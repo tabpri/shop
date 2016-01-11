@@ -1,22 +1,9 @@
 package net.malta.web.app;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.enclosing.util.HTTPGetRedirection;
 import net.enclosing.util.HibernateSession;
-import net.malta.model.Choise;
-import net.malta.model.DeliveryAddress;
-import net.malta.model.DeliveryAddressChoise;
-import net.malta.model.PaymentMethod;
-import net.malta.model.PublicUser;
-import net.malta.model.Purchase;
-
-import org.apache.commons.lang.StringUtils;
+import net.malta.model.*;
+import net.malta.web.utils.JsonUtil;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -25,6 +12,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 public class ShowPurchaseForConfirmationAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -63,7 +54,7 @@ public class ShowPurchaseForConfirmationAction extends Action {
 
 		Criteria criteria = session.createCriteria(Purchase.class);
 
-
+		Map<String, Object> mapJson = new HashMap<String, Object>();
 		
 		System.err.println("----------------------------------------------------------------- mark 1000000000000000");
 		Criteria criteriadeliveryaddress=session.createCriteria(DeliveryAddress.class);
@@ -71,7 +62,8 @@ public class ShowPurchaseForConfirmationAction extends Action {
 		/*criteriadeliveryaddress.add(Restrictions.eq("publicUser",purchase.getPublicUser()));*/
 		if(req.getSession().getAttribute("deliverymethod")!=null){
 			Integer deliverymethodInteger = (Integer)req.getSession().getAttribute("deliverymethod");
-			req.getSession().setAttribute("deliverymethod", deliverymethodInteger);
+			//req.getSession().setAttribute("deliverymethod", deliverymethodInteger);
+			mapJson.put("deliveryMethod", deliverymethodInteger);
 			if(deliverymethodInteger.intValue()==2){
 				criteriadeliveryaddress.setMaxResults(1);
 				criteriadeliveryaddress.addOrder(Order.desc("id"));
@@ -89,15 +81,21 @@ public class ShowPurchaseForConfirmationAction extends Action {
 					}
 				}
 				System.err.println("here --------------------------");
-				req.setAttribute("deliveryAddress", map.values());
+				//req.setAttribute("deliveryAddress", map.values());
+				//res.getWriter().print(JsonUtil.INSTANCE.toJson(map.values()));
 			}
 		}
 		
 		Criteria criteriaPaymentMethod = session.createCriteria(PaymentMethod.class);
-		req.setAttribute("PaymentMethods", criteriaPaymentMethod.list());
-		
-		//req.getSession().setAttribute("deliverymethod",req.getParameter("deliverymethod") );
+		//req.setAttribute("PaymentMethods", criteriaPaymentMethod.list());
 
-		return mapping.findForward("success");
+		mapJson.put("paymentMethods", criteriaPaymentMethod.list());
+
+		res.setContentType("application/json");
+
+		res.getWriter().print(JsonUtil.INSTANCE.toJson(mapJson));
+
+		return null;
+		//return mapping.findForward("success");
 	}
 }

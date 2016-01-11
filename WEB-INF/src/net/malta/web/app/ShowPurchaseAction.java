@@ -1,22 +1,18 @@
 package net.malta.web.app;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.enclosing.util.HibernateSession;
-import net.malta.model.Item;
 import net.malta.model.Purchase;
-import net.malta.model.Purchase;
-import net.malta.model.PurchaseImpl;
-
+import net.malta.web.utils.JsonUtil;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class ShowPurchaseAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -34,8 +30,13 @@ public class ShowPurchaseAction extends Action {
 			criteria.add(Restrictions.idEq(Integer.valueOf(req
 					.getParameter("id"))));
 			purchase = (Purchase) criteria.uniqueResult();
-			req.setAttribute("purchase", purchase);
+			//req.setAttribute("purchase", purchase);
 		}
+
+
+		res.setContentType("application/json");
+
+		res.getWriter().print(JsonUtil.INSTANCE.toJson(purchase));
 
 //}
 		
@@ -50,6 +51,7 @@ public class ShowPurchaseAction extends Action {
 
 //		req.setAttribute("purchase", purchase);
 //
-		return mapping.findForward("success");
+		return null;
+		//return mapping.findForward("success");
 	}
 }
