@@ -1,8 +1,5 @@
 package net.malta.web.app;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.enclosing.util.HTTPGetRedirection;
 import net.enclosing.util.HibernateSession;
 import net.enclosing.util.StringFullfiller;
@@ -10,17 +7,15 @@ import net.malta.beans.ChoiseForm;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Purchase;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class PostChoiseVPAction extends Action{
@@ -61,7 +56,7 @@ public class PostChoiseVPAction extends Action{
 		choise.setVarietychoise(choiseform.getVarietychoise());
 
 		StringFullfiller.fullfil(choise);
-        
+
 //		criteria2.add(Restrictions.idEq(purchaseInt));
 //		Purchase purchase = (Purchase) criteria2.uniqueResult();
 //		choise.setPurchase(purchase);
@@ -88,7 +83,7 @@ public class PostChoiseVPAction extends Action{
 			//////////////////////////////////here the codes to get the price of wp_post using wp_post_id 
 			choise.setPricewithtax(getPriceOf(choise.getWp_posts_id(), session));
 			choise.setName(getNameOf(choise.getWp_posts_id(), session));
-			choise.setImg(getImgOf(choise.getWp_posts_id(), session));;
+			choise.setImg(getImgOf(choise.getWp_posts_id(), session));
 //			choise.setPricewithtax( ( item.getPricewithtax() + choise.getItem().getCarriage().getValue()) );
 			if(choise.getOrdernum()==0)
 				choise.setOrdernum(1);

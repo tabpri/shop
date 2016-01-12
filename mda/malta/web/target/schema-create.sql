@@ -1,4 +1,3 @@
-
     create table ATTACHMENT (
         ID INTEGER not null auto_increment,
         FILETYPE VARCHAR(255) BINARY not null,
@@ -8,20 +7,20 @@
         DB_FILE_FK INTEGER unique,
         ASDETAILED_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table CARRIAGE (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         VALUE INTEGER not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table CATEGORY (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table CHOISE (
         ID INTEGER not null auto_increment,
@@ -30,14 +29,19 @@
         WRAPPING TINYINT not null,
         PURCHASE_FK INTEGER not null,
         ITEM_FK INTEGER not null,
+        CARRIAGE int null,
+        NAME int null,
+        VARIETYCHOISE VARCHAR(255) null,
+        IMG VARCHAR(255) BINARY null,
+        wp_posts_id INT null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table DB_FILE (
         ID INTEGER not null auto_increment,
         DATA LONGBLOB not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table DELIVERY_ADDRESS (
         ID INTEGER not null auto_increment,
@@ -56,7 +60,7 @@
         GIFT_CARD_FK INTEGER,
         PREFECTURE_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table DELIVERY_ADDRESS_CHOISE (
         ID INTEGER not null auto_increment,
@@ -67,13 +71,13 @@
         CHOISE_FK INTEGER not null,
         GIFT_CARD_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table GIFT_CARD (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table ITEM (
         ID INTEGER not null auto_increment,
@@ -92,20 +96,20 @@
         ZOOM_FK INTEGER unique,
         DEFAULTATTACHMENT_FK INTEGER unique,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table PAYMENT_METHOD (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         NOTE VARCHAR(2000) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table PREFECTURE (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table PRODUCT (
         ID INTEGER not null auto_increment,
@@ -125,8 +129,9 @@
         CATEGORY_FK INTEGER,
         THUMNAIL_FK INTEGER unique,
         SLIDESHOW_FK INTEGER unique,
+        ENGLISH VARCHAR(255) not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table PUBLIC_USER (
         ID INTEGER not null auto_increment,
@@ -165,7 +170,7 @@
         PASSWORDONETIMEHASH VARCHAR(255) BINARY not null,
         PREFECTURE_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table PURCHASE (
         ID INTEGER not null auto_increment,
@@ -180,7 +185,7 @@
         PUBLIC_USER_FK INTEGER,
         PAYMENT_METHOD_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     create table STATIC_DATA (
         ID INTEGER not null auto_increment,
@@ -194,7 +199,7 @@
         CREDITCARDPROCESURL VARCHAR(255) BINARY not null,
         CONTRACT_CODE VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    ) ENGINE=InnoDB;
 
     alter table ATTACHMENT 
         add index ATTACHMENT_DB_FILE_FKC (DB_FILE_FK), 

@@ -1,87 +1,69 @@
 package net.malta.web.app;
 
+		import net.enclosing.util.HTTPGetRedirection;
+import net.enclosing.util.HibernateSession;
+import net.enclosing.util.StringFullfiller;
+import net.malta.beans.PublicUserForm;
 import net.malta.model.*;
 import net.malta.web.utils.DeliveryMethodUtils;
 import net.malta.web.utils.SessionData;
-import net.malta.beans.*;
-import net.storyteller.desktop.CopyProperties;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.enclosing.util.StringFullfiller;
-import net.enclosing.util.HTTPGetRedirection;
-import net.enclosing.util.HibernateSession;
-
-import net.malta.model.GiftCard;
-import net.malta.model.Prefecture;
-import net.malta.model.PublicUser;
-import net.malta.model.PublicUserImpl;
-import net.malta.model.Purchase;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.poi.poifs.property.Child;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
-public class UpdateCarriageForPrefectureAction extends Action{
-	public ActionForward execute(
-			ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest req,
-			HttpServletResponse res) throws Exception{
+		public class UpdateCarriageForPrefectureAction extends Action{
+			public ActionForward execute(
+					ActionMapping mapping,
+					ActionForm form,
+					HttpServletRequest req,
+					HttpServletResponse res) throws Exception{
 
-         DeliveryMethodUtils.setIntoSesssion(req);
-		
-		PublicUser publicUser = new PublicUserImpl();
-		PublicUserForm publicUserform = (PublicUserForm) form;
+				DeliveryMethodUtils.setIntoSesssion(req);
 
-		Session session = new HibernateSession().currentSession(this.getServlet().getServletContext());
-		
-		
-		Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
-		session.evict(purchase);
-		session.refresh(purchase);
-		
-		Map map = new HashMap();
-		map.put(new Integer(1), new Integer(1060));
-		map.put(new Integer(2), new Integer(740));
-		map.put(new Integer(3), new Integer(740));
-		map.put(new Integer(4), new Integer(640));
-		map.put(new Integer(5), new Integer(740));
-		
-		map.put(new Integer(6), new Integer(640));
-		map.put(new Integer(7), new Integer(640));
-		map.put(new Integer(8), new Integer(640));
-		map.put(new Integer(9), new Integer(640));
-		map.put(new Integer(10), new Integer(640));
-		map.put(new Integer(11), new Integer(640));
-		map.put(new Integer(12), new Integer(640));
-		map.put(new Integer(13), new Integer(640));
-		map.put(new Integer(14), new Integer(640));
-		map.put(new Integer(15), new Integer(640));
-		map.put(new Integer(16), new Integer(640));
-		map.put(new Integer(17), new Integer(640));
-		map.put(new Integer(18), new Integer(640));
-		
-		map.put(new Integer(19), new Integer(640)); // yamanashi
+				PublicUser publicUser = new PublicUserImpl();
+				PublicUserForm publicUserform = (PublicUserForm) form;
+
+				Session session = new HibernateSession().currentSession(this.getServlet().getServletContext());
+
+
+				Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
+				session.evict(purchase);
+				session.refresh(purchase);
+
+				Map map = new HashMap();
+				map.put(new Integer(1), new Integer(1060));
+				map.put(new Integer(2), new Integer(740));
+				map.put(new Integer(3), new Integer(740));
+				map.put(new Integer(4), new Integer(640));
+				map.put(new Integer(5), new Integer(740));
+
+				map.put(new Integer(6), new Integer(640));
+				map.put(new Integer(7), new Integer(640));
+				map.put(new Integer(8), new Integer(640));
+				map.put(new Integer(9), new Integer(640));
+				map.put(new Integer(10), new Integer(640));
+				map.put(new Integer(11), new Integer(640));
+				map.put(new Integer(12), new Integer(640));
+				map.put(new Integer(13), new Integer(640));
+				map.put(new Integer(14), new Integer(640));
+				map.put(new Integer(15), new Integer(640));
+				map.put(new Integer(16), new Integer(640));
+				map.put(new Integer(17), new Integer(640));
+				map.put(new Integer(18), new Integer(640));
+
+				map.put(new Integer(19), new Integer(640)); // yamanashi
 		map.put(new Integer(20), new Integer(640)); // nagano
 		map.put(new Integer(21), new Integer(640)); // gifu
 		map.put(new Integer(22), new Integer(640)); // Shizuoka
@@ -164,10 +146,10 @@ public class UpdateCarriageForPrefectureAction extends Action{
 			publicUser.setRegisted(publicUserform.isRegisted());
 		}
 		publicUser.setTemp(new Boolean(false));
-		publicUser.setHasgiftcard(publicUserform.isHasgiftcard());
-		publicUser.setPreferredtime(publicUserform.getPreferredtime());
+		/*publicUser.setHasgiftcard(publicUserform.isHasgiftcard());
+		publicUser.setPreferredtime(publicUserform.getPreferredtime());*/
 		publicUser.setPref(publicUserform.getPref());
-		publicUser.setPreferreddatedate(publicUserform.getPreferreddatedate());
+		/*publicUser.setPreferreddatedate(publicUserform.getPreferreddatedate());*/
 		StringFullfiller.fullfil(publicUser);
                 
 		Integer prefectureInt = publicUserform.getPrefecture();
@@ -182,7 +164,7 @@ public class UpdateCarriageForPrefectureAction extends Action{
 		criteria2 = session.createCriteria(GiftCard.class);
 		criteria2.add(Restrictions.idEq(giftcardInt));
 		GiftCard giftcard = (GiftCard) criteria2.uniqueResult();
-		publicUser.setGiftCard(giftcard);
+		/*publicUser.setGiftCard(giftcard);*/
 		purchase.setTotal(total);
 		
 		Transaction transaction = session.beginTransaction();

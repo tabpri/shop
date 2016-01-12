@@ -1,13 +1,9 @@
 package net.malta.web.app;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.enclosing.util.HibernateSession;
 import net.malta.model.Category;
 import net.malta.model.Product;
 import net.malta.web.utils.Pagination;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.struts.action.Action;
@@ -18,6 +14,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class ProductListAction extends Action{
@@ -82,7 +81,7 @@ public class ProductListAction extends Action{
 		
 		/*Criteria criteriaAward = session.createCriteria(Award.class);
 		req.setAttribute("pages", 1 + ( (int ) ( criteriaAward.list().size() / pagesize ) ));*/
-		
+
 
 
 
