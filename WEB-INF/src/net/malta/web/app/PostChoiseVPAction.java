@@ -83,7 +83,7 @@ public class PostChoiseVPAction extends Action{
 			//////////////////////////////////here the codes to get the price of wp_post using wp_post_id 
 			choise.setPricewithtax(getPriceOf(choise.getWp_posts_id(), session));
 			choise.setName(getNameOf(choise.getWp_posts_id(), session));
-			choise.setImg(getImgOf(choise.getWp_posts_id(), session));;
+			choise.setImg(getImgOf(choise.getWp_posts_id(), session));
 //			choise.setPricewithtax( ( item.getPricewithtax() + choise.getItem().getCarriage().getValue()) );
 			if(choise.getOrdernum()==0)
 				choise.setOrdernum(1);
