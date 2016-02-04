@@ -7,6 +7,7 @@ import com.gmo_pg.g_pay.client.common.PaymentException;
 import com.gmo_pg.g_pay.client.impl.PaymentClientImpl;
 import com.gmo_pg.g_pay.client.input.EntryExecTranInput;
 import com.gmo_pg.g_pay.client.output.EntryExecTranOutput;
+import com.gmo_pg.g_pay.client.output.ErrHolder;
 import com.gmo_pg.g_pay.client.output.SecureTranOutput;
 
 /**
@@ -23,9 +24,13 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 	// エラー情報
 	private List entryErrList = null;
 	// 3Dセキュア認証結果
-	private String paRes = null;
+	private String PaRes = null;
 	// 取引ID
-	private String md = null;
+	private String MD = null;
+	// 3D認証サービスから結果がPOSTされるURL
+	private String termUrl;
+	// リダイレクトページHTML
+	private String redirectContents;
 	// ACS呼出判定
 	private String acs;
 	// 本人認証パスワード入力画面URL
@@ -42,12 +47,16 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 		PaymentClientImpl paymentClientImpl = new PaymentClientImpl();
 
 		// 認証後決済(3D セキュア認証結果と取引IDが設定されている場合)
-		if (paRes != null && md != null) {
-			SecureTranOutput secureTranOutput = paymentClientImpl.doSecureTran(paRes, md);
+		if (PaRes != null && MD != null) {
+			SecureTranOutput secureTranOutput = paymentClientImpl.doSecureTran(PaRes, MD);
 			// 結果確認
 			if (secureTranOutput.isErrorOccurred()) {
 				entryErrList = new ArrayList();
-				entryErrList.addAll(secureTranOutput.getErrList());
+				List errList = secureTranOutput.getErrList();
+				for (int i = 0; errList.size() > i; i++) {
+					ErrHolder errHolder = (ErrHolder)errList.get(i);
+					entryErrList.add(new String[] {errHolder.getErrCode(), errHolder.getErrInfo()});
+				}
 			}
 			return;
 		}
@@ -58,29 +67,56 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 		// 結果確認
 		if (entryExecTranOutput.isErrorOccurred()) {
 			entryErrList = new ArrayList();
-			entryErrList.addAll(entryExecTranOutput.getEntryErrList());
-			entryErrList.addAll(entryExecTranOutput.getExecErrList());
+			List errList = new ArrayList();
+			errList.addAll(entryExecTranOutput.getEntryErrList());
+			errList.addAll(entryExecTranOutput.getExecErrList());
+			for (int i = 0; errList.size() > i; i++) {
+				ErrHolder errHolder = (ErrHolder)errList.get(i);
+				entryErrList.add(new String[] {errHolder.getErrCode(), errHolder.getErrInfo()});
+			}
+			return;
 		}
 
-		// 3D セキュア認証に必要な値を設定
-		this.acs = entryExecTranOutput.getAcs();
-		this.acsUrl = entryExecTranOutput.getAcsUrl();
-		this.paReq = entryExecTranOutput.getPaReq();
-		this.md = entryExecTranOutput.getMd();
+		// 3D セキュア認証が必要な場合
+		if ("1".equals(entryExecTranOutput.getAcs())) {
+			// JSPでリダイレクト用
+			this.acs = entryExecTranOutput.getAcs();
+			this.paReq = entryExecTranOutput.getPaReq();
+			this.MD = entryExecTranOutput.getMd();
+			this.acsUrl = entryExecTranOutput.getAcsUrl();
+			// 直接レスポンスに書き込み用
+			this.redirectContents = paymentClientImpl.createRedirectPage("conf/RedirectPage.html",
+					entryExecTranOutput.getExecTranOutput(), termUrl, "UTF-8");
+		}
 
 	}
 
 	/**
 	 * 3D セキュア認証結果を設定
 	 */
-	public void setPaRes(String paRes) {
-		this.paRes = paRes;
+	public void setPaRes(String PaRes) {
+		this.PaRes = PaRes;
 	}
 	/**
 	 * 取引IDを設定
 	 */
-	public void setMd(String md) {
-		this.md = md;
+	public void setMD(String MD) {
+		this.MD = MD;
+	}
+
+	/**
+	 * 3D認証結果返却URLを設定
+	 */
+	public void setTermUrl(String termUrl) {
+		this.termUrl = termUrl;
+	}
+
+	/**
+	 * リダイレクトページのHTMLを取得
+	 * @return リダイレクトページのHTML
+	 */
+	public String getRedirectContents() {
+		return redirectContents;
 	}
 
 	/**
@@ -88,7 +124,7 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 	 * @return ACS呼出判定
 	 */
 	public String getAcs() {
-		return null;
+		return this.acs;
 	}
 
 	/**
@@ -96,7 +132,7 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 	 * @return 本人認証パスワード入力画面URL
 	 */
 	public String getAcsUrl() {
-		return null;
+		return this.acsUrl;
 	}
 
 	/**
@@ -104,15 +140,15 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 	 * @return 本人認証サービス要求電文
 	 */
 	public String getPaReq() {
-		return null;
+		return this.paReq;
 	}
 
 	/**
 	 * 取引IDを取得
 	 * @return 取引ID
 	 */
-	public String getMd() {
-		return null;
+	public String getMD() {
+		return this.MD;
 	}
 
 	/**

@@ -49,8 +49,11 @@ public interface PaymentGatewayConfiguration {
 	public void setCardSeq(Integer cardSeq);				// カード登録連番
 	public void setCardPass(String cardPass);				// カードパスワード
 	// 3Dセキュア認証後の決済で使用
-	public void setPaRes(String paRed);						// 3D セキュア認証結果
-	public void setMd(String md);							// 取引ID
+	public void setPaRes(String PaRes);						// 3D セキュア認証結果
+	public void setMD(String MD);							// 取引ID
+
+	// 3Dセキュア認証結果からPOSTされるURL
+	public void setTermUrl(String termUrl);
 
 	// 決済の処理で失敗して、同じオーダーIDで再度決済を行う場合は必要
 	public String getAccessId();							// 取引ID
@@ -59,7 +62,9 @@ public interface PaymentGatewayConfiguration {
 	public String getAcs();									// ACS呼出判定(1:呼出要)
 	public String getAcsUrl();								// 本人認証パスワード入力画面URL
 	public String getPaReq();								// 本人認証サービス要求電文
-	public String getMd();									// 取引ID
+	public String getMD();									// 取引ID
+
+	public String getRedirectContents();
 
 	/**
 	 * エラー情報取得
