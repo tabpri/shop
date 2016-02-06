@@ -8,8 +8,8 @@ public class JSONResponseUtil {
 
 	private static final String APPLICATION_JSON = "application/json; charset=utf-8";
 	
-	public static void writeObjectAsJSON(HttpServletResponse response,Object o) throws IOException {
+	public static void writeResponseAsJSON(HttpServletResponse response,Object o) throws IOException {
 		response.setContentType(APPLICATION_JSON);
-		response.getWriter().print(JSONUtil.serialize(o));	
+		response.getWriter().print(JSONUtil.serialize(o));
 	}
 }

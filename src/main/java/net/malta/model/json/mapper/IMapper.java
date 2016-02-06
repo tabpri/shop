@@ -6,5 +6,5 @@ package net.malta.model.json.mapper;
 
 public interface IMapper<I,O> {
 
-	public void map(I i,O o);
+	public O map(I i,O o);
 }

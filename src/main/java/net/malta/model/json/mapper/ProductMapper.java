@@ -5,10 +5,10 @@ import java.util.Collection;
 import net.malta.model.Item;
 import net.malta.model.Product;
 
-public class ProductJSONMapper implements IMapper<Product, net.malta.model.json.Product>{
+public class ProductMapper implements IMapper<Product, net.malta.model.json.Product>{
 
 	@Override
-	public void map(Product product, net.malta.model.json.Product productJSON) {
+	public net.malta.model.json.Product map(Product product, net.malta.model.json.Product productJSON) {
 		productJSON.setId(product.getId());
 		productJSON.setName(product.getName());		
 		productJSON.setDescription(product.getDescription());
@@ -24,6 +24,7 @@ public class ProductJSONMapper implements IMapper<Product, net.malta.model.json.
 			productJSON.setMainItem(mainItemJSON);
 			
 		}
+		return productJSON;
 	}
 
 	private Item mainItem(Collection items) {

@@ -14,15 +14,15 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import net.enclosing.util.HTTPGetRedirection;
-import net.enclosing.util.HibernateSession;
 import net.enclosing.util.StringFullfiller;
 import net.malta.beans.ChoiseForm;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Item;
 import net.malta.model.Purchase;
-import net.malta.model.json.mapper.ChoiseMapper;
+import net.malta.model.json.mapper.PurchaseChoiseMapper;
+import net.malta.web.utils.BeanUtil;
+import net.malta.web.utils.HibernateUtil;
 import net.malta.web.utils.JSONResponseUtil;
 
 
@@ -41,7 +41,7 @@ public class PostChoiseVPAction extends Action{
 		Integer itemInt = choiseform.getItem();
 		choiseform.setItem(null);
 
-		Session session = new HibernateSession().currentSession(this.getServlet().getServletContext());
+		Session session = HibernateUtil.getCurrentSession(this);
 		
 	
 		if(choiseform.getId() == null || choiseform.getId().intValue() == 0){
@@ -103,13 +103,11 @@ public class PostChoiseVPAction extends Action{
 			session.flush();
 		}
 		
-		//new HTTPGetRedirection(req, res, "ShowPurchase.html", null);
-		
-		// send json
-		ChoiseMapper mapper = new ChoiseMapper();
+		PurchaseChoiseMapper mapper = BeanUtil.getPurchaseChoiseMapper(this.getServlet().getServletContext());
 		net.malta.model.json.Choise choiseJSON = new net.malta.model.json.Choise();
 		mapper.map(choise, choiseJSON);
-		JSONResponseUtil.writeObjectAsJSON(res, choiseJSON);
+		JSONResponseUtil.writeResponseAsJSON(res, choiseJSON);
+		
 		return null;
 	}
  
