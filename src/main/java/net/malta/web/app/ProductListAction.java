@@ -1,16 +1,10 @@
 package net.malta.web.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.enclosing.util.HibernateSession;
-import net.malta.model.Category;
-import net.malta.model.Product;
-import net.malta.web.utils.Pagination;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -22,6 +16,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
+import net.enclosing.util.HibernateSession;
+import net.malta.model.Category;
+import net.malta.model.Product;
+import net.malta.model.json.mapper.ProductsJSONMapper;
+import net.malta.web.utils.JSONResponseUtil;
+import net.malta.web.utils.Pagination;
 
 
 public class ProductListAction extends Action{
@@ -36,9 +37,6 @@ public class ProductListAction extends Action{
 		Session session = new HibernateSession().currentSession(this
 				.getServlet().getServletContext());
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonArray jsonElements = new JsonArray();
-
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.addOrder(Order.desc("id"));
 		criteria.add(Restrictions.eq("removed", new Boolean(false)));
@@ -46,10 +44,6 @@ public class ProductListAction extends Action{
         int pagesize = 6;
         int offset = 0;
         int currentpage = 1;
-        
-//        new Product().getName()
-//        new Product().getThumnail()
-//        new Product().getCategory()
         
         if(StringUtils.isNotBlank(req.getParameter("pagesize")) && req.getParameter("pagesize")!=null) {
         	//if(NumberUtils.isDigits(req.getParameter("pagesize")))
@@ -79,27 +73,21 @@ public class ProductListAction extends Action{
         }
         
 		int max=pagination.getMax(criteria.list().size(), pagesize);
-
-		JsonObject maxProducts = new JsonObject();
-		maxProducts.addProperty("max", max);
-		jsonElements.add(maxProducts);
-
+		
 //		criteria.setMaxResults(pagesize);
 		criteria.setFirstResult(offset);
 
 		/*Criteria criteriaAward = session.createCriteria(Award.class);
 		req.setAttribute("pages", 1 + ( (int ) ( criteriaAward.list().size() / pagesize ) ));*/
 
-		JsonObject products = new JsonObject();
-		products.addProperty("products", gson.toJson(criteria.list()));
-		jsonElements.add(products);
-
-		res.setContentType("application/json");
-		res.getWriter().print(gson.toJson(jsonElements));
+		List productsList = criteria.list();
+		ProductsJSONMapper jsonMapper = new ProductsJSONMapper();
+		ArrayList<net.malta.model.json.Product> productsJSON = new ArrayList<net.malta.model.json.Product>();
+		jsonMapper.map(productsList, productsJSON);
+		JSONResponseUtil.writeObjectAsJSON(res, productsJSON);
 
 		return null;
 /*
-				
 		<c:forEach var="page" begin="1" end="${pages}">
 		<a href="ProductList.do?currentpage=${page}">
 		${page}
@@ -110,6 +98,5 @@ public class ProductListAction extends Action{
 
 */
 	}
-	
-	
+		
 }

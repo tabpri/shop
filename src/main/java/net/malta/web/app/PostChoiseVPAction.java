@@ -3,14 +3,6 @@ package net.malta.web.app;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.enclosing.util.HTTPGetRedirection;
-import net.enclosing.util.HibernateSession;
-import net.enclosing.util.StringFullfiller;
-import net.malta.beans.ChoiseForm;
-import net.malta.model.Choise;
-import net.malta.model.ChoiseImpl;
-import net.malta.model.Purchase;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -21,6 +13,17 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+
+import net.enclosing.util.HTTPGetRedirection;
+import net.enclosing.util.HibernateSession;
+import net.enclosing.util.StringFullfiller;
+import net.malta.beans.ChoiseForm;
+import net.malta.model.Choise;
+import net.malta.model.ChoiseImpl;
+import net.malta.model.Item;
+import net.malta.model.Purchase;
+import net.malta.model.json.mapper.ChoiseMapper;
+import net.malta.web.utils.JSONResponseUtil;
 
 
 public class PostChoiseVPAction extends Action{
@@ -34,10 +37,6 @@ public class PostChoiseVPAction extends Action{
 		Choise choise = new ChoiseImpl();
 		ChoiseForm choiseform = (ChoiseForm) form;
 
-                String error = "";
-
-
-        Integer purchaseInt = choiseform.getPurchase();
 		choiseform.setPurchase(null);
 		Integer itemInt = choiseform.getItem();
 		choiseform.setItem(null);
@@ -65,10 +64,10 @@ public class PostChoiseVPAction extends Action{
 //		criteria2.add(Restrictions.idEq(purchaseInt));
 //		Purchase purchase = (Purchase) criteria2.uniqueResult();
 //		choise.setPurchase(purchase);
-//		Criteria criteria2 = session.createCriteria(Item.class);
-//		criteria2.add(Restrictions.idEq(itemInt));
-//		Item item = (Item) criteria2.uniqueResult();
-//		choise.setItem(item);
+		Criteria criteria2 = session.createCriteria(Item.class);
+		criteria2.add(Restrictions.idEq(itemInt));
+		Item item = (Item) criteria2.uniqueResult();
+		choise.setItem(item);
 		choise.setWp_posts_id(itemInt);
 		
 //		if(item.getStocknum()<=0){
@@ -104,7 +103,13 @@ public class PostChoiseVPAction extends Action{
 			session.flush();
 		}
 		
-		new HTTPGetRedirection(req, res, "ShowPurchase.html", null);
+		//new HTTPGetRedirection(req, res, "ShowPurchase.html", null);
+		
+		// send json
+		ChoiseMapper mapper = new ChoiseMapper();
+		net.malta.model.json.Choise choiseJSON = new net.malta.model.json.Choise();
+		mapper.map(choise, choiseJSON);
+		JSONResponseUtil.writeObjectAsJSON(res, choiseJSON);
 		return null;
 	}
  
