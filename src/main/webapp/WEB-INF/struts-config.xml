@@ -158,7 +158,7 @@
     <action path="/PostChoiseDetail" type="net.malta.web.app.PostChoiseDetailAction">
       <forward name="success" path="/pages/app/PostChoiseDetail.jsp"/>
     </action>
-    <action path="/PostChoiseVP" name="ChoiseForm" type="net.malta.web.app.PostChoiseVPAction"/>
+    <action path="/PostChoiseVP" name="ChoiseForm" type="net.malta.web.app.PostChoiseVPAction" scope="request"/>
     <action path="/ProductsForScenesXml" type="net.malta.web.app.ProductsForScenesXmlAction">
       <forward name="success" path="/pages/app/ProductsForScenesXml.jsp"/>
     </action>

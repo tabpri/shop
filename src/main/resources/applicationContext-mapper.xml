@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="productMapper" class="net.malta.model.json.mapper.ProductMapper"></bean>
+	
+	<bean id="productsMapper" class="net.malta.model.json.mapper.ProductsMapper">
+		<property name="productMapper" ref="productMapper"></property>
+	</bean>
+	
+	<bean id="choiseMapper" class="net.malta.model.json.mapper.ChoiseMapper"></bean>
+
+	<bean id="choisesMapper" class="net.malta.model.json.mapper.ChoisesMapper">
+		<property name="choiseMapper" ref="choiseMapper"></property>		
+	</bean>
+	
+	<bean id="purchaseMapper" class="net.malta.model.json.mapper.PurchaseMapper">
+		<property name="choisesMapper" ref="choisesMapper"></property>
+	</bean>
+	
+	<bean id="purchaseChoiseMapper" class="net.malta.model.json.mapper.PurchaseChoiseMapper">
+		<property name="choiseMapper" ref="choiseMapper"></property>
+	</bean>
+	
+</beans>
