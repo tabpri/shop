@@ -10,6 +10,9 @@ import net.malta.model.Item;
 import net.malta.model.Purchase;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
+import net.malta.model.json.mapper.PurchaseMapper;
+import net.malta.web.utils.BeanUtil;
+import net.malta.web.utils.JSONResponseUtil;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -52,9 +55,10 @@ public class ShowPurchaseAction extends Action {
 //		req.setAttribute("purchase", purchase);
 //
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		res.setContentType("application/json");
-		res.getWriter().print(gson.toJson(purchase));
+		PurchaseMapper purchaseMapper = BeanUtil.getPurchaseMapper(this.getServlet().getServletContext());
+		net.malta.model.json.Purchase purchaseJSON = purchaseMapper.map(purchase, new net.malta.model.json.Purchase());
+		JSONResponseUtil.writeResponseAsJSON(res,purchaseJSON);
+		
 		return null;
 	}
 }
