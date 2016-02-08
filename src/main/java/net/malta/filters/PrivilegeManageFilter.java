@@ -14,14 +14,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.enclosing.util.HTTPGetRedirection;
-import net.enclosing.util.HibernateSession;
-import net.enclosing.util.StringFullfiller;
-import net.malta.model.PublicUser;
-import net.malta.model.PublicUserImpl;
-import net.malta.model.Purchase;
-import net.malta.model.PurchaseImpl;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -29,6 +21,13 @@ import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+
+import net.enclosing.util.HibernateSession;
+import net.enclosing.util.StringFullfiller;
+import net.malta.model.PublicUser;
+import net.malta.model.PublicUserImpl;
+import net.malta.model.Purchase;
+import net.malta.model.PurchaseImpl;
 
 
 public class PrivilegeManageFilter implements Filter {
@@ -97,12 +96,7 @@ public class PrivilegeManageFilter implements Filter {
 							
 							req2.getSession().setAttribute("u", publicUser);
 							req2.getSession().setAttribute("purchase", purchase);
-							res2.sendRedirect("ProductList.do?category=1");
-							res2.flushBuffer();
 							System.err.println("mark 1----------------------------------------");
-							return;
-							
-	            			
 	            		}else{
 	            			System.err.println("hogehoge");
 	            			session.refresh(req2.getSession().getAttribute("u"));
@@ -183,7 +177,6 @@ public class PrivilegeManageFilter implements Filter {
 //	            	req.setAttribute("p",intraUser.getPrivilege());
 //	            	session.refresh(intraUser);
 //	            	criteria = null;
-	            	chain.doFilter(req, res);
 	            	log.debug("Committing the database transaction");
 	            }
 	        } catch (StaleObjectStateException staleEx) {
@@ -211,10 +204,8 @@ public class PrivilegeManageFilter implements Filter {
 	        }
 
 
-		}else{
-			chain.doFilter(req, res);
 		}
-
+		chain.doFilter(req, res);
 	}
 	public void init(FilterConfig arg0) throws ServletException {
 		context = arg0.getServletContext();
