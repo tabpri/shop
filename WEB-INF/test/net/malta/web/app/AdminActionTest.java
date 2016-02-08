@@ -2,36 +2,57 @@
 package net.malta.web.app;
 
 import static org.junit.Assert.*;
-import net.malta.web.app.AdminAction;
-import org.junit.Test;
-import org.junit.Before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class AdminActionTest {
 
     private AdminAction action;
-    private Mockery mockery;
-    
+
+    @Mocked
+    private ActionMapping actionMapping;
+
+    @Mocked
+    private ActionForm actionForm;
+
+    @Mocked
+    private HttpServletRequest httpServeltRequest;
+
+    @Mocked
+    private HttpServletResponse httpServletResponse;
+
     @Before
     public void setUp() {
         action = new AdminAction();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
     }
-    
+
+    @Test
+    public void testExecute() {
+    	try {
+    		// return success のみ
+			action.execute(actionMapping, actionForm, httpServeltRequest, httpServletResponse);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }

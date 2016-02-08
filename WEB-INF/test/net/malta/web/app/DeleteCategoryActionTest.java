@@ -2,36 +2,107 @@
 package net.malta.web.app;
 
 import static org.junit.Assert.*;
-import net.malta.web.app.DeleteCategoryAction;
-import org.junit.Test;
-import org.junit.Before;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.integration.junit4.JMockit;
+import net.enclosing.util.HibernateSession;
+import net.malta.model.Category;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class DeleteCategoryActionTest {
 
     private DeleteCategoryAction action;
-    private Mockery mockery;
-    
+
+    private Category category;
+
+    @Mocked
+    private ActionMapping actionMapping;
+
+    @Mocked
+    private ActionForm actionForm;
+
+    @Mocked
+    private HttpServletRequest httpServeltRequest;
+
+    @Mocked
+    private HttpServletResponse httpServletResponse;
+
+    @Mocked
+    private ServletContext servletContext;
+
+    @Mocked
+    private Session hibernateSession;
+
+    @Mocked
+    private Transaction transaction;
+
+    @Mocked
+    private Criteria criteria;
+
     @Before
     public void setUp() {
         action = new DeleteCategoryAction();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
+
+        category = Category.Factory.newInstance();
     }
-    
+
+    @Test
+    public void testExecute1() {
+
+    	new NonStrictExpectations() {{
+    		httpServeltRequest.getParameter("id"); result= "1";
+    		criteria.uniqueResult(); result= category;
+    	}};
+
+    	new MockUp<Action> () {
+			@Mock public ActionServlet getServlet() {
+				return new ActionServlet();
+			}
+		};
+		new MockUp<ActionServlet> () {
+			@Mock public ServletContext getServletContext() {
+				return servletContext;
+			}
+		};
+
+    	new MockUp<HibernateSession> () {
+    		@Mock public Session currentSession(ServletContext servletContext) {
+    			return hibernateSession;
+    		}
+		};
+
+		try {
+			action.execute(actionMapping, actionForm, httpServeltRequest, httpServletResponse);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }
