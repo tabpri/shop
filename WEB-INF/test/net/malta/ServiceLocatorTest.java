@@ -2,36 +2,93 @@
 package net.malta;
 
 import static org.junit.Assert.*;
-import net.malta.ServiceLocator;
-import org.junit.Test;
-import org.junit.Before;
+import mockit.integration.junit4.JMockit;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class ServiceLocatorTest {
 
     private ServiceLocator locator;
-    private Mockery mockery;
-    
+
+    private String beanFactoryLocation = "beanRefFactory.xml";
+
+    private String beanFactoryId = "beanRefFactory";
+
     @Before
     public void setUp() {
-        locator = new ServiceLocator();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
     }
-    
+
+    @Test
+    public void testInit1() {
+    	locator = ServiceLocator.instance();
+    	locator.init(beanFactoryLocation);
+    }
+
+    @Test
+    public void testInit2() {
+    	locator = ServiceLocator.instance();
+    	locator.init(beanFactoryLocation, beanFactoryId);
+    }
+
+    @Test
+    public void testGetContext1() {
+    	locator = ServiceLocator.instance();
+    	locator.init(beanFactoryLocation);
+
+    	locator.getContext();
+
+    	locator.shutdown();
+    }
+
+    @Test
+    public void testGetContext2() {
+    	locator = ServiceLocator.instance();
+    	locator.init(null);
+
+    	locator.getContext();
+
+    	locator.shutdown();
+    }
+
+    @Test
+    public void testGetService() {
+    	locator = ServiceLocator.instance();
+    	locator.init(null);
+
+    	try {
+			locator.getDbFileManageableService();
+			locator.getAttachmentManageableService();
+			locator.getPublicUserManageableService();
+			locator.getItemManageableService();
+			locator.getPurchaseManageableService();
+			locator.getProductManageableService();
+			locator.getChoiseManageableService();
+			locator.getCategoryManageableService();
+			locator.getDeliveryAddressManageableService();
+			locator.getDeliveryAddressChoiseManageableService();
+			locator.getGiftCardManageableService();
+			locator.getStaticDataManageableService();
+			locator.getCarriageManageableService();
+			locator.getPaymentMethodManageableService();
+			locator.getPrefectureManageableService();
+
+			locator.getService("DbFileManageableService");
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+    	locator.shutdown();
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }

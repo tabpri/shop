@@ -1,37 +1,40 @@
 
 package net.malta;
 
-import static org.junit.Assert.*;
-import net.malta.CriteriaSearchConfiguration;
-import org.junit.Test;
-import org.junit.Before;
+import mockit.integration.junit4.JMockit;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class CriteriaSearchConfigurationTest {
 
     private CriteriaSearchConfiguration configuration;
-    private Mockery mockery;
-    
+
     @Before
     public void setUp() {
         configuration = new CriteriaSearchConfiguration();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
     }
-    
+
+    @Test
+    public void test1() {
+    	configuration.isForceEagerLoading();
+    	configuration.setForceEagerLoading(false);
+    	configuration.setFirstResult(new Integer(1));
+    	configuration.getFirstResult();
+    	configuration.setFetchSize(new Integer(2));
+    	configuration.getFetchSize();
+    	configuration.setMaximumResultSize(new Integer(3));
+    	configuration.getMaximumResultSize();
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }

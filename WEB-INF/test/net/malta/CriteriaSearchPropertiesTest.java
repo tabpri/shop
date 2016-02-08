@@ -1,37 +1,51 @@
 
 package net.malta;
 
-import static org.junit.Assert.*;
-import net.malta.CriteriaSearchProperties;
-import org.junit.Test;
-import org.junit.Before;
+import mockit.integration.junit4.JMockit;
+import net.malta.model.PurchaseImpl;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class CriteriaSearchPropertiesTest {
 
     private CriteriaSearchProperties properties;
-    private Mockery mockery;
-    
+
     @Before
     public void setUp() {
-        properties = new CriteriaSearchProperties();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
+
+    	properties = new CriteriaSearchProperties();
     }
-    
+
+    @Test
+    public void testGetEmbeddedValues() {
+
+    	CriteriaSearchProperties.getEmbeddedValues(PurchaseImpl.class);
+    }
+
+    @Test
+    public void testGgetNavigableAssociationEndType1() {
+
+    	CriteriaSearchProperties.getNavigableAssociationEndType(PurchaseImpl.class, "choises");
+
+    	System.out.println("test exist[PurchaseImpl, choises]=" + CriteriaSearchProperties.getNavigableAssociationEndType(PurchaseImpl.class, "choises"));
+    }
+
+    @Test
+    public void testGgetNavigableAssociationEndType2() {
+
+    	CriteriaSearchProperties.getNavigableAssociationEndType(PurchaseImpl.class, "test");
+    	System.out.println("test not exist[PurchaseImpl, test]=" + CriteriaSearchProperties.getNavigableAssociationEndType(PurchaseImpl.class, "test"));
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }

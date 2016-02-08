@@ -2,36 +2,59 @@
 package net.malta.model;
 
 import static org.junit.Assert.*;
-import net.malta.model.DbFile;
-import org.junit.Test;
-import org.junit.Before;
+import mockit.integration.junit4.JMockit;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class DbFileTest {
 
     private DbFile file;
-    private Mockery mockery;
-    
+
+    private DbFile file2;
+
+    private DbFile file3;
+
     @Before
     public void setUp() {
-        file = new DbFile();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
     }
-    
+
+    @Test
+    public void test1() {
+    	file = DbFile.Factory.newInstance();
+
+    	file.setId(new Integer(1));
+    	file.setData("data".getBytes());
+
+    	file.getId();
+    	file.getData();
+
+    	file2 = DbFile.Factory.newInstance();
+    	file2.setId(new Integer(2));
+
+    	file3 = DbFile.Factory.newInstance();
+    	file3.setId(new Integer(1));
+
+    	assertTrue(file.equals(file));
+    	assertFalse(file.equals(Item.Factory.newInstance()));
+    	assertFalse(file.equals(file2));
+    	assertTrue(file.equals(file3));
+
+    	file.hashCode();
+    	DbFile.Factory.newInstance().hashCode();
+
+    	DbFile.Factory.newInstance("data".getBytes());
+
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }
