@@ -1,37 +1,46 @@
 
 package net.malta.web.utils;
 
-import static org.junit.Assert.*;
-import net.malta.web.utils.DeliveryMethodUtils;
-import org.junit.Test;
-import org.junit.Before;
+import javax.servlet.http.HttpServletRequest;
+
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.integration.junit4.JMockit;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class DeliveryMethodUtilsTest {
 
     private DeliveryMethodUtils utils;
-    private Mockery mockery;
-    
+
+    @Mocked
+    private HttpServletRequest httpServletRequest;
+
     @Before
     public void setUp() {
         utils = new DeliveryMethodUtils();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
     }
-    
+
+    @Test
+    public void testSetIntoSesssion() {
+
+    	new NonStrictExpectations() {{
+    		httpServletRequest.getParameter("deliverymethod"); result= "1"; result= "1";
+    	}};
+
+    	DeliveryMethodUtils.setIntoSesssion(httpServletRequest);
+
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }

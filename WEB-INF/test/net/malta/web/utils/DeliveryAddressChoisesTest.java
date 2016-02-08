@@ -2,36 +2,64 @@
 package net.malta.web.utils;
 
 import static org.junit.Assert.*;
-import net.malta.web.utils.DeliveryAddressChoises;
-import org.junit.Test;
-import org.junit.Before;
+
+import javax.servlet.ServletContext;
+
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
+import net.enclosing.util.HibernateSession;
+import net.malta.model.DeliveryAddress;
+import net.malta.model.Purchase;
+
+import org.hibernate.Session;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * @author Denis Zhdanov
  * @since 01/19/2016
  */
-@RunWith(JMock.class)
+@RunWith(JMockit.class)
 public class DeliveryAddressChoisesTest {
 
     private DeliveryAddressChoises choises;
-    private Mockery mockery;
-    
+
+	@Mocked
+	private Session session;
+
+	@Mocked
+	private ServletContext servletContext;
+
+	@Mocked
+    private Session hibernateSession;
+
     @Before
     public void setUp() {
-        choises = new DeliveryAddressChoises();
-        mockery = new JUnit4Mockery() {{
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }};
+    	choises = new DeliveryAddressChoises();
     }
-    
+
+    @Test
+    public void testOf1() {
+
+    	new MockUp<HibernateSession> () {
+    		@Mock public Session currentSession(ServletContext servletContext) {
+    			return hibernateSession;
+    		}
+		};
+
+		Purchase purchase = Purchase.Factory.newInstance();
+
+		DeliveryAddress deliveryAddress = DeliveryAddress.Factory.newInstance();
+
+		assertNotNull(DeliveryAddressChoises.Of(purchase, deliveryAddress, servletContext));
+
+    }
+
     @After
     public void checkExpectations() {
-        mockery.assertIsSatisfied();
     }
 }
