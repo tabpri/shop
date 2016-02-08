@@ -269,6 +269,13 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jp.storyteller.desktop.jar</systemPath>
         </dependency>
+        
+		<dependency>
+			<groupId>com.thetransactioncompany</groupId>
+			<artifactId>cors-filter</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+        
     </dependencies>
 
     <build>
