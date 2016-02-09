@@ -1,22 +1,10 @@
 package net.malta.web.app;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.malta.model.*;
-import net.malta.beans.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.text.SimpleDateFormat;
-
-import java.util.Iterator;
-import java.util.Vector;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import java.util.Date;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -24,14 +12,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
-
-import net.enclosing.util.HibernateSession;
-import net.storyteller.desktop.CopyProperties;
+import net.malta.model.PaymentMethod;
+import net.malta.model.json.mapper.PaymentMethodsMapper;
+import net.malta.web.utils.BeanUtil;
+import net.malta.web.utils.HibernateUtil;
+import net.malta.web.utils.JSONResponseUtil;
 
 
 public class PaymentMethodsAction extends Action{
@@ -41,48 +27,19 @@ public class PaymentMethodsAction extends Action{
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
 
-		Session session = new HibernateSession().currentSession(this
-				.getServlet().getServletContext());
-
-		Vector vector = new Vector();
-		Criteria criteria = session.createCriteria(PaymentMethod.class);
-
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonArray jsonElements = new JsonArray();
-
-		JsonObject paymentMethodsJson = new JsonObject();
-		paymentMethodsJson.addProperty("paymentMethods", gson.toJson(criteria.list()));
-		jsonElements.add(paymentMethodsJson);
-
-//		for (Iterator iter = criteria.list().iterator(); iter.hasNext();) {
-//			PaymentMethod paymentMethod = (PaymentMethod) iter.next();
-//			vector.add(paymentMethod);
-//		}
-		PaymentMethod paymentMethod = new PaymentMethodImpl();
-		PaymentMethodForm paymentMethodform = new PaymentMethodForm();
-		criteria = session.createCriteria(PaymentMethod.class);
-
-		if (req.getAttribute("form")== null && req.getParameter("id")!=null){
-			criteria.add(Restrictions.idEq(Integer.valueOf(req
-					.getParameter("id"))));
-			paymentMethod = (PaymentMethod) criteria.uniqueResult();
-			new CopyProperties(paymentMethod,paymentMethodform);
-		} else if(req.getAttribute("form")!=null){
-                        paymentMethodform = (PaymentMethodForm)req.getAttribute("form");
-			criteria.add(Restrictions.idEq(paymentMethodform.getId()));
-			paymentMethod = (PaymentMethod) criteria.uniqueResult();
+		Session session = null;		
+		try {
+			session = HibernateUtil.getCurrentSession(this);			
+			Criteria criteria = session.createCriteria(PaymentMethod.class);
+			List<PaymentMethod> paymentMethods = criteria.list();
+			
+			PaymentMethodsMapper paymentMethodsMapper = BeanUtil.getPaymentMethodsMapper(this.getServlet().getServletContext());
+			List<net.malta.model.json.PaymentMethod> paymentMethodsJson = paymentMethodsMapper.map(paymentMethods, new ArrayList<net.malta.model.json.PaymentMethod>());
+			JSONResponseUtil.writeResponseAsJSON(res, paymentMethodsJson);			
+		} finally {
+			HibernateUtil.closeSession(session);
 		}
-
-		req.setAttribute("model",paymentMethod);
-		req.setAttribute("form",paymentMethodform);
-
-		if(req.getParameter("displayexport") !=null){
-			return mapping.findForward("displayexport");
-		}
-
-		res.setContentType("application/json");
-		res.getWriter().print(gson.toJson(jsonElements));
-		return mapping.findForward("success");
+		return null;
 	}
 	
 	

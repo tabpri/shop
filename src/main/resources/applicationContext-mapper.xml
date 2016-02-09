@@ -26,5 +26,10 @@
 	<bean id="purchaseChoiseMapper" class="net.malta.model.json.mapper.PurchaseChoiseMapper">
 		<property name="choiseMapper" ref="choiseMapper"></property>
 	</bean>
-	
+
+	<bean id="paymentMethodMapper" class="net.malta.model.json.mapper.PaymentMethodMapper" />
+
+	<bean id="paymentMethodsMapper" class="net.malta.model.json.mapper.PaymentMethodsMapper">
+		<property name="paymentMethodMapper" ref="paymentMethodMapper"></property>
+	</bean>
 </beans>

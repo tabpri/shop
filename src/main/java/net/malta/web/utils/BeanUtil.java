@@ -5,6 +5,7 @@ import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import net.malta.model.json.mapper.PaymentMethodsMapper;
 import net.malta.model.json.mapper.ProductsMapper;
 import net.malta.model.json.mapper.PurchaseChoiseMapper;
 import net.malta.model.json.mapper.PurchaseMapper;
@@ -30,5 +31,9 @@ public class BeanUtil {
 
 	public static PurchaseMapper getPurchaseMapper(ServletContext context) {
 		return (PurchaseMapper) getBean("purchaseMapper", context);
+	}
+
+	public static PaymentMethodsMapper getPaymentMethodsMapper(ServletContext context) {
+		return (PaymentMethodsMapper) getBean("paymentMethodsMapper", context);
 	}
 }
