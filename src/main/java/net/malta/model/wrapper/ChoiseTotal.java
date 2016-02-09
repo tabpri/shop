@@ -22,5 +22,6 @@ public class ChoiseTotal implements ITotal<Choise> {
 		Integer priceWithTax = item.getPricewithtax();
 		Integer quantity = choise.getOrdernum();
 		choise.setPricewithtax( ( priceWithTax + shippingCost) * quantity );
+		choise.setCarriage( shippingCost * quantity );
 	}
 }
