@@ -9,7 +9,11 @@
 		<property name="productMapper" ref="productMapper"></property>
 	</bean>
 	
-	<bean id="choiseMapper" class="net.malta.model.json.mapper.ChoiseMapper"></bean>
+	<bean id="itemMapper" class="net.malta.model.json.mapper.ItemMapper" />
+	
+	<bean id="choiseMapper" class="net.malta.model.json.mapper.ChoiseMapper">
+		<property name="itemMapper" ref="itemMapper"></property>
+	</bean>
 
 	<bean id="choisesMapper" class="net.malta.model.json.mapper.ChoisesMapper">
 		<property name="choiseMapper" ref="choiseMapper"></property>		

@@ -15,6 +15,7 @@ public class Item implements Serializable {
 	private String name;
 	private String description;
 	private Integer pricewithtax;
+	private Integer carriage;
 	private String catchcopy;
 	
 	public String getCatchcopy() {
@@ -49,4 +50,10 @@ public class Item implements Serializable {
 		this.description = description;
 	}
 
+	public Integer getCarriage() {
+		return carriage;
+	}
+	public void setCarriage(Integer carriage) {
+		this.carriage = carriage;
+	}
 }
