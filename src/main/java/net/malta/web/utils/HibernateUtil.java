@@ -10,7 +10,7 @@ import net.enclosing.util.HibernateSession;
 
 public class HibernateUtil {
 	public static Session getCurrentSession(Action action) {
-		return new HibernateSession().currentSession(action.getServlet().getServletContext());		
+		return new HibernateSession().currentSession(action.getServlet().getServletContext(),10);		
 	}
 	
 	public static void closeSession(Session session) {

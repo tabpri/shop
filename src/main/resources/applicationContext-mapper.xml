@@ -32,4 +32,11 @@
 	<bean id="paymentMethodsMapper" class="net.malta.model.json.mapper.PaymentMethodsMapper">
 		<property name="paymentMethodMapper" ref="paymentMethodMapper"></property>
 	</bean>
+	
+	<bean id="deliveryAddressMapper" class="net.malta.model.json.mapper.DeliveryAddressMapper" />
+
+	<bean id="deliveryAddressesMapper" class="net.malta.model.json.mapper.DeliveryAddressesMapper">
+		<property name="deliveryAddressMapper" ref="deliveryAddressMapper"></property>
+	</bean>
+		
 </beans>
