@@ -1,7 +1,5 @@
 package net.malta.model.json.mapper;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.beanutils.BeanUtils;
 
 import net.malta.model.DeliveryAddress;
@@ -27,7 +25,7 @@ public class DeliveryAddressMapper implements IMapper<DeliveryAddress, net.malta
 				deliveryAddressJson.setPrefecturename(prefecture.getName());				
 			}
 			deliveryAddressJson.setPublicuserid(deliveryAddress.getPublicUser().getId());
-		} catch (IllegalAccessException | InvocationTargetException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 		return deliveryAddressJson;

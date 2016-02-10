@@ -31,4 +31,8 @@ public class PurchaseTotal implements ITotal<Purchase>{
 			purchase.setTotal(purchaseTotal);
 			purchase.setCarriage(carriageTotal);
 	}
+
+	public void setCarriage(int carriage) {
+        purchase.setCarriage(carriage);
+	}
 }

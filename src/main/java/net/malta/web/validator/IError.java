@@ -1,7 +1,7 @@
 /**
  * @author SB
  */
-package net.malta.beans;
+package net.malta.web.validator;
 
 public interface IError {
 

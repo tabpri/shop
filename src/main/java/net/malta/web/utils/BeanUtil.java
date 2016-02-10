@@ -17,7 +17,7 @@ public class BeanUtil {
 		return (ProductsMapper) getBean("productsMapper",context);
 	}
 	
-	private static Object getBean(String name, ServletContext context) {
+	public static Object getBean(String name, ServletContext context) {
 		ApplicationContext applicationContext = getApplicationContext(context);
 		return applicationContext.getBean(name);
 	}

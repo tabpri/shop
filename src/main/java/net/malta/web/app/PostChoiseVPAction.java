@@ -18,7 +18,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import net.malta.beans.ChoiseForm;
-import net.malta.beans.Errors;
 import net.malta.beans.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
@@ -31,6 +30,7 @@ import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.HibernateUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.PurchaseSessionUtil;
+import net.malta.web.validator.Errors;
 
 
 public class PostChoiseVPAction extends Action{
@@ -59,7 +59,7 @@ public class PostChoiseVPAction extends Action{
 				if ( choise == null ) { // not an existing choise with the combination of id, itemid, purchase id
 					Errors errors = new Errors();
 					errors.add(new ValidationError(CHOISE_DOESNOTEXIST,choiseform.getId(),choiseform.getItem(),purchase.getId()));					
-					sendErrorJSON(res,errors);
+					JSONResponseUtil.sendErrorJSON(res,errors);
 					return null;
 				}
 			} else { // new choise
@@ -80,12 +80,6 @@ public class PostChoiseVPAction extends Action{
 			HibernateUtil.closeSession(session);
 		}
 		return null;
-	}
-
-	// need to be encapsulated in a separate class for reuse
-	private void sendErrorJSON(HttpServletResponse res,Errors errors) throws IOException {
-		res.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
-		JSONResponseUtil.writeResponseAsJSON(res, errors);
 	}
 
 	private void checkForStock(Integer itemId) {

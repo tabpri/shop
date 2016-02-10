@@ -1,4 +1,9 @@
+/**
+ * @author SB
+ */
 package net.malta.beans;
+
+import net.malta.web.validator.IError;
 
 public class ValidationError implements IError {
 

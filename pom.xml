@@ -11,6 +11,7 @@
         <struts.version>1.2.2</struts.version>
         <hibernate.version>3.0.5</hibernate.version>
         <spring.version>1.2.7</spring.version>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
     </properties>
 
     <dependencies>

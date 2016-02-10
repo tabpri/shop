@@ -1,7 +1,7 @@
 /**
  * @author SB
  */
-package net.malta.beans;
+package net.malta.web.validator;
 
 import java.util.ArrayList;
 
@@ -11,5 +11,9 @@ public class Errors extends ArrayList<IError>{
 
 	public Errors() {
 		super();
+	}
+
+	public boolean hasErrors() {
+		return this.size() > 0;
 	}
 }
