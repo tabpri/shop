@@ -41,6 +41,16 @@ this.mail = mail;
 public String getMail(){
 return this.mail;
 }
+private int zip; // zipthree is zip
+
+public int getZip() {
+	return zip;
+}
+public void setZip(int zip) {
+	this.zip = zip;
+	setZipthree(zip);
+}
+
 private int zipthree;
 public void setZipthree(int zipthree){
 this.zipthree = zipthree;
@@ -209,13 +219,15 @@ this.fax = fax;
 public String getFax(){
 return this.fax;
 }
-private boolean registed;
-public void setRegisted(boolean registed){
-this.registed = registed;
+private boolean registered;
+
+public boolean isRegistered() {
+	return registered;
 }
-public boolean isRegisted(){
-return this.registed;
+public void setRegistered(boolean registered) {
+	this.registered = registered;
 }
+
 private boolean temp;
 public void setTemp(boolean temp){
 this.temp = temp;
@@ -378,7 +390,7 @@ return this.formFiles;
 public void reset(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request){	male =false;
 	removed =false;
 	delivertodifferentaddress =false;
-	registed =false;
+	registered =false;
 	temp =false;
 	hasgiftcard =false;
 }

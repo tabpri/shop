@@ -1,7 +1,10 @@
 package net.malta.web.app;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -14,103 +17,154 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import net.enclosing.util.StringFullfiller;
 import net.malta.beans.ChoiseForm;
+import net.malta.beans.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Item;
 import net.malta.model.Purchase;
 import net.malta.model.json.mapper.PurchaseChoiseMapper;
+import net.malta.model.wrapper.ChoiseTotal;
+import net.malta.model.wrapper.PurchaseTotal;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.HibernateUtil;
 import net.malta.web.utils.JSONResponseUtil;
+import net.malta.web.utils.PurchaseSessionUtil;
+import net.malta.web.validator.Errors;
 
 
 public class PostChoiseVPAction extends Action{
+	
+	private static final String CHOISE_DOESNOTEXIST = "CHOISE.DOESNOTEXIST";
+
 	public ActionForward execute(
 			ActionMapping mapping,
 			ActionForm form,
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
 
-		
-		Choise choise = new ChoiseImpl();
-		ChoiseForm choiseform = (ChoiseForm) form;
+		Session session = null;
 
-		choiseform.setPurchase(null);
-		Integer itemInt = choiseform.getItem();
-		choiseform.setItem(null);
-
-		Session session = HibernateUtil.getCurrentSession(this);
-		
-	
-		if(choiseform.getId() == null || choiseform.getId().intValue() == 0){
-			choise.setId(null);
-			choiseform.setId(null);
-		}else{
-			choise.setId(choiseform.getId());
-			Criteria criteria = session.createCriteria(Choise.class);
-			criteria.add(Restrictions.idEq(Integer.valueOf(req.getParameter("id"))));
-			choise = (Choise) criteria.uniqueResult();
-
-		}
-		choise.setOrdernum(choiseform.getOrdernum());
-		choise.setPricewithtax(choiseform.getPricewithtax());
-		choise.setWrapping(choiseform.isWrapping());
-		choise.setVarietychoise(choiseform.getVarietychoise());
-
-		StringFullfiller.fullfil(choise);
-        
-//		criteria2.add(Restrictions.idEq(purchaseInt));
-//		Purchase purchase = (Purchase) criteria2.uniqueResult();
-//		choise.setPurchase(purchase);
-		Criteria criteria2 = session.createCriteria(Item.class);
-		criteria2.add(Restrictions.idEq(itemInt));
-		Item item = (Item) criteria2.uniqueResult();
-		choise.setItem(item);
-		choise.setWp_posts_id(itemInt);
-		
-//		if(item.getStocknum()<=0){
-//			new HTTPGetRedirection(req, res, "ShowPurchase.do", null ,"zerostock=true");
-//			return null;
-//		}
-		
-		Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
-	
-		Criteria criteriaChoise = session.createCriteria(Choise.class);
-		criteriaChoise.add(Restrictions.eq("wp_posts_id", itemInt));
-		criteriaChoise.add(Restrictions.eq("purchase", purchase));
-		Choise ch = (Choise) criteriaChoise.uniqueResult();
-		if(ch == null) {
-			choise.setPurchase(purchase);
-			//choise.setPricewithtax(item.getPricewithtax());
-			//////////////////////////////////here the codes to get the price of wp_post using wp_post_id 
-			choise.setPricewithtax(getPriceOf(choise.getWp_posts_id(), session));
-			choise.setName(getNameOf(choise.getWp_posts_id(), session));
-			choise.setImg(getImgOf(choise.getWp_posts_id(), session));;
-//			choise.setPricewithtax( ( item.getPricewithtax() + choise.getItem().getCarriage().getValue()) );
-			if(choise.getOrdernum()==0)
-				choise.setOrdernum(1);
-			session.evict(purchase);
-			session.refresh(purchase);
+		try {
+			ChoiseForm choiseform = (ChoiseForm) form;
+			session = HibernateUtil.getCurrentSession(this);
+			HttpSession httpSession = req.getSession(false);
 			
-			//purchase.setTotal(purchase.getTotal() + choise.getPricewithtax() * choise.getOrdernum());
-			purchase.setTotal(purchase.getTotal() + choise.getPricewithtax());
-			Transaction transaction = session.beginTransaction();
-			session.saveOrUpdate(choise);
-			session.saveOrUpdate(purchase);
-			transaction.commit();
-			session.flush();
+			Purchase purchase = PurchaseSessionUtil.getPurchaseFromSession(httpSession, session);
+			
+			Choise choise = null;
+			boolean newchoise = false;
+			if( choiseform.getId() != null ){ // existing choise
+				choise = existingChoiceCheck(session,choiseform,purchase);
+				if ( choise == null ) { // not an existing choise with the combination of id, itemid, purchase id
+					Errors errors = new Errors();
+					errors.add(new ValidationError(CHOISE_DOESNOTEXIST,choiseform.getId(),choiseform.getItem(),purchase.getId()));					
+					JSONResponseUtil.sendErrorJSON(res,errors);
+					return null;
+				}
+			} else { // new choise
+				newchoise = true;
+			}
+			
+			// not implemented yet
+			checkForStock(choiseform.getItem());
+
+			if( newchoise ) {
+				choise = createNewChoise(session,choiseform,purchase);
+			} else {
+				choise = updateChoise(session,choiseform,choise,purchase);
+			}
+
+			sendJSON(res, choise);			
+		} finally {
+			HibernateUtil.closeSession(session);
 		}
+		return null;
+	}
+
+	private void checkForStock(Integer itemId) {
 		
+	}
+
+	private void sendJSON(HttpServletResponse res, Choise choise) throws IOException {
 		PurchaseChoiseMapper mapper = BeanUtil.getPurchaseChoiseMapper(this.getServlet().getServletContext());
 		net.malta.model.json.Choise choiseJSON = new net.malta.model.json.Choise();
 		mapper.map(choise, choiseJSON);
 		JSONResponseUtil.writeResponseAsJSON(res, choiseJSON);
-		
-		return null;
 	}
- 
+
+	private Choise existingChoiceCheck(Session session,ChoiseForm choiseform,Purchase purchase) throws Exception {
+		
+		Integer itemInt = choiseform.getItem();
+		Integer choiseid = choiseform.getId();
+		
+		Choise choise = null;
+		
+		Criteria criteria = session.createCriteria(Choise.class);
+		criteria.add(Restrictions.idEq(choiseid));
+		criteria.add(Restrictions.eq("wp_posts_id", itemInt));
+		criteria.add(Restrictions.eq("purchase", purchase));
+		choise = (Choise) criteria.uniqueResult();			
+		return choise;
+	}
+
+	private Choise updateChoise(Session session, ChoiseForm choiseform,Choise choise,Purchase purchase) {
+		choise.setPurchase(purchase);
+		setBasicAttributes(session,choiseform, choise);
+		calcTotals(purchase, choise);		
+		saveOrUpdate(session,purchase, choise);
+		return choise;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Choise createNewChoise(Session session, ChoiseForm choiseform,Purchase purchase) {
+
+		Choise choise = new ChoiseImpl();
+		choise.setPurchase(purchase);		
+		setBasicAttributes(session,choiseform, choise);
+		setAttributesFromWPPosts(session, choise);		
+		purchase.getChoises().add(choise);
+		//totals - choise and purchase
+		calcTotals(purchase, choise);
+		saveOrUpdate(session,purchase, choise);
+		return choise;
+	}
+
+	private void calcTotals(Purchase purchase, Choise choise) {
+		new ChoiseTotal(choise).calcAndSetTotal();		
+		new PurchaseTotal(purchase).calcAndSetTotal();
+	}
+
+	private void saveOrUpdate(Session session, Purchase purchase, Choise choise) {
+		session.evict(purchase);
+		Transaction transaction = session.beginTransaction();
+		session.saveOrUpdate(choise);
+		session.saveOrUpdate(purchase);
+		transaction.commit();
+		session.flush();
+	}
+
+	private void setAttributesFromWPPosts(Session session, Choise choise) {
+		Integer price = getPriceOf(choise.getWp_posts_id(), session);
+		choise.setName(getNameOf(choise.getWp_posts_id(), session));
+		choise.setImg(getImgOf(choise.getWp_posts_id(), session));;
+		choise.getItem().setPricewithtax(price);
+	}
+
+	public Choise setBasicAttributes(Session session,ChoiseForm choiseform,Choise choise) {
+		int ordernum = (choiseform.getOrdernum() == 0) ? 1 : choiseform.getOrdernum();		
+		choise.setOrdernum(ordernum);
+		choise.setWrapping(choiseform.isWrapping());
+		choise.setVarietychoise(choiseform.getVarietychoise());
+				
+		Criteria criteriaItem = session.createCriteria(Item.class);
+		criteriaItem.add(Restrictions.idEq(choiseform.getItem()));
+		Item item = (Item) criteriaItem.uniqueResult();
+		choise.setItem(item);
+		choise.setWp_posts_id(item.getId());
+		return choise;
+	}
+	
 	private String getImgOf(int wp_posts_id, Session session) {
 		 SQLQuery query = session.createSQLQuery("SELECT meta_value value FROM wp_postmeta where meta_key = 'product-thumbnail' and post_id = " + wp_posts_id);
 		 query.addScalar( "value", Hibernate.STRING); 

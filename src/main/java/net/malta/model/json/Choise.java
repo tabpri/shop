@@ -6,27 +6,20 @@ public class Choise implements Serializable{
 
 	private static final long serialVersionUID = 1749126775249703892L;
 
-	private Purchase purchase;
-
 	private Integer id;
-	private Integer item;
-	private String img;	
+	private String img;
 	private Integer ordernum;
 	private Integer pricewithtax;
 	private Boolean wrapping;
 	private String varietychoise;	
+	private Item item;
+	private Purchase purchase;	
 	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public Integer getItem() {
-		return item;
-	}
-	public void setItem(Integer item) {
-		this.item = item;
 	}
 	public Integer getOrdernum() {
 		return ordernum;
@@ -66,5 +59,10 @@ public class Choise implements Serializable{
 	public void setPurchase(Purchase purchase) {
 		this.purchase = purchase;
 	}
-
+	public Item getItem() {
+		return item;
+	}
+	public void setItem(Item item) {
+		this.item = item;
+	}	
 }

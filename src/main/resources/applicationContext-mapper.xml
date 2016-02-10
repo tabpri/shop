@@ -9,7 +9,11 @@
 		<property name="productMapper" ref="productMapper"></property>
 	</bean>
 	
-	<bean id="choiseMapper" class="net.malta.model.json.mapper.ChoiseMapper"></bean>
+	<bean id="itemMapper" class="net.malta.model.json.mapper.ItemMapper" />
+	
+	<bean id="choiseMapper" class="net.malta.model.json.mapper.ChoiseMapper">
+		<property name="itemMapper" ref="itemMapper"></property>
+	</bean>
 
 	<bean id="choisesMapper" class="net.malta.model.json.mapper.ChoisesMapper">
 		<property name="choiseMapper" ref="choiseMapper"></property>		
@@ -22,5 +26,23 @@
 	<bean id="purchaseChoiseMapper" class="net.malta.model.json.mapper.PurchaseChoiseMapper">
 		<property name="choiseMapper" ref="choiseMapper"></property>
 	</bean>
+
+	<bean id="paymentMethodMapper" class="net.malta.model.json.mapper.PaymentMethodMapper" />
+
+	<bean id="paymentMethodsMapper" class="net.malta.model.json.mapper.PaymentMethodsMapper">
+		<property name="paymentMethodMapper" ref="paymentMethodMapper"></property>
+	</bean>
 	
+	<bean id="deliveryAddressMapper" class="net.malta.model.json.mapper.DeliveryAddressMapper" />
+
+	<bean id="deliveryAddressesMapper" class="net.malta.model.json.mapper.DeliveryAddressesMapper">
+		<property name="deliveryAddressMapper" ref="deliveryAddressMapper"></property>
+	</bean>
+		
+	<bean id="publicUserFormValidator" class="net.malta.web.validator.PublicUserFormValidator">
+	</bean>
+
+	<bean id="publicUserMapper" class="net.malta.model.json.mapper.PublicUserMapper" >
+	</bean>
+		
 </beans>

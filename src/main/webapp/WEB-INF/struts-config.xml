@@ -52,7 +52,7 @@
     <action path="/DeleteChoise" type="net.malta.web.app.DeleteChoiseAction"/>
     <action path="/UpdatePurchaseForOrdernum" type="net.malta.web.app.UpdatePurchaseForOrdernumAction"/>
     <action path="/DeliveryAddressList" type="net.malta.web.app.DeliveryAddressListAction"/>
-    <action path="/PostPublicUserVP" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPAction">
+    <action path="/PostPublicUserVP" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPAction" scope="request" >
       <forward name="error" path="/PostPublicUserDetail.do"/>
     </action>
     <action path="/ShowPurchaseForThanks" type="net.malta.web.app.ShowPurchaseForThanksAction">

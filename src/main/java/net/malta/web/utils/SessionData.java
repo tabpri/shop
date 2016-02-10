@@ -26,6 +26,7 @@ public class SessionData {
 		session.evict(purchase);
 		session.refresh(purchase);
 		Transaction transaction = session.beginTransaction();
+		session.saveOrUpdate(publicUser);
 		session.saveOrUpdate(purchase);
 		transaction.commit();
 
