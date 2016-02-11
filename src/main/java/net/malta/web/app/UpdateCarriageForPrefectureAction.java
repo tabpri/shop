@@ -143,7 +143,7 @@ public class UpdateCarriageForPrefectureAction extends Action{
 		publicUser.setPhone(publicUserform.getPhone());
 		if(!publicUser.isRegisted()){
 			publicUser.setPassword(publicUserform.getPassword());
-			publicUser.setRegisted(publicUserform.isRegisted());
+			publicUser.setRegisted(publicUserform.isRegistered());
 		}
 		publicUser.setTemp(new Boolean(false));
 		//publicUser.setsetHasgiftcard(publicUserform.isHasgiftcard());
