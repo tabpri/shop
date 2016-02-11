@@ -12,6 +12,7 @@ public class PublicUserMapper implements IMapper<PublicUser, net.malta.model.jso
 		try {
 			BeanUtils.copyProperties(publicUserJSON, publicUser);
 			publicUserJSON.setZip(publicUser.getZipthree());
+			publicUserJSON.setPrefecture(publicUser.getPrefecture().getId());
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}		
