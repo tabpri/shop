@@ -20,6 +20,13 @@ this.kana = kana;
 public String getKana(){
 return this.kana;
 }
+private int zip;
+public int getZip() {
+	return zip;
+}
+public void setZip(int zip) {
+	this.zip = zip;
+}
 private int zipthree;
 public void setZipthree(int zipthree){
 this.zipthree = zipthree;

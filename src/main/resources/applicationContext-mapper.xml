@@ -39,10 +39,12 @@
 		<property name="deliveryAddressMapper" ref="deliveryAddressMapper"></property>
 	</bean>
 		
-	<bean id="publicUserFormValidator" class="net.malta.web.validator.PublicUserFormValidator">
-	</bean>
+	<bean id="publicUserMapper" class="net.malta.model.json.mapper.PublicUserMapper" ></bean>
 
-	<bean id="publicUserMapper" class="net.malta.model.json.mapper.PublicUserMapper" >
-	</bean>
-		
+	<bean id="choiseFormMapper" class="net.malta.beans.mapper.ChoiseFormMapper"></bean>
+
+	<bean id="publicUserFormMapper" class="net.malta.beans.mapper.PublicUserFormMapper"></bean>
+
+	<bean id="deliveryAddressFormMapper" class="net.malta.beans.mapper.DeliveryAddressFormMapper"></bean>
+				
 </beans>

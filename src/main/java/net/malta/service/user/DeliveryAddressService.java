@@ -1,0 +1,101 @@
+package net.malta.service.user;
+
+import java.util.List;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.malta.dao.user.DeliveryAddressDAO;
+import net.malta.error.Errors;
+import net.malta.model.DeliveryAddress;
+import net.malta.model.DeliveryAddressImpl;
+import net.malta.model.GiftCard;
+import net.malta.model.Prefecture;
+import net.malta.model.PublicUser;
+import net.malta.model.user.validator.DeliveryAddressValidator;
+import net.malta.service.meta.IGiftCardService;
+import net.malta.service.meta.IPrefectureService;
+
+public class DeliveryAddressService implements IDeliveryAddressService {
+	
+	private IPublicUserService publicUserService;
+	
+	private IPrefectureService prefectureService;
+	
+	private IGiftCardService giftCardService;
+
+	private DeliveryAddressDAO deliveryAddressDAO;
+	
+	private DeliveryAddressValidator deliveryAddressValidator;
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public DeliveryAddress addDeliveryAddress(Integer userId,DeliveryAddress deliveryAddress) {
+		return deliveryAddressUpdate(userId, deliveryAddress);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public DeliveryAddress updateDeliveryAddress(Integer userId, DeliveryAddress deliveryAddress) {
+		return deliveryAddressUpdate(userId, deliveryAddress);
+	}	
+
+	private DeliveryAddress deliveryAddressUpdate(Integer userId, DeliveryAddress deliveryAddress) {
+		
+		//validate
+		deliveryAddressValidator.validate(deliveryAddress, new Errors());
+		
+		//save
+		PublicUser user = publicUserService.getUser(userId);
+		deliveryAddress.setPublicUser(user);
+		Prefecture prefecture = prefectureService.getPrefecture(deliveryAddress.getPrefecture().getId());
+		deliveryAddress.setPrefecture(prefecture);
+		if ( deliveryAddress.getGiftCard() != null ) {
+			GiftCard giftCard = giftCardService.getGiftCard(deliveryAddress.getGiftCard().getId());
+			deliveryAddress.setGiftCard(giftCard);
+			deliveryAddress.setHasgiftcard(true);
+		}		
+		deliveryAddressDAO.saveOrUpdate((DeliveryAddressImpl) deliveryAddress);
+		initialize(deliveryAddress);
+		return deliveryAddress;
+	}
+
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public List<DeliveryAddress> getDeliveryAddresses(Integer userId) {
+		List<DeliveryAddress> deliveryAddresses = deliveryAddressDAO.getDeliveryAddresses(userId);
+		for (DeliveryAddress deliveryAddress : deliveryAddresses) {
+			initialize(deliveryAddress);
+		}
+		return deliveryAddresses;
+	}
+
+	private void initialize(DeliveryAddress deliveryAddress) {
+		deliveryAddress.getPrefecture().getName();
+		if ( deliveryAddress.getGiftCard() != null ) {
+			deliveryAddress.getGiftCard().getName();			
+		}
+		deliveryAddress.getPublicUser().getName();
+	}
+	
+	public void setPublicUserService(IPublicUserService publicUserService) {
+		this.publicUserService = publicUserService;
+	}
+
+	public void setPrefectureService(IPrefectureService prefectureService) {
+		this.prefectureService = prefectureService;
+	}
+
+	public void setGiftCardService(IGiftCardService giftCardService) {
+		this.giftCardService = giftCardService;
+	}
+
+	public void setDeliveryAddressDAO(DeliveryAddressDAO deliveryAddressDAO) {
+		this.deliveryAddressDAO = deliveryAddressDAO;
+	}
+
+	public void setDeliveryAddressValidator(DeliveryAddressValidator deliveryAddressValidator) {
+		this.deliveryAddressValidator = deliveryAddressValidator;
+	}	
+}

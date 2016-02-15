@@ -1,3 +1,6 @@
+/**
+ * @author SB
+ */
 package net.malta.web.app;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class ProductListAction extends Action{
 			HttpServletResponse res) throws Exception{
 
 
-		Session session = HibernateUtil.getCurrentSession(this);
+		Session session = HibernateUtil.openSession(this);
 		
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.addOrder(Order.desc("id"));
@@ -49,7 +52,7 @@ public class ProductListAction extends Action{
         }
         
 		List<Product> productsList = criteria.list();
-		ArrayList<net.malta.model.json.Product> productsJSON = new ArrayList<net.malta.model.json.Product>();
+		ArrayList<net.malta.model.product.json.Product> productsJSON = new ArrayList<net.malta.model.product.json.Product>();
 		
 		ProductsMapper productsMapper = BeanUtil.getProductsMapper(this.getServlet().getServletContext());
 		productsMapper.map(productsList, productsJSON);

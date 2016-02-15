@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.malta.web.validator.Errors;
+import net.malta.error.Errors;
 
 public class JSONResponseUtil {
 
@@ -14,6 +14,7 @@ public class JSONResponseUtil {
 		response.setContentType(APPLICATION_JSON);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getWriter().print(JSONUtil.serialize(o));
+		response.flushBuffer();
 	}
 	
 	public static void sendErrorJSON(HttpServletResponse res,Errors errors) throws IOException {

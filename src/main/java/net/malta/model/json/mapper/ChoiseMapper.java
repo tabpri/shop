@@ -1,14 +1,15 @@
 package net.malta.model.json.mapper;
 
+import net.malta.mapper.IMapper;
 import net.malta.model.Choise;
-import net.malta.model.json.Item;
+import net.malta.model.product.json.Item;
 
-public class ChoiseMapper implements IMapper<Choise, net.malta.model.json.Choise>{
+public class ChoiseMapper implements IMapper<Choise, net.malta.model.purchase.json.Choise>{
 
 	private ItemMapper itemMapper;
 	
 	@Override
-	public net.malta.model.json.Choise map(Choise choise, net.malta.model.json.Choise choiseJSON) {
+	public net.malta.model.purchase.json.Choise map(Choise choise, net.malta.model.purchase.json.Choise choiseJSON) {
 		choiseJSON.setId(choise.getId());
 		choiseJSON.setImg(choise.getImg());
 		// item mapping

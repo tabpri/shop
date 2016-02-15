@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byType">
+
+	<bean id="prefectureDAO" class="net.malta.dao.meta.PrefectureDAO"></bean>
+	
+	<bean id="giftCardDAO" class="net.malta.dao.meta.GiftCardDAO"></bean>
+
+	<bean id="wpPostDAO" class="net.malta.dao.post.WPPostsDAO"></bean>
+
+	<bean id="itemDAO" class="net.malta.dao.product.ItemDAO" />
+
+	<bean id="publicUserDAO" class="net.malta.dao.user.PublicUserDAO" />
+
+	<bean id="deliveryAddressDAO" class="net.malta.dao.user.DeliveryAddressDAO" />
+
+	<bean id="choiseDAO" class="net.malta.dao.purchase.ChoiseDAO" />
+
+	<bean id="purchaseDAO" class="net.malta.dao.purchase.PurchaseDAO" />
+
+	<bean id="paymentMethodDAO" class="net.malta.dao.payment.PaymentMethodDAO" />
+	
+	<bean id="prefectureServiceTarget" class="net.malta.service.meta.PrefectureService"></bean>
+	
+	<bean id="prefectureService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="prefectureServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="giftCardServiceTarget" class="net.malta.service.meta.GiftCardService"></bean>
+	<bean id="giftCardService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="giftCardServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+
+	<bean id="wpPostServiceTarget" class="net.malta.service.post.WPPostService"></bean>
+
+	<bean id="wpPostsService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="wpPostServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="itemServiceTarget" class="net.malta.service.product.ItemService" />
+
+	<bean id="itemService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="itemServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+
+
+	<bean id="publicUserServiceTarget" class="net.malta.service.user.PublicUserService"></bean>
+
+	<bean id="publicUserValidator" class="net.malta.model.user.validator.PublicUserValidator"></bean>
+	
+	<bean id="publicUserService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="publicUserServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="deliveryAddressServiceTarget" class="net.malta.service.user.DeliveryAddressService"></bean>
+
+	<bean id="deliveryAddressValidator" class="net.malta.model.user.validator.DeliveryAddressValidator"></bean>
+
+	<bean id="deliveryAddressService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="deliveryAddressServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="purchaseServiceTarget" class="net.malta.service.purchase.PurchaseService" />
+
+	<bean id="purchaseService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="purchaseServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="choiseServiceTarget" class="net.malta.service.purchase.ChoiseService">
+	</bean>
+	
+	<bean id="choiseService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="choiseServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+	
+
+	<bean id="paymentServiceTarget" class="net.malta.service.payment.PaymentService" />
+
+	<bean id="paymentService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="paymentServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+</beans>
