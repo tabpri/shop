@@ -3,7 +3,7 @@
  */
 package net.malta.beans;
 
-import net.malta.web.validator.IError;
+import net.malta.error.IError;
 
 public class ValidationError implements IError {
 

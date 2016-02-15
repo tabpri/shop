@@ -2,15 +2,16 @@ package net.malta.model.json.mapper;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import net.malta.mapper.IMapper;
 import net.malta.model.DeliveryAddress;
 import net.malta.model.GiftCard;
 import net.malta.model.Prefecture;
 
-public class DeliveryAddressMapper implements IMapper<DeliveryAddress, net.malta.model.json.DeliveryAddress> {
+public class DeliveryAddressMapper implements IMapper<DeliveryAddress, net.malta.model.user.json.DeliveryAddress> {
 
 	@Override
-	public net.malta.model.json.DeliveryAddress map(DeliveryAddress deliveryAddress,
-			net.malta.model.json.DeliveryAddress deliveryAddressJson) {
+	public net.malta.model.user.json.DeliveryAddress map(DeliveryAddress deliveryAddress,
+			net.malta.model.user.json.DeliveryAddress deliveryAddressJson) {
 		try {
 			BeanUtils.copyProperties(deliveryAddressJson, deliveryAddress);
 			deliveryAddressJson.setZip(deliveryAddress.getZipthree());

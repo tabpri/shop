@@ -1,86 +1,74 @@
+/**
+ * @author SB
+ */
 package net.malta.web.app;
 
-import java.util.Iterator;
-
-import net.malta.model.*;
-import net.malta.model.crud.*;
-
-
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.enclosing.util.HTTPGetRedirection;
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import net.enclosing.util.HibernateSession;
-
-
+import net.malta.model.Purchase;
+import net.malta.model.json.mapper.PurchaseMapper;
+import net.malta.model.validator.ValidationException;
+import net.malta.service.purchase.IChoiseService;
+import net.malta.service.purchase.IPurchaseService;
+import net.malta.web.model.PurchaseInfo;
+import net.malta.web.utils.BeanUtil;
+import net.malta.web.utils.JSONResponseUtil;
+import net.malta.web.utils.PurchaseSessionUtil;
+import net.malta.web.utils.SessionData;
 
 public class DeleteChoiseAction extends Action{
+	
+	//private final Logger logger = Logger.getLogger(DeleteChoiseAction.class.getName());
+	
 	public ActionForward execute(
 			ActionMapping mapping,
 			ActionForm form,
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
-
-
-
-		Session session = new HibernateSession().currentSession(this
-				.getServlet().getServletContext());
-
-		Transaction transaction = session.beginTransaction();
-		Criteria criteria = session.createCriteria(Choise.class);
-		criteria.add(Restrictions.idEq(Integer.valueOf(req.getParameter("id"))));
-
-		Choise choise = (Choise) criteria.uniqueResult();
-		session.delete(choise); 
-		transaction.commit();
-		session.flush();
 		
-		Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
-		session.evict(purchase);
-		session.refresh(purchase);
-		int total = 0;
-		for (Iterator iterator = purchase.getChoises().iterator(); iterator.hasNext();) {
-			Choise choise2 = (Choise) iterator.next();
-			total += choise2.getPricewithtax();
-//			total += choise2.getPricewithtax() * choise2.getOrdernum();
-		}
-		
-//		PurchaseForm purchaseform = new PurchaseForm();
-//		Criteria criteria = session.createCriteria(Purchase.class);
-//
-//		if (req.getAttribute("form")== null && req.getParameter("id")!=null){
-//			criteria.add(Restrictions.idEq(Integer.valueOf(req
-//					.getParameter("id"))));
-//			purchase = (Purchase) criteria.uniqueResult();
-//			new CopyProperties(purchase,purchaseform);
-//		} else if(req.getAttribute("form")!=null){
-//                        purchaseform = (PurchaseForm)req.getAttribute("form");
-//			criteria.add(Restrictions.idEq(purchaseform.getId()));
-//			purchase = (Purchase) criteria.uniqueResult();
-//		}
-//                   
-		purchase.setTotal(total);
-		transaction = session.beginTransaction();
-		session.saveOrUpdate(purchase);
-		transaction.commit();
-		session.flush();
+		try {
+			
+			Integer choiseId = Integer.parseInt(req.getParameter("id"));
 
-		new HTTPGetRedirection(req, res, "ShowPurchase.html",null);
+			Integer purchaseId = deleteChoise(req, choiseId);
+			
+			sendJSON(res, purchaseId);
+					
+		} catch(ValidationException ve) {			
+			JSONResponseUtil.sendErrorJSON(res, ve.getErrors());
+		}		
 		return null;
+	}
+
+	private Integer deleteChoise(HttpServletRequest req, Integer choiseId) {
+		
+		PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
+
+		Integer purchaseId = purchaseInfo.getPurchaseId();
+
+		IChoiseService choiseService = (IChoiseService) BeanUtil.getBean("choiseService", 
+				this.getServlet().getServletContext());
+
+		choiseService.deleteChoise(purchaseId, choiseId);
+		return purchaseId;
+	}
+
+	private void sendJSON(HttpServletResponse res, Integer purchaseId) throws IOException {
+		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
+				this.getServlet().getServletContext());			
+
+		Purchase purchase = purchaseService.getPurchase(purchaseId);
+		
+		PurchaseMapper purchaseMapper = BeanUtil.getPurchaseMapper(this.getServlet().getServletContext());
+		net.malta.model.purchase.json.Purchase purchaseJSON = purchaseMapper.map(purchase, new net.malta.model.purchase.json.Purchase());
+		JSONResponseUtil.writeResponseAsJSON(res,purchaseJSON);
 	}
 }

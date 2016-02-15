@@ -41,14 +41,13 @@ this.mail = mail;
 public String getMail(){
 return this.mail;
 }
-private int zip; // zipthree is zip
+private int zip;
 
 public int getZip() {
 	return zip;
 }
 public void setZip(int zip) {
 	this.zip = zip;
-	setZipthree(zip);
 }
 
 private int zipthree;

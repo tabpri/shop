@@ -240,14 +240,6 @@
         </dependency>
 
         <dependency>
-            <groupId>malta-core-1.0</groupId>
-            <artifactId>malta-core-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/malta-core-1.0.jar</systemPath>
-        </dependency>
-
-        <dependency>
             <groupId>malta-common-1.0</groupId>
             <artifactId>malta-common-1.0</artifactId>
             <version>1.0</version>

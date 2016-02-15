@@ -37,7 +37,7 @@ public class JSONUtil {
 		choise.setItem(item);
 		choise.setPurchase(purchase);
 		purchase.getChoises().add(choise);
-		System.out.println(serialize(mapper.map(purchase, new net.malta.model.json.Purchase())));
+		System.out.println(serialize(mapper.map(purchase, new net.malta.model.purchase.json.Purchase())));
 
 	}
 }
