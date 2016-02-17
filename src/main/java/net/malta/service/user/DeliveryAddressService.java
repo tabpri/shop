@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import net.malta.dao.user.DeliveryAddressDAO;
 import net.malta.error.Errors;
 import net.malta.model.DeliveryAddress;
-import net.malta.model.DeliveryAddressImpl;
 import net.malta.model.GiftCard;
 import net.malta.model.Prefecture;
 import net.malta.model.PublicUser;
@@ -34,6 +33,7 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 		return deliveryAddressUpdate(userId, deliveryAddress);
 	}
 
+	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)	
 	public DeliveryAddress updateDeliveryAddress(Integer userId, DeliveryAddress deliveryAddress) {
@@ -55,7 +55,7 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 			deliveryAddress.setGiftCard(giftCard);
 			deliveryAddress.setHasgiftcard(true);
 		}		
-		deliveryAddressDAO.saveOrUpdate((DeliveryAddressImpl) deliveryAddress);
+		deliveryAddressDAO.saveOrUpdate(deliveryAddress);
 		initialize(deliveryAddress);
 		return deliveryAddress;
 	}
@@ -70,6 +70,14 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 		}
 		return deliveryAddresses;
 	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)		
+	public DeliveryAddress getDeliveryAddress(Integer userId, Integer id) {
+		DeliveryAddress deliveryAddress = deliveryAddressDAO.getDeliveryAddress(userId, id);
+		initialize(deliveryAddress);
+		return deliveryAddress;
+	}	
 
 	private void initialize(DeliveryAddress deliveryAddress) {
 		deliveryAddress.getPrefecture().getName();
@@ -97,5 +105,6 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 
 	public void setDeliveryAddressValidator(DeliveryAddressValidator deliveryAddressValidator) {
 		this.deliveryAddressValidator = deliveryAddressValidator;
-	}	
+	}
+
 }

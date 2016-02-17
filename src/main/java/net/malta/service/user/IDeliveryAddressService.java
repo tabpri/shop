@@ -12,4 +12,6 @@ public interface IDeliveryAddressService {
 
 	public List<DeliveryAddress> getDeliveryAddresses(Integer userId);
 
+	public DeliveryAddress getDeliveryAddress(Integer userId,Integer id);
+
 }
