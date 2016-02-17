@@ -21,6 +21,7 @@ public class DeliveryAddressFormMapper implements IMapper<DeliveryAddressForm, D
 		deliveryAddress.setZipfour(form.getZipfour());
 		deliveryAddress.setPref(form.getPref());
 		deliveryAddress.setBuildingname(form.getBuildingname());
+		deliveryAddress.setCity(form.getCity());		
 		deliveryAddress.setPhone(form.getPhone());
 		deliveryAddress.setPreferreddate(form.getPreferreddate());
 		deliveryAddress.setPreferredtime(form.getPreferredtime());

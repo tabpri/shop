@@ -20,6 +20,7 @@ public class PublicUserFormMapper implements IMapper<PublicUserForm, PublicUser>
 		user.setMail(form.getMail());
 		user.setAddress(form.getAddress());
 		user.setBuildingname(form.getBuildingname());
+		user.setCity(form.getCity());
 		user.setRegisted(form.isRegistered());
 		user.setFax(form.getFax());
 		user.setPhone(form.getPhone());

@@ -55,6 +55,16 @@ this.buildingname = buildingname;
 public String getBuildingname(){
 return this.buildingname;
 }
+
+private String city;
+
+public String getCity() {
+	return city;
+}
+public void setCity(String city) {
+	this.city = city;
+}
+
 private String phone;
 public void setPhone(String phone){
 this.phone = phone;

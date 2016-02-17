@@ -16,7 +16,8 @@ public class DeliveryAddress implements Serializable {
     private String phone;
     private String address;
     private String buildingname;
-    private String pref;
+    private String city;
+	private String pref;
     private boolean hasgiftcard;
     private Integer giftcardid;
 	private String giftcardname;
@@ -157,5 +158,13 @@ public class DeliveryAddress implements Serializable {
 
 	public void setPublicuserid(Integer publicuserid) {
 		this.publicuserid = publicuserid;
+	}
+	
+    public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}	
 }

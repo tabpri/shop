@@ -708,4 +708,16 @@ public abstract class PublicUser
     }
     
 // HibernateEntity.vsl merge-point
+    
+    // city - added by SB
+    private String city;
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+    
 }

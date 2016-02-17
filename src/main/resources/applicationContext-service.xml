@@ -22,6 +22,8 @@
 
 	<bean id="paymentMethodDAO" class="net.malta.dao.payment.PaymentMethodDAO" />
 	
+	<bean id="deliveryAddressChoiseDAO" class="net.malta.dao.purchase.DeliveryAddressChoiseDAO" />
+	
 	<bean id="prefectureServiceTarget" class="net.malta.service.meta.PrefectureService"></bean>
 	
 	<bean id="prefectureService"
@@ -125,7 +127,20 @@
 		</property>
 	</bean>
 	
+	<bean id="deliveryAddresschoiseServiceTarget" class="net.malta.service.purchase.DeliveryAddressChoiseService">
+	</bean>
+	
+	<bean id="deliveryAddressChoiseService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="deliveryAddresschoiseServiceTarget" />
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
 
+	
 	<bean id="paymentServiceTarget" class="net.malta.service.payment.PaymentService" />
 
 	<bean id="paymentService"
