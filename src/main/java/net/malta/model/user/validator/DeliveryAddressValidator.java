@@ -8,6 +8,7 @@ import net.malta.model.DeliveryAddress;
 import net.malta.model.validator.IValidator;
 import net.malta.model.validator.ValidationException;
 import net.malta.model.validator.constants.DeliveryAddressConstants;
+import net.malta.model.validator.constants.PublicUserConstants;
 
 public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 
@@ -41,6 +42,11 @@ public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 		}
 		if( deliveryAddress.getPrefecture().getId() == 0){
 			errors.add(new ValidationError(DeliveryAddressConstants.PREFECTUREISBLANK, blank));			
+		}
+
+		String city = deliveryAddress.getCity();
+		if (StringUtils.isBlank(city)) {
+			errors.add(new ValidationError(DeliveryAddressConstants.CITY_ISBLANK, blank));
 		}
 
 		if ( errors.hasErrors() ) {

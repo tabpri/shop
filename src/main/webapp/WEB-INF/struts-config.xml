@@ -97,6 +97,8 @@
     <action path="/PostDeliveryAddressVP" name="DeliveryAddressForm" type="net.malta.web.app.PostDeliveryAddressVPAction" scope="request">
       <forward name="error" path="/PostDeliveryAddressDetail.do"/>
     </action>
+    <action path="/PostDeliveryAddressChoisesVP" name="DeliveryAddressChoiseForm" type="net.malta.web.app.PostDeliveryAddressChoisesVPAction" scope="request">
+    </action>    
     <action path="/GiftCardList" type="net.malta.web.app.GiftCardListAction">
       <forward name="success" path="/pages/app/GiftCardList.jsp"/>
     </action>
@@ -109,7 +111,6 @@
     <action path="/PostProductVP" name="ProductForm" type="net.malta.web.app.PostProductVPAction">
       <forward name="error" path="/PostProductDetail.do"/>
     </action>
-    <action path="/UpdateDeliveryAddressChoise" type="net.malta.web.app.UpdateDeliveryAddressChoiseAction"/>
     <action path="/PostPublicUserVPForPassword" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPForPasswordAction"/>
     <action path="/PostPurchaseVPChoosingPaymentMethod" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPChoosingPaymentMethodAction"/>
     <action path="/AttachmentFormFileUploadAddingToProductForThumnail" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForThumnailAction">

@@ -65,10 +65,14 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 		if (StringUtils.isBlank(phone)) {
 			errors.add(new ValidationError(PublicUserConstants.PHONE_ISBLANK, blank));
 		}
-		
+
+		String city = user.getCity();
+		if (StringUtils.isBlank(city)) {
+			errors.add(new ValidationError(PublicUserConstants.CITY_ISBLANK, blank));
+		}
+
 		if ( errors.hasErrors() ) {
 			throw new ValidationException(errors);
 		}
 	}
-
 }

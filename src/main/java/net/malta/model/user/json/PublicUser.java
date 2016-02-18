@@ -17,6 +17,7 @@ public class PublicUser implements Serializable{
 	private int zip;
 	private String pref;
 	private String buildingname;
+	private String city;	
 	private String phone;
 	private Integer fax;
 	private Integer prefecture;
@@ -93,5 +94,11 @@ public class PublicUser implements Serializable{
 	}
 	public void setFax(Integer fax) {
 		this.fax = fax;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
 	}	
 }

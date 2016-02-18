@@ -34,6 +34,9 @@
         <property name="buildingname" type="java.lang.String">
             <column name="BUILDINGNAME" not-null="true" unique="false" sql-type="VARCHAR(255) BINARY"/>
         </property>
+        <property name="city" type="java.lang.String">
+            <column name="CITY" not-null="true" unique="false" sql-type="VARCHAR(255) BINARY"/>
+        </property>        
         <property name="pref" type="java.lang.String">
             <column name="PREF" not-null="true" unique="false" sql-type="VARCHAR(255) BINARY"/>
         </property>

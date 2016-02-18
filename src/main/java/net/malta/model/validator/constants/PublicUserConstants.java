@@ -12,5 +12,6 @@ public interface PublicUserConstants {
 	public static final String FAX_ISBLANK = "PUBLICUSER.FAXISBLANK";
 	public static final String FAX_ISNOTNUMERIC = "PUBLICUSER.FAXISNOTNUMERIC";
 	public static final String PHONE_ISBLANK = "PUBLICUSER.PHONEISBLANK";
+	public static final String CITY_ISBLANK = "PUBLICUSER.CITYISBLANK";
 	
 }
