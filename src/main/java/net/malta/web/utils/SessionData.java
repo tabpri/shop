@@ -72,6 +72,8 @@ public class SessionData {
 		cookie.setValue(userIdString);
 		cookie.setComment("hoge");
 		cookie.setMaxAge(60 * 60 * 168);
+		System.out.println("setting the cookie path to / -----------------------------------");
+		cookie.setPath("/");
 		res.addCookie(cookie); 		
 	}
 	
