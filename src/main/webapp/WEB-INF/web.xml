@@ -75,7 +75,12 @@
 
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.do</url-pattern>		
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.html</url-pattern>		
 	</servlet-mapping>
 
 	<!-- <error-page> <exception-type>java.lang.Exception</exception-type> <location>/error.jsp</location> 

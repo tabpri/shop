@@ -3,9 +3,6 @@ package net.malta.web.app;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import net.enclosing.util.HibernateSession;
 import net.malta.beans.ItemForm;
 import net.malta.model.Carriage;
@@ -62,11 +59,12 @@ public class PostItemDetailAction extends Action{
 		req.setAttribute("model",item);
 		req.setAttribute("form",itemform);
 
-		Criteria criteriaCarriage= session.createCriteria(Carriage.class);
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		res.setContentType("application/json");
-		res.getWriter().print(gson.toJson(criteriaCarriage.list()));
+Criteria criteriaCarriage= session.createCriteria(Carriage.class);
+			req.setAttribute("Carriages", criteriaCarriage.list());
+
+ 
+		
 		return mapping.findForward("success");
 	}
 	

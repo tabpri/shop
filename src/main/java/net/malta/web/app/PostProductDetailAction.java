@@ -3,10 +3,6 @@ package net.malta.web.app;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.malta.model.*;
 import net.malta.beans.*;
 
@@ -36,6 +32,7 @@ public class PostProductDetailAction extends Action{
 		Session session = new HibernateSession().currentSession(this
 				.getServlet().getServletContext());
 
+
 		Product product = new ProductImpl();
 		ProductForm productform = new ProductForm();
 		Criteria criteria = session.createCriteria(Product.class);
@@ -50,25 +47,19 @@ public class PostProductDetailAction extends Action{
 			criteria.add(Restrictions.idEq(productform.getId()));
 			product = (Product) criteria.uniqueResult();
 		}
+		
 
 		req.setAttribute("model",product);
 		req.setAttribute("form",productform);
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonArray jsonElements = new JsonArray();
 
 		Criteria criteriaCategory= session.createCriteria(Category.class);
-		JsonObject categorysJson = new JsonObject();
-		categorysJson.addProperty("Categorys", gson.toJson(criteriaCategory.list()));
-		jsonElements.add(categorysJson);
+		req.setAttribute("Categorys", criteriaCategory.list());
 
 		Criteria criteriaCarriage= session.createCriteria(Carriage.class);
-		JsonObject carriageJson = new JsonObject();
-		carriageJson.addProperty("Carriages", gson.toJson(criteriaCarriage.list()));
-		jsonElements.add(carriageJson);
+					req.setAttribute("Carriages", criteriaCarriage.list());
 
-		res.setContentType("application/json");
-		res.getWriter().print(gson.toJson(jsonElements));
+		 
 		return mapping.findForward("success");
 	}
 }

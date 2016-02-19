@@ -31,14 +31,14 @@ public class PostItemVPAction extends Action{
 			ActionForm form,
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
-		if(req.getScheme().equals("http")) {
+/*		if(req.getScheme().equals("http")) {
 			res.sendRedirect("https://www.malta-net.jp/PostItemVP.do?item=" + req.getParameter("item"));
 			System.err.println("it should be working.---------------------");
 			return null;
 		}else{
 			System.err.println("not http. the scheme is " + req.getScheme());
 		}
-
+*/
 		Session session = new HibernateSession().currentSession(this.getServlet().getServletContext());
 		Item item = new ItemImpl();
 		ItemForm itemform = (ItemForm) form;
@@ -132,7 +132,7 @@ public class PostItemVPAction extends Action{
 			return null;
 		}
 		
-		new HTTPGetRedirection(req, res, "PostProductDetail.html", item.getProduct().getId().toString());
+		new HTTPGetRedirection(req, res, "PostProductDetail.do", item.getProduct().getId().toString());
 		return null;
 	}
 }
