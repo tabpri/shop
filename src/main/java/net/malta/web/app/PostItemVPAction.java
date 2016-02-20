@@ -132,7 +132,7 @@ public class PostItemVPAction extends Action{
 			return null;
 		}
 		
-		new HTTPGetRedirection(req, res, "PostProductDetail.do", item.getProduct().getId().toString());
+		new HTTPGetRedirection(req, res, "PostProductDetail.html", item.getProduct().getId().toString());
 		return null;
 	}
 }

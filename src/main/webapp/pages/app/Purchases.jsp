@@ -140,7 +140,7 @@
                         </a>
                         </display:column>--%>
  <display:column media="html" sortable="true" title="ID"><nobr>
- <a href="ShowPurchase.do?id=${row.id}">
+ <a href="ShowPurchaseAdmin.do?id=${row.id}">
 ${row.id}
 </a>
 </display:column>
@@ -161,10 +161,11 @@ ${row.total}</nobr>
 ${row.paymentMethod.name}</nobr>
 </display:column>
 
+<%--  
 <display:column media="html" sortable="true" title="削除"><nobr>
 <input type="submit" name="button" id="button" value="削除" 
 onClick="javascript:if(window.confirm('削除してもよろしいですか？')){location.href='DeletePurchase.do?id=${row.id}';}"/>
-</display:column>
+</display:column>--%>
 <%--<display:column media="html" sortable="true" title="削除"><nobr>
 ${row.totalordernum}</nobr>
 </display:column>
