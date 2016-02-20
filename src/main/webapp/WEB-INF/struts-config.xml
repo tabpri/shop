@@ -43,6 +43,9 @@
     <action path="/Admin" type="net.malta.web.app.AdminAction">
       <forward name="success" path="/pages/app/Admin.jsp"/>
     </action>
+    <action path="/ShowPurchaseAdmin" type="net.malta.web.app.ShowPurchaseAdminAction">
+      <forward name="success" path="/pages/app/ShowPurchaseAdmin.jsp"/>    
+    </action>
     <action path="/ShowPurchaseForConfirmation" type="net.malta.web.app.ShowPurchaseForConfirmationAction"/>
     <action path="/ShowPublicUserForPassword" type="net.malta.web.app.ShowPublicUserForPasswordAction"/>
     <action path="/DeletePublicUser" type="net.malta.web.app.DeletePublicUserAction"/>
