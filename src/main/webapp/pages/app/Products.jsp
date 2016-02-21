@@ -123,5 +123,8 @@
 			    </a>
 			</display:column>
 		</display:table>
+		<div id="productadd" >
+			&nbsp;&nbsp;<a href="PostProductDetail.do">製品を追加</a>
+		</div>		
 	</tiles:put>
 </tiles:insert>

@@ -88,6 +88,7 @@ public class PostProductVPAction extends Action{
 		}
 		product.setDate(new Date());
 		product.setSize(productform.getSize());
+		product.setNo(productform.getNo());		
 		
 		Item item = null;
 		if(MainItem.Of((Object)product, session) !=null){
@@ -106,6 +107,7 @@ public class PostProductVPAction extends Action{
 		item.setNote(productform.getNote());
 		item.setStocknum(productform.getStocknum());
 		item.setSize(productform.getSize());
+		item.setNo(product.getNo());
 		item.setMain(true);
 		product.setPub(productform.isPub());
 
@@ -126,6 +128,7 @@ public class PostProductVPAction extends Action{
 		item.setProduct(product);
 		Transaction transaction = session.beginTransaction();
 		session.saveOrUpdate(product);
+		System.out.println("product date ----------------------- " + product.getDate());
 		session.saveOrUpdate(item);
 		transaction.commit();
 		session.flush();
