@@ -92,6 +92,7 @@ public class PostPurchaseVPChoosingPaymentMethodActionTest {
         purchaseform.setPaymentMethod(new Integer(1));
 
         paymentMethod = PaymentMethod.Factory.newInstance();
+        paymentMethod.setId(1);
         staticData = StaticData.Factory.newInstance();
 
         stringbuffer = new StringBuffer();
@@ -480,6 +481,48 @@ public class PostPurchaseVPChoosingPaymentMethodActionTest {
 		};
 		new MockUp<GMOPaymentWrapper> () {
     		@Mock public void executePayment(PaymentGatewayConfiguration paymentGatewayConfiguration) {
+    		}
+		};
+
+		try {
+			action.execute(actionMapping, purchaseform, httpServletRequest, httpServletResponse);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+    }
+
+    /**
+     * 追加 口座振替の想定
+     */
+    @Test
+    public void testExecute10() {
+
+    	paymentMethod.setId(2);
+
+    	new NonStrictExpectations() {{
+    		httpServletRequest.getSession().getAttribute("purchase"); result= purchase;
+    		criteria.uniqueResult(); result = paymentMethod;
+		}};
+
+		new MockUp<Action> () {
+			@Mock public ActionServlet getServlet() {
+				return new ActionServlet();
+			}
+		};
+		new MockUp<ActionServlet> () {
+			@Mock public ServletContext getServletContext() {
+				return servletContext;
+			}
+		};
+
+		new MockUp<HibernateSession> () {
+    		@Mock public Session currentSession(ServletContext servletContext) {
+    			return hibernateSession;
+    		}
+		};
+		new MockUp<StringFullfiller> () {
+    		@Mock public void fullfil(Object obj) {
     		}
 		};
 

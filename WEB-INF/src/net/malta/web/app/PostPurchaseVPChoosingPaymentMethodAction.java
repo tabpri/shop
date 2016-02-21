@@ -114,11 +114,11 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 //			System.err.println("st_code = 000010-0000-00000");
 //
 //		}
-//		if(paymentmethod.getId().intValue() == 4){
-//			new HTTPGetRedirection(req, res, "PostPurchaseVPForSettingNonTemp.do",
-//					purchase.getId().toString(),"temp=0&deliverymethod="+req.getParameter("deliverymethod"));
-//			return null;
-//		}
+		if(paymentmethod.getId().intValue() == 2){
+			new HTTPGetRedirection(req, res, "PostPurchaseVPForSettingNonTemp.do",
+					purchase.getId().toString(),"temp=0&deliverymethod="+deliverymethod);
+			return null;
+		}
 
 		Criteria criteriaStaticData = session.createCriteria(StaticData.class);
 		criteriaStaticData.add(Restrictions.eq("id", new Integer(1)));
@@ -139,6 +139,7 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 			paymentGatewayConfiguration.setOrderId("id" + purchase.getId().toString() + "date" +  dateFormat.format(new Date()));
 			paymentGatewayConfiguration.setJobCd(GMOPaymentWrapper.JOB_CD_CAPTURE);
 			paymentGatewayConfiguration.setAmount(purchase.getTotal());
+			paymentGatewayConfiguration.setTax(purchase.getCarriage());
 			paymentGatewayConfiguration.setTdFlag(GMOPaymentWrapper.TD_FLAG_USE);
 
 			// 決済情報
