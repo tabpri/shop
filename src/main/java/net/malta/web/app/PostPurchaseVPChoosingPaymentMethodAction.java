@@ -1,6 +1,7 @@
 package net.malta.web.app;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -28,26 +29,45 @@ import org.hibernate.criterion.Restrictions;
 import com.getsecual.shop.payment.BankingPaymentGatewayConfiguration;
 import com.getsecual.shop.payment.GMOPaymentWrapper;
 import com.getsecual.shop.payment.PaymentGatewayConfiguration;
+import com.gmo_pg.g_pay.client.common.Method;
 
 public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 
+		// 本人認証画面からの戻り値
+		String MD = req.getParameter("MD");
+		String PaRes = req.getParameter("PaRes");
+
+		String deliverymethod = req.getParameter("deliverymethod");
+
 		PurchaseForm purchaseform = (PurchaseForm) form;
+
+		if (MD != null && PaRes != null) {
+			// PurchaseFormとdeliverymethodの値を復元
+			purchaseform = (PurchaseForm)req.getSession().getAttribute("purchaseform");
+			deliverymethod = (String)req.getSession().getAttribute("deliverymethod");
+			req.getSession().removeAttribute("purchaseform");
+			req.getSession().removeAttribute("deliverymethod");
+		} else {
+			req.getSession().removeAttribute("purchaseform");
+			req.getSession().removeAttribute("deliverymethod");
+		}
+
 		Integer paymentMethodInt = purchaseform.getPaymentMethod();
 		purchaseform.setPaymentMethod(null);
 
-//        String error = "";
-//		if(paymentMethodInt==null || paymentMethodInt==0){
-//		   error += "支払い方法が選択されていません<br/>";
-//		}
-//
-//		if(StringUtils.isNotBlank(error)){
-//			req.getSession().setAttribute("error",error);
-//			req.setAttribute("form",purchaseform);
-//			new HTTPGetRedirection(req, res, "ShowPurchaseForConfirmation.do", null);
-//			return null;
-//		}
+        String error = "";
+		if(paymentMethodInt==null || paymentMethodInt==0){
+		   error += "支払い方法が選択されていません<br/>";
+		}
+
+		if(StringUtils.isNotBlank(error)){
+			req.getSession().setAttribute("error",error);
+			req.setAttribute("form",purchaseform);
+			new HTTPGetRedirection(req, res, "ShowPurchaseForConfirmation.do", null);
+			return null;
+		}
 
 		Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
 		if(StringUtils.isNotBlank(req.getParameter("deliverymethod"))){
@@ -75,7 +95,6 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 		transaction.commit();
 		session.flush();
 
-		// 非同期通信でPurchaseテーブルを更新
 		if (StringUtils.isNotBlank(req.getParameter("ajax"))) {
 			req.setAttribute("message", "success");
 			return mapping.findForward("success");
@@ -110,47 +129,37 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 		/** 決済処理 */
 		try {
 
-			PaymentGatewayConfiguration paymentGatewayConfiguration = new BankingPaymentGatewayConfiguration();
-
 			GMOPaymentWrapper gmoPaymentWrapper = new GMOPaymentWrapper();
 
+			PaymentGatewayConfiguration paymentGatewayConfiguration = new BankingPaymentGatewayConfiguration();
+
 			// 取引情報
-			paymentGatewayConfiguration.setShopId(purchaseform.getShopId());
-			paymentGatewayConfiguration.setShopPass(purchaseform.getShopPass());
-			paymentGatewayConfiguration.setOrderId(purchaseform.getOrderId());
-			paymentGatewayConfiguration.setJobCd(purchaseform.getJobCd());
-			paymentGatewayConfiguration.setItemCode(purchaseform.getItemCode());
-			paymentGatewayConfiguration.setAmount(purchaseform.getAmount());
-			paymentGatewayConfiguration.setTax(purchaseform.getTax());
-			paymentGatewayConfiguration.setTdFlag(purchaseform.getTdFlag());
-			paymentGatewayConfiguration.setTdTenantName(purchaseform.getTdTenantName());
+			paymentGatewayConfiguration.setShopId(GMOPaymentWrapper.SHOP_ID);
+			paymentGatewayConfiguration.setShopPass(GMOPaymentWrapper.SHOP_PASS);
+			paymentGatewayConfiguration.setOrderId("id" + purchase.getId().toString() + "date" +  dateFormat.format(new Date()));
+			paymentGatewayConfiguration.setJobCd(GMOPaymentWrapper.JOB_CD_CAPTURE);
+			paymentGatewayConfiguration.setAmount(purchase.getTotal());
+			paymentGatewayConfiguration.setTdFlag(GMOPaymentWrapper.TD_FLAG_USE);
 
 			// 決済情報
-			paymentGatewayConfiguration.setAccessId(purchaseform.getAccessId());
-			paymentGatewayConfiguration.setAccessPass(purchaseform.getAccessPass());
-			paymentGatewayConfiguration.setMethod(purchaseform.getMethod());
-			paymentGatewayConfiguration.setPayTimes(purchaseform.getPayTimes());
+			paymentGatewayConfiguration.setMethod(Method.IKKATU);
+			paymentGatewayConfiguration.setPayTimes(1);
 			paymentGatewayConfiguration.setCardNo(purchaseform.getCardNo());
 			paymentGatewayConfiguration.setExpire(purchaseform.getExpire());
 			paymentGatewayConfiguration.setSecurityCode(purchaseform.getSecurityCode());
-			paymentGatewayConfiguration.setClientField1(purchaseform.getClientField1());
-			paymentGatewayConfiguration.setClientField2(purchaseform.getClientField2());
-			paymentGatewayConfiguration.setClientField3(purchaseform.getClientField3());
-			paymentGatewayConfiguration.setClientFieldFlag(purchaseform.getClientFieldFlag());
 			paymentGatewayConfiguration.setHttpAccept(req.getHeader("ACCEPT"));
 			paymentGatewayConfiguration.setHttpUserAgent(req.getHeader("USER-AGENT"));
-			paymentGatewayConfiguration.setDeviceCategory(purchaseform.getDeviceCategory());
-			paymentGatewayConfiguration.setSiteId(purchaseform.getSiteId());
-			paymentGatewayConfiguration.setSitePass(purchaseform.getSitePass());
+			paymentGatewayConfiguration.setSiteId(GMOPaymentWrapper.SITE_ID);
+			paymentGatewayConfiguration.setSitePass(GMOPaymentWrapper.SITE_PASS);
 			paymentGatewayConfiguration.setMemberId(purchaseform.getMemberId());
 			paymentGatewayConfiguration.setSeqMode(purchaseform.getSeqMode());
 			paymentGatewayConfiguration.setCardSeq(purchaseform.getCardSeq());
 			paymentGatewayConfiguration.setCardPass(purchaseform.getCardPass());
-			paymentGatewayConfiguration.setTermUrl(purchaseform.getTermUrl());
+			paymentGatewayConfiguration.setTermUrl(req.getRequestURL().toString());
 
-			// 3Dセキュア認証後決済に必要な値
-			paymentGatewayConfiguration.setPaRes(req.getParameter("PaRes"));
-			paymentGatewayConfiguration.setMD(req.getParameter("MD"));
+			// 本人認証画面から返却される値
+			paymentGatewayConfiguration.setPaRes(PaRes);
+			paymentGatewayConfiguration.setMD(MD);
 
 			// 決済実行
 			gmoPaymentWrapper.executePayment(paymentGatewayConfiguration);
@@ -160,87 +169,46 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends Action {
 
 			// エラーコード（残高不足など）がある場合
 			if (errList != null) {
-				purchaseform.setAccessId(paymentGatewayConfiguration.getAccessId());
-				purchaseform.setAccessPass(paymentGatewayConfiguration.getAccessId());
-				// エラーページかリトライ用の画面に戻る?
 				String[] errinfo = (String[])errList.get(0);
-				throw new Exception(errinfo[0] + " " + errinfo[1]);
+				req.getSession().setAttribute("error",errinfo[1] + " 決済が正常に行われませんでした。");
+				req.setAttribute("form",purchaseform);
+				new HTTPGetRedirection(req, res, "ShowPurchaseForConfirmation.do", null);
+				return null;
 			}
 
 			// ACS呼出判定が1(要)の場合（本人認証サービスの呼出が必要な場合）
 			if (paymentGatewayConfiguration.getRedirectContents() != null) {
+				// セッションにフォームを一時保存
+				purchaseform.setPaymentMethod(paymentMethodInt);
+				req.getSession().setAttribute("purchaseform", purchaseform);
+				req.getSession().setAttribute("deliverymethod", deliverymethod);
 				// リダイレクト用ページに遷移(レスポンスにHTML書き出し)
 				res.getWriter().write(paymentGatewayConfiguration.getRedirectContents());
 				res.getWriter().flush();
 				return null;
 			}
 
-//			HttpClient httpClient = new HttpClient();
-//			PostMethod postMethod = new PostMethod(staticData.getCreditcardprocesurl());
-//			postMethod.addParameter(new NameValuePair("contract_code","23715700"));
-//			System.err.println("contract_code is " + 23715700);
-//			postMethod.addParameter(new NameValuePair("contract_code","23278700"));　this is for akarui heya
-//			postMethod.addParameter(new NameValuePair("user_id",purchase.getPublicUser().getId().toString()));
-//			postMethod.addParameter(new NameValuePair("user_name", purchase.getPublicUser().getId().toString()));
-//			postMethod.addParameter(new NameValuePair("user_name_kana", new String(purchase.getPublicUser().getKana().getBytes("EUC-JP"))));
-//			postMethod.addParameter(new NameValuePair("user_mail_add",purchase.getPublicUser().getMail()));
-//			postMethod.addParameter(new NameValuePair("item_code",purchase.getId().toString()));
-//			postMethod.addParameter(new NameValuePair("item_name",purchase.getId().toString()));
-//			postMethod.addParameter(new NameValuePair("order_number","id" + purchase.getId().toString() + "date" +  dateFormat.format(new Date())));
-//			postMethod.addParameter(new NameValuePair("st_code",st_code));
-//			postMethod.addParameter(new NameValuePair("mission_code","1"));
-//			postMethod.addParameter(new NameValuePair("item_price",String.valueOf( purchase.getTotal()) ));
-//			postMethod.addParameter(new NameValuePair("process_code","1"));
-//			postMethod.addParameter(new NameValuePair("memo1","0"));
-//			postMethod.addParameter(new NameValuePair("memo2","0"));
-//			postMethod.addParameter(new NameValuePair("xml","1"));
-//
-//			httpClient.executeMethod(postMethod);
-//
-//			String response = postMethod.getResponseBodyAsString();
-//			System.err.println(response);
-//
-//			SAXReader reader = new SAXReader();
-//			StringReader stringReader = new StringReader(response);
-//			Document document = reader.read(stringReader);
-//			Element rootElement = document.getRootElement();
-//			for (Iterator iterator = rootElement.elementIterator("result"); iterator.hasNext();) {
-//				Element element = (Element) iterator.next();
-//				if(element.attribute("redirect") !=null){
-//					String redirecturl = URLDecoder.decode(element.attributeValue("redirect"));
-//					new HTTPGetRedirection(req, res, redirecturl);
-//					System.err.println("redirecting to epsilong");
-//					return null;
-//				}
-//
-//			}
-
-
-//			 <Epsilon_result>
-//			  <result result="1" />
-//			  <result redirect="http%3A%2F%2Fbeta.epsilon.jp%2Fcgi-bin%2Forder%2Fmethod_select3.cgi%3Ftrans_code%3DSsY6rqJcVec34" />
-//			  </Epsilon_result>
-
-
-//			System.err.println(response);
-
 		} catch (Exception e) {
 			e.printStackTrace();
+			req.getSession().setAttribute("error"," システムエラーが発生しました。");
+			req.setAttribute("form",purchaseform);
+			new HTTPGetRedirection(req, res, "ShowPurchaseForConfirmation.do", null);
+			return null;
 		}
 
-		// 決済完了
-
+		// struts-config.xml exist?
 		if (StringUtils.isNotBlank(req.getParameter("from"))
 				&& !req.getParameter("from").equals("")) {
 			System.err.println("mark 1");
 			new HTTPGetRedirection(req, res, "PostPurchaseDetail.do", purchase
-					.getId().toString(),"deliverymethod="+req.getParameter("deliverymethod"));
+					.getId().toString(),"deliverymethod="+deliverymethod);
 			return null;
 		}
 
+		// 決済完了
 		System.err.println("mark 2, navigating to ForSettingNonTemp.");
 		new HTTPGetRedirection(req, res, "PostPurchaseVPForSettingNonTemp.do",
-				purchase.getId().toString(),"temp=0&deliverymethod="+req.getParameter("deliverymethod"));
+				purchase.getId().toString(),"temp=0&deliverymethod="+deliverymethod);
 		return null;
 	}
 }
