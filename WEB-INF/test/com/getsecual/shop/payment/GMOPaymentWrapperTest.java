@@ -29,11 +29,23 @@ public class GMOPaymentWrapperTest {
     }
 
     /**
+     * 定数を参照するだけ
+     */
+    public void testExecutePayment1() {
+    	String shopId = GMOPaymentWrapper.SHOP_ID;
+    	String shopPass = GMOPaymentWrapper.SHOP_PASS;
+    	String siteId = GMOPaymentWrapper.SITE_ID;
+    	String sitePass = GMOPaymentWrapper.SITE_PASS;
+    	String jobCd = GMOPaymentWrapper.JOB_CD_CAPTURE;
+    	String tdFlagUse = GMOPaymentWrapper.TD_FLAG_USE;
+    }
+
+    /**
      * 正常終了のケース
      * @throws Exception
      */
     @Test
-    public void testExecutePayment1() {
+    public void testExecutePayment2() {
 
     	PaymentGatewayConfiguration paymentGatewayConfiguration = new BankingPaymentGatewayConfiguration();
 
@@ -68,7 +80,7 @@ public class GMOPaymentWrapperTest {
      * @throws Exception
      */
     @Test
-    public void testExecutePayment2() throws Exception {
+    public void testExecutePayment3() throws Exception {
 
     	PaymentGatewayConfiguration paymentGatewayConfiguration = new BankingPaymentGatewayConfiguration();
 
@@ -88,7 +100,7 @@ public class GMOPaymentWrapperTest {
      * @throws Exception
      */
     @Test
-    public void testExecutePayment3() throws Exception {
+    public void testExecutePayment4() throws Exception {
 
     	PaymentGatewayConfiguration paymentGatewayConfiguration = null;
 
