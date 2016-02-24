@@ -74,7 +74,8 @@ public class SessionData {
 		cookie.setMaxAge(60 * 60 * 168);
 		System.out.println("setting the cookie path to / -----------------------------------");
 		cookie.setPath("/");
-		res.addCookie(cookie); 		
+		res.addCookie(cookie);
+		res.setHeader("malta", userIdString);
 	}
 	
 	public static String getSessionCookie(HttpServletRequest req) {
