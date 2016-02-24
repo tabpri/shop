@@ -130,5 +130,8 @@
         <many-to-one name="prefecture" class="net.malta.model.PrefectureImpl" foreign-key="PUBLIC_USER_PREFECTURE_FKC" lazy="proxy" fetch="select">
             <column name="PREFECTURE_FK" not-null="false" sql-type="INTEGER"/>
         </many-to-one>
+        <property name="authuserid" type="int">
+            <column name="AUTH_USERID" unique="false" sql-type="INTEGER"/>
+        </property>        
     </class>
 </hibernate-mapping>

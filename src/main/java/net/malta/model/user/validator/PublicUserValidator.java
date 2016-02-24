@@ -3,7 +3,8 @@
  */
 package net.malta.model.user.validator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import net.malta.beans.ValidationError;
 import net.malta.error.Errors;
@@ -13,6 +14,7 @@ import net.malta.model.validator.IValidator;
 import net.malta.model.validator.ValidationException;
 import net.malta.model.validator.constants.PublicUserConstants;
 
+@Component
 public class PublicUserValidator implements IValidator<PublicUser> {
 
 	@Override
@@ -71,6 +73,13 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.CITY_ISBLANK, blank));
 		}
 
+		// need to be enabled once the UI integrate the auth api for creating the user
+/*		Integer authuserid = user.getAuthuserid();
+		
+		if (authuserid == null ) {
+			errors.add(new ValidationError(PublicUserConstants.AUTHUSERID_ISBLANK, blank));
+		}
+*/		
 		if ( errors.hasErrors() ) {
 			throw new ValidationException(errors);
 		}

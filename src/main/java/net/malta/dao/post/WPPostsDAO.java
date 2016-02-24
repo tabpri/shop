@@ -2,9 +2,11 @@ package net.malta.dao.post;
 
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
+import org.springframework.stereotype.Repository;
 
 import net.malta.dao.BaseDAO;
 
+@Repository
 public class WPPostsDAO<T> extends BaseDAO<T> {
 
 	public String getImg(int wp_posts_id) {

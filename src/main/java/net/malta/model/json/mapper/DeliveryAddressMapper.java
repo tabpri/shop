@@ -1,12 +1,14 @@
 package net.malta.model.json.mapper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import net.malta.mapper.IMapper;
 import net.malta.model.DeliveryAddress;
 import net.malta.model.GiftCard;
 import net.malta.model.Prefecture;
 
+@Component
 public class DeliveryAddressMapper implements IMapper<DeliveryAddress, net.malta.model.user.json.DeliveryAddress> {
 
 	@Override

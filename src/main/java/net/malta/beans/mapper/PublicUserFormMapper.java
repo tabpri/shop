@@ -1,5 +1,7 @@
 package net.malta.beans.mapper;
 
+import org.springframework.stereotype.Component;
+
 import net.enclosing.util.StringFullfiller;
 import net.malta.beans.PublicUserForm;
 import net.malta.mapper.IMapper;
@@ -7,6 +9,7 @@ import net.malta.model.Prefecture;
 import net.malta.model.PrefectureImpl;
 import net.malta.model.PublicUser;
 
+@Component
 public class PublicUserFormMapper implements IMapper<PublicUserForm, PublicUser>{
 
 	@Override
@@ -29,6 +32,7 @@ public class PublicUserFormMapper implements IMapper<PublicUserForm, PublicUser>
 		Prefecture prefecture = new PrefectureImpl();
 		prefecture.setId(form.getPrefecture());
 		user.setPrefecture(prefecture);
+		user.setAuthuserid(form.getAuthuserid());
 		StringFullfiller.fullfil(user);		
 		return user;
 	}

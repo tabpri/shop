@@ -2,10 +2,13 @@ package net.malta.model.json.mapper;
 
 import java.util.Collection;
 
+import org.springframework.stereotype.Component;
+
 import net.malta.mapper.IMapper;
 import net.malta.model.Item;
 import net.malta.model.Product;
 
+@Component
 public class ProductMapper implements IMapper<Product, net.malta.model.product.json.Product>{
 
 	@Override

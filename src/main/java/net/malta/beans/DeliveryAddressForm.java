@@ -1,7 +1,7 @@
 package net.malta.beans;
 import org.apache.struts.upload.FormFile;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 public class DeliveryAddressForm
     extends org.apache.struts.validator.ValidatorForm
     implements java.io.Serializable
@@ -156,7 +156,7 @@ this.preferreddatedateIsValid = false;
 }
 	if(preferreddatedateIsValid){
 		try {
-			this.preferreddatedate = (org.apache.commons.lang.StringUtils.isBlank(preferreddatedate)) ? null : simpleformat.parse(preferreddatedate);
+			this.preferreddatedate = (org.apache.commons.lang3.StringUtils.isBlank(preferreddatedate)) ? null : simpleformat.parse(preferreddatedate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

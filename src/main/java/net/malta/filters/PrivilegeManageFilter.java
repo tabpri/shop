@@ -12,16 +12,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import net.malta.web.utils.SessionData;
 
 public class PrivilegeManageFilter implements Filter {
-	private static final String PURCHASEINFO = "purchase";
-	private static final String USERINFO = "u";
-
+	
 	public static final ThreadLocal thread = new ThreadLocal();
 	private static Log log = LogFactory.getLog(PrivilegeManageFilter.class);
 	private ServletContext context = null;
@@ -35,7 +33,7 @@ public class PrivilegeManageFilter implements Filter {
 		// TODO Auto-generated method stub
 		HttpServletRequest req2 = (HttpServletRequest)req;
 		HttpServletResponse res2 = (HttpServletResponse)res;
-		if(req2.getRequestURI().replaceAll(".do","").endsWith("Login") || !req2.getRequestURI().contains(".do")){
+		if(!req2.getRequestURI().contains(".do")){
 			chain.doFilter(req, res);
 		}else if(req.getParameter("login") == null || req.getParameter("ajax") == null){
 				synchronized (thread) {

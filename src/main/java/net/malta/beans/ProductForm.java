@@ -1,7 +1,7 @@
 package net.malta.beans;
 import org.apache.struts.upload.FormFile;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 public class ProductForm
     extends org.apache.struts.validator.ValidatorForm
     implements java.io.Serializable
@@ -139,7 +139,7 @@ this.dateIsValid = false;
 }
 	if(dateIsValid){
 		try {
-			this.date = (org.apache.commons.lang.StringUtils.isBlank(date)) ? null : simpleformat.parse(date);
+			this.date = (org.apache.commons.lang3.StringUtils.isBlank(date)) ? null : simpleformat.parse(date);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

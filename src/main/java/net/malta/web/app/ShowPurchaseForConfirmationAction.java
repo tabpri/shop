@@ -20,7 +20,7 @@ import net.malta.model.PaymentMethod;
 import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

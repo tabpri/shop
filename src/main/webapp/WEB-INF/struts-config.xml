@@ -36,6 +36,7 @@
     <form-bean name="PrefectureForm" type="net.malta.beans.PrefectureForm"/>
     <form-bean name="managePaymentForm" type="net.malta.model.crud.PaymentForm"/>
     <form-bean name="PaymentForm" type="net.malta.beans.PaymentForm"/>
+    <form-bean name="LoginForm" type="net.malta.beans.LoginForm"></form-bean>
   </form-beans>
   <global-exceptions/>
   <global-forwards/>
@@ -166,7 +167,7 @@
     <action path="/ProductsForScenesXml" type="net.malta.web.app.ProductsForScenesXmlAction">
       <forward name="success" path="/pages/app/ProductsForScenesXml.jsp"/>
     </action>
-    <action path="/Login" name="PublicUserForm" type="net.malta.web.app.LoginAction"/>
+    <action path="/Login" name="LoginForm" type="net.malta.web.app.LoginAction"/>
     <action path="/Logout" type="net.malta.web.app.LogoutAction"/>
     <action path="/MailAboutPublicUserForPassword" type="net.malta.web.app.MailAboutPublicUserForPasswordAction">
       <forward name="success" path="/pages/app/MailAboutPublicUserForPassword.jsp"/>

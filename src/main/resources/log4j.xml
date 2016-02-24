@@ -15,8 +15,16 @@
 	   </layout>
 	</appender>
 
+ <category name="net.malta" >
+    <priority value="DEBUG" />
+ </category>
+
+ <category name="com.getsecual" >
+    <priority value="DEBUG" />
+ </category>
+ 
 	<root>
-		<level value="DEBUG" />
+		<level value="ERROR" />
 		<appender-ref ref="file" />
 	</root>
 

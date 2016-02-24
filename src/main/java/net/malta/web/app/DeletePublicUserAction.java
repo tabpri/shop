@@ -1,7 +1,6 @@
 package net.malta.web.app;
 
 import net.malta.model.*;
-import net.malta.model.crud.*;
 
 
 

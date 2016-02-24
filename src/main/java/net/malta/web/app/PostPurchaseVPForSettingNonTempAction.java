@@ -18,7 +18,7 @@ import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.web.utils.SessionData;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

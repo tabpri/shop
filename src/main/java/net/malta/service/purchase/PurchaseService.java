@@ -6,6 +6,8 @@ package net.malta.service.purchase;
 
 import java.util.Iterator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,16 +18,18 @@ import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 
+@Service
 public class PurchaseService implements IPurchaseService {
 
+	@Autowired
 	private PurchaseDAO purchaseDAO;
 	
 	public void setPurchaseDAO(PurchaseDAO purchaseDAO) {
 		this.purchaseDAO = purchaseDAO;
 	}
-
+	
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation=Propagation.REQUIRED)	
 	public Purchase getPurchase(Integer id) {
 		Purchase purchase = purchaseDAO.find(id);
 		initialize(purchase);

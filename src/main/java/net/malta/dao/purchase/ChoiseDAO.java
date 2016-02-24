@@ -2,11 +2,13 @@ package net.malta.dao.purchase;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import net.malta.dao.BaseDAO;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 
+@Repository
 public class ChoiseDAO extends BaseDAO<ChoiseImpl>{
 
 	public Choise getChoise(Integer purchaseId, Integer choiseId) {		

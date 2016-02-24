@@ -1,11 +1,14 @@
 package net.malta.beans.mapper;
 
+import org.springframework.stereotype.Component;
+
 import net.malta.beans.ChoiseForm;
 import net.malta.mapper.IMapper;
 import net.malta.model.Choise;
 import net.malta.model.Item;
 import net.malta.model.ItemImpl;
 
+@Component
 public class ChoiseFormMapper implements IMapper<ChoiseForm, Choise> {
 
 	@Override

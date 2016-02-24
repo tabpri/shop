@@ -1,7 +1,7 @@
 package net.malta.beans;
 import org.apache.struts.upload.FormFile;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 public class CategoryForm
     extends org.apache.struts.validator.ValidatorForm
     implements java.io.Serializable

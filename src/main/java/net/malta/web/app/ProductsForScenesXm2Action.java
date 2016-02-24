@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Vector;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import org.apache.struts.action.Action;

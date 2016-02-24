@@ -18,7 +18,7 @@ import net.enclosing.util.HibernateSession;
 import net.enclosing.util.StringFullfiller;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
