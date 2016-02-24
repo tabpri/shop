@@ -1,13 +1,17 @@
 package net.malta.service.product;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.malta.dao.product.ItemDAO;
 import net.malta.model.Item;
 
+@Service
 public class ItemService implements IItemService {
 
+	@Autowired
 	private ItemDAO itemDAO;
 	
 	@Override

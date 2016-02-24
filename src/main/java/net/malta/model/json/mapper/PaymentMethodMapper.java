@@ -3,9 +3,12 @@
  */
 package net.malta.model.json.mapper;
 
+import org.springframework.stereotype.Component;
+
 import net.malta.mapper.IMapper;
 import net.malta.model.PaymentMethod;
 
+@Component
 public class PaymentMethodMapper implements IMapper<PaymentMethod, net.malta.model.payment.json.PaymentMethod> {
 
 	@Override

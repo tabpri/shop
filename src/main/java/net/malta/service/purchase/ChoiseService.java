@@ -1,5 +1,7 @@
 package net.malta.service.purchase;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +18,19 @@ import net.malta.model.validator.constants.ChoiseConstants;
 import net.malta.service.post.IWPPostsService;
 import net.malta.service.product.IItemService;
 
+@Service
 public class ChoiseService implements IChoiseService {
 
+	@Autowired
 	private IPurchaseService purchaseService;
 	
+	@Autowired
 	private IWPPostsService postsService;
 
+	@Autowired
 	private IItemService itemService;
 	
+	@Autowired
 	private ChoiseDAO choiseDAO;
 	
 	@Override

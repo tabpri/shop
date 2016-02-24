@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import net.malta.mapper.IMapper;
 import net.malta.model.Choise;
 import net.malta.model.Purchase;
 
+@Component
 public class PurchaseMapper implements IMapper<Purchase, net.malta.model.purchase.json.Purchase>{
 
+	@Autowired
 	private ChoisesMapper choisesMapper;
 	
 	@Override

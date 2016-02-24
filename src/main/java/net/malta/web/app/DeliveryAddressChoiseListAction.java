@@ -14,8 +14,8 @@ import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 import net.malta.web.utils.Pagination;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

@@ -14,7 +14,7 @@ import net.enclosing.util.HTTPGetRedirection;
 import net.enclosing.util.HibernateSession;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;

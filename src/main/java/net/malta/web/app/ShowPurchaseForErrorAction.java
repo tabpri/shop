@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.malta.model.*;
-import net.malta.model.crud.*;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;

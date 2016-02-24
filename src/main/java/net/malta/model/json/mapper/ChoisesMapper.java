@@ -2,11 +2,16 @@ package net.malta.model.json.mapper;
 
 import java.util.Collection;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import net.malta.mapper.IMapper;
 import net.malta.model.Choise;
 
+@Component
 public class ChoisesMapper implements IMapper<Collection<Choise>, Collection<net.malta.model.purchase.json.Choise>> {
 
+	@Autowired
 	private ChoiseMapper choiseMapper;
 	
 	@Override

@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/tx  
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-<beans>
 
-    <!-- ========================= GENERAL DEFINITIONS ========================= -->
-
-    <!-- Message source for this context, loaded from localized "messages_xx" files -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename"><value>messages</value></property>
-    </bean>
-
-    <!-- applicationContext merge-point -->
-    <!-- Hibernate SessionFactory -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:authapi.properties</value>
+		</property>
+	</bean>
+	
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
         <property name="dataSource"><ref bean="dataSource"/></property>
         <property name="mappingResources">
@@ -45,268 +55,19 @@
         </property>
     </bean>
 
-    <!-- The Hibernate interceptor -->
-    <bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
-        <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.getsecual.auth,net.malta"></context:component-scan>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+    <!-- ========================= GENERAL DEFINITIONS ========================= -->
+
+    <!-- Message source for this context, loaded from localized "messages_xx" files -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename"><value>messages</value></property>
     </bean>
 
-    <!-- DbFile Entity Proxy with inner DbFile Entity implementation -->
-    <bean id="dbFileDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.DbFileDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.DbFileDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Attachment Entity Proxy with inner Attachment Entity implementation -->
-    <bean id="attachmentDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.AttachmentDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.AttachmentDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- PublicUser Entity Proxy with inner PublicUser Entity implementation -->
-    <bean id="publicUserDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.PublicUserDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.PublicUserDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Item Entity Proxy with inner Item Entity implementation -->
-    <bean id="itemDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.ItemDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.ItemDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Purchase Entity Proxy with inner Purchase Entity implementation -->
-    <bean id="purchaseDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.PurchaseDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.PurchaseDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Product Entity Proxy with inner Product Entity implementation -->
-    <bean id="productDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.ProductDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.ProductDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Choise Entity Proxy with inner Choise Entity implementation -->
-    <bean id="choiseDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.ChoiseDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.ChoiseDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Category Entity Proxy with inner Category Entity implementation -->
-    <bean id="categoryDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.CategoryDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.CategoryDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- DeliveryAddress Entity Proxy with inner DeliveryAddress Entity implementation -->
-    <bean id="deliveryAddressDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.DeliveryAddressDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.DeliveryAddressDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- DeliveryAddressChoise Entity Proxy with inner DeliveryAddressChoise Entity implementation -->
-    <bean id="deliveryAddressChoiseDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.DeliveryAddressChoiseDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.DeliveryAddressChoiseDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- GiftCard Entity Proxy with inner GiftCard Entity implementation -->
-    <bean id="giftCardDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.GiftCardDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.GiftCardDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- StaticData Entity Proxy with inner StaticData Entity implementation -->
-    <bean id="staticDataDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.StaticDataDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.StaticDataDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Carriage Entity Proxy with inner Carriage Entity implementation -->
-    <bean id="carriageDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.CarriageDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.CarriageDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- PaymentMethod Entity Proxy with inner PaymentMethod Entity implementation -->
-    <bean id="paymentMethodDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.PaymentMethodDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.PaymentMethodDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Prefecture Entity Proxy with inner Prefecture Entity implementation -->
-    <bean id="prefectureDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="net.malta.model.PrefectureDaoImpl">
-                <property name="sessionFactory"><ref local="sessionFactory"/></property>
-            </bean>
-        </property>
-        <property name="proxyInterfaces">
-            <value>net.malta.model.PrefectureDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>hibernateInterceptor</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- ========================= Start of SERVICE DEFINITIONS ========================= -->
-
-    <!-- ========================= End of SERVICE DEFINITIONS ========================= -->
+    <!-- applicationContext merge-point -->
+    <!-- Hibernate SessionFactory -->
 
 </beans>

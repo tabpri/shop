@@ -1,10 +1,12 @@
 package net.malta.model.json.mapper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import net.malta.mapper.IMapper;
 import net.malta.model.PublicUser;
 
+@Component
 public class PublicUserMapper implements IMapper<PublicUser, net.malta.model.user.json.PublicUser>{
 
 	@Override

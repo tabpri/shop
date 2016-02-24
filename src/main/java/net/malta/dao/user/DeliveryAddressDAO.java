@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import net.malta.dao.BaseDAO;
 import net.malta.model.DeliveryAddress;
 
+@Repository
 public class DeliveryAddressDAO extends BaseDAO<DeliveryAddress>{
 
 	@SuppressWarnings("unchecked")

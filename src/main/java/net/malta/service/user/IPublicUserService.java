@@ -10,4 +10,6 @@ public interface IPublicUserService {
 
 	public PublicUser updateUser(PublicUser publicUser);
 
+	public PublicUser getUserByAuthUser(Integer authUserId);
+
 }

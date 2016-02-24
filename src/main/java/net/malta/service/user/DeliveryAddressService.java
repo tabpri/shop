@@ -2,6 +2,8 @@ package net.malta.service.user;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +17,22 @@ import net.malta.model.user.validator.DeliveryAddressValidator;
 import net.malta.service.meta.IGiftCardService;
 import net.malta.service.meta.IPrefectureService;
 
+@Service
 public class DeliveryAddressService implements IDeliveryAddressService {
-	
+
+	@Autowired
 	private IPublicUserService publicUserService;
 	
+	@Autowired
 	private IPrefectureService prefectureService;
 	
+	@Autowired
 	private IGiftCardService giftCardService;
 
+	@Autowired
 	private DeliveryAddressDAO deliveryAddressDAO;
 	
+	@Autowired
 	private DeliveryAddressValidator deliveryAddressValidator;
 	
 	@Override

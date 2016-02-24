@@ -1,6 +1,7 @@
 package net.malta.model.user.validator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import net.malta.beans.ValidationError;
 import net.malta.error.Errors;
@@ -8,8 +9,8 @@ import net.malta.model.DeliveryAddress;
 import net.malta.model.validator.IValidator;
 import net.malta.model.validator.ValidationException;
 import net.malta.model.validator.constants.DeliveryAddressConstants;
-import net.malta.model.validator.constants.PublicUserConstants;
 
+@Component
 public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 
 	@Override

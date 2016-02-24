@@ -10,7 +10,7 @@
     <properties>
         <struts.version>1.2.2</struts.version>
         <hibernate.version>3.0.5</hibernate.version>
-        <spring.version>1.2.7</spring.version>
+        <spring.version>3.0.7.RELEASE</spring.version>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
     </properties>
 
@@ -140,6 +140,12 @@
             </exclusions>
         </dependency>
 
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -162,7 +168,7 @@
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
 
@@ -200,8 +206,8 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-hibernate</artifactId>
-            <version>${spring.version}</version>
+            <artifactId>spring-hibernate3</artifactId>
+            <version>2.0.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -232,6 +238,14 @@
         </dependency>
 
         <dependency>
+            <groupId>jp.storyteller.desktop</groupId>
+            <artifactId>jp.storyteller.desktop</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jp.storyteller.desktop.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>gpay_client-3.0</groupId>
             <artifactId>gpay_client-3.0</artifactId>
             <version>3.0</version>
@@ -239,30 +253,6 @@
             <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gpay_client-3.0.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>malta-common-1.0</groupId>
-            <artifactId>malta-common-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/malta-common-1.0.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>malta-workflow-1.0</groupId>
-            <artifactId>malta-workflow-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/malta-workflow-1.0.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>jp.storyteller.desktop</groupId>
-            <artifactId>jp.storyteller.desktop</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jp.storyteller.desktop.jar</systemPath>
-        </dependency>
-        
     </dependencies>
 
     <build>

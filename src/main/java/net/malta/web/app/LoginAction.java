@@ -1,24 +1,30 @@
 package net.malta.web.app;
-import java.util.Calendar;
 
-import javax.servlet.http.Cookie;
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.enclosing.util.HTTPGetRedirection;
-import net.enclosing.util.HibernateSession;
-import net.malta.model.PublicUser;
-import net.malta.model.Purchase;
-import net.malta.web.utils.SessionData;
-import net.malta.beans.PublicUserForm;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+
+import com.getsecual.auth.client.UserAuthServiceClient;
+import com.getsecual.auth.client.exception.AuthenticationException;
+import com.getsecual.auth.client.model.json.AuthenticationUserRequest;
+import com.getsecual.auth.client.model.json.AuthenticationUserResponse;
+
+import net.malta.beans.LoginForm;
+import net.malta.model.PublicUser;
+import net.malta.model.Purchase;
+import net.malta.model.user.json.AuthenticationResponse;
+import net.malta.service.purchase.IPurchaseService;
+import net.malta.service.user.IPublicUserService;
+import net.malta.web.model.PurchaseInfo;
+import net.malta.web.utils.BeanUtil;
+import net.malta.web.utils.JSONResponseUtil;
+import net.malta.web.utils.SessionData;
 
 public class LoginAction extends Action{
 	public ActionForward execute(
@@ -26,51 +32,56 @@ public class LoginAction extends Action{
 			ActionForm form,
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
-		Session session = new HibernateSession().currentSession(this.getServlet().getServletContext());
-
-
-		PublicUserForm publicUserForm = (PublicUserForm)form;
-
-
-		Criteria criteria = session.createCriteria(PublicUser.class);
-		criteria.add(Restrictions.eq("registed", new Boolean(true)));
-		criteria.add(Restrictions.eq("temp", new Boolean(false)));
-		criteria.add(Restrictions.eq("mail",publicUserForm.getMail()));
-		criteria.add(Restrictions.eq("password",publicUserForm.getPassword()));
-		criteria.add(Restrictions.eq("removed", new Boolean(false)));
-		criteria.setMaxResults(1);
-
-		PublicUser publicUser = null;
-		if(criteria.uniqueResult() !=null){
-			publicUser = (PublicUser)criteria.uniqueResult();
-			Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
-			//purchase.setPublicUser(publicUser);
-			SessionData.update(publicUser,purchase,req, res,session);
-        	//req.getSession().setAttribute("u", publicUser);
-			//req.getSession().setAttribute("purchase", purchase);
-			
-			/*
-			if(publicUser.isRemoved()){
-				req.setAttribute("message","そのユーザはメールアドレスの認証が済んでいません。");
-				return mapping.findForward("error");
-			}
-			*/
-
-		}else{
-
-			if(publicUserForm.getMail() != null){
-				req.setAttribute("message","ユーザが存在しないか、パスワードが間違っています。");
-			}
-			//return mapping.findForward("error");
-			new HTTPGetRedirection(req,res,"PostPublicUserDetail.html",null);
-			return null;
-		}
-		//session.flush();
-		//new HTTPGetRedirection(req,res,"index.jsp","");
 		
-		new HTTPGetRedirection(req,res,"PostPublicUserDetail.html",null,"login=t");
+		LoginForm loginForm = (LoginForm) form;
+		try {
+			UserAuthServiceClient authClient = (UserAuthServiceClient) BeanUtil.getBean("userAuthServiceClient", 
+					this.getServlet().getServletContext());
+			AuthenticationUserRequest authenticationRequest = new AuthenticationUserRequest(loginForm.getEmail(), 
+					loginForm.getPassword());
+			AuthenticationUserResponse authenticationResponse = authClient.authenticateUser(authenticationRequest);
+			
+			IPublicUserService userService = (IPublicUserService) BeanUtil.getBean("publicUserService", this.getServlet().getServletContext());
+			PublicUser publicUser = userService.getUserByAuthUser(authenticationResponse.getId());
+
+			updatePurchase(req, res, publicUser);
+			
+			sendJSON(res, authenticationResponse, publicUser);
+			
+			System.out.println("LoginAction ------------------------------- didnt close the outputstream");
+		} catch (AuthenticationException ae) {
+			res.setStatus(ae.getStatusCode());
+		}
 		return null;
 	}
 
+	private void sendJSON(HttpServletResponse res, AuthenticationUserResponse authenticationResponse,
+			PublicUser publicUser) throws IOException {
+		AuthenticationResponse responseJSON = new AuthenticationResponse();
+		responseJSON.setId(publicUser.getId());
+		responseJSON.setAuthuserid(authenticationResponse.getId()); // auth userid
+		responseJSON.setEmail(authenticationResponse.getEmail());
+		responseJSON.setName(authenticationResponse.getName());
+		res.setContentType("application/json");
+		res.setHeader("access-token", authenticationResponse.getAccessToken());
+		res.setHeader("client", authenticationResponse.getClient());
+		res.setHeader("uid", authenticationResponse.getUid());			
+		JSONResponseUtil.writeResponseAsJSON(res, responseJSON);
+	}
+	
+	private void updatePurchase(HttpServletRequest req, HttpServletResponse res,PublicUser publicUser) {
+		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
+				this.getServlet().getServletContext());
+		
+		PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		
+		Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
+		
+		purchase.setPublicUser(publicUser);
+		
+		purchaseService.updatePurchase(purchase);
 
+		SessionData.updateSessionPurchaseInfoAndCookie(req, res,publicUser.getId());
+	}
+	
 }

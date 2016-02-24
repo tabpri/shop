@@ -719,5 +719,16 @@ public abstract class PublicUser
 	public void setCity(String city) {
 		this.city = city;
 	}
-    
+ 
+	// authuserid -- added by SB	
+	private Integer authuserid;
+
+	public Integer getAuthuserid() {
+		return authuserid;
+	}
+
+	public void setAuthuserid(Integer authuserid) {
+		this.authuserid = authuserid;
+	}
+		
 }

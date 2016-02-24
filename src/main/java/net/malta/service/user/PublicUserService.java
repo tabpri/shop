@@ -1,5 +1,7 @@
 package net.malta.service.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,19 +13,31 @@ import net.malta.model.PublicUserImpl;
 import net.malta.model.user.validator.PublicUserValidator;
 import net.malta.service.meta.IPrefectureService;
 
+@Service
 public class PublicUserService implements IPublicUserService {
 
+	@Autowired
 	private IPrefectureService prefectureService;
 	
+	@Autowired
 	private PublicUserDAO publicUserDAO;
-		
+	
+	@Autowired
 	private PublicUserValidator validator;
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
 	public PublicUser getUser(Integer id) {
 		return publicUserDAO.find(id);
 	}
-	
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public PublicUser getUserByAuthUser(Integer authUserId) {
+		return publicUserDAO.findUserByAuthUser(authUserId);
+	}
+
+
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)		
 	public PublicUser createUser(PublicUser publicUser) {

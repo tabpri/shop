@@ -1,5 +1,7 @@
 package net.malta.beans.mapper;
 
+import org.springframework.stereotype.Component;
+
 import net.enclosing.util.StringFullfiller;
 import net.malta.beans.DeliveryAddressForm;
 import net.malta.mapper.IMapper;
@@ -9,6 +11,7 @@ import net.malta.model.GiftCardImpl;
 import net.malta.model.Prefecture;
 import net.malta.model.PrefectureImpl;
 
+@Component
 public class DeliveryAddressFormMapper implements IMapper<DeliveryAddressForm, DeliveryAddress>{
 
 	@Override

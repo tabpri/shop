@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +17,16 @@ import net.malta.model.DeliveryAddressChoiseImpl;
 import net.malta.model.Purchase;
 import net.malta.service.user.IDeliveryAddressService;
 
+@Service
 public class DeliveryAddressChoiseService implements IDeliveryAddressChoiseService {
 
+	@Autowired
 	private IPurchaseService purchaseService;
 	
+	@Autowired
 	private IDeliveryAddressService addressService;
 	
+	@Autowired
 	private DeliveryAddressChoiseDAO addressChoiseDAO; 
 	
 	@Override

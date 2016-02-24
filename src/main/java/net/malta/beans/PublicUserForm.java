@@ -1,7 +1,7 @@
 package net.malta.beans;
 import org.apache.struts.upload.FormFile;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 public class PublicUserForm
     extends org.apache.struts.validator.ValidatorForm
     implements java.io.Serializable
@@ -315,7 +315,7 @@ this.preferreddatedateIsValid = false;
 }
 	if(preferreddatedateIsValid){
 		try {
-			this.preferreddatedate = (org.apache.commons.lang.StringUtils.isBlank(preferreddatedate)) ? null : simpleformat.parse(preferreddatedate);
+			this.preferreddatedate = (org.apache.commons.lang3.StringUtils.isBlank(preferreddatedate)) ? null : simpleformat.parse(preferreddatedate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -390,6 +390,16 @@ this.preferredtime = preferredtime;
 public String getPreferredtime(){
 return this.preferredtime;
 }
+
+private Integer authuserid;
+
+public Integer getAuthuserid() {
+	return authuserid;
+}
+public void setAuthuserid(Integer authuserid) {
+	this.authuserid = authuserid;
+}
+
 FormFile[] formFiles = new FormFile[10];
 public void setFormFiles(FormFile[] formFiles){
 this.formFiles = formFiles;
