@@ -1,7 +1,8 @@
 package net.malta.beans;
-import org.apache.struts.upload.FormFile;
 import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.upload.FormFile;
 public class PurchaseForm
     extends org.apache.struts.validator.ValidatorForm
     implements java.io.Serializable
@@ -178,6 +179,56 @@ this.formFiles = formFiles;
 }
 public FormFile[] getFormFiles(){
 return this.formFiles;
+}
+
+private String cardNo;          // カード番号
+private String expire;          // 有効期限
+private String securityCode;    // セキュリティーコード
+private String memberId;        // 会員ID
+private String seqMode;         // カード登録連番モード
+private Integer cardSeq;        // カード登録連番
+private String cardPass;        // カードパスワード
+public String getCardNo() {
+	return cardNo;
+}
+public void setCardNo(String cardNo) {
+	this.cardNo = cardNo;
+}
+public String getExpire() {
+	return expire;
+}
+public void setExpire(String expire) {
+	this.expire = expire;
+}
+public String getSecurityCode() {
+	return securityCode;
+}
+public void setSecurityCode(String securityCode) {
+	this.securityCode = securityCode;
+}
+public String getMemberId() {
+	return memberId;
+}
+public void setMemberId(String memberId) {
+	this.memberId = memberId;
+}
+public String getSeqMode() {
+	return seqMode;
+}
+public void setSeqMode(String seqMode) {
+	this.seqMode = seqMode;
+}
+public Integer getCardSeq() {
+	return cardSeq;
+}
+public void setCardSeq(Integer cardSeq) {
+	this.cardSeq = cardSeq;
+}
+public String getCardPass() {
+	return cardPass;
+}
+public void setCardPass(String cardPass) {
+	this.cardPass = cardPass;
 }
 public void reset(org.apache.struts.action.ActionMapping mapping, javax.servlet.http.HttpServletRequest request){	temp =false;
 	shipped =false;
