@@ -19,12 +19,12 @@ public class BaseDAO<T> implements IBaseDAO<T> {
 				   ((ParameterizedType)this.getClass().getGenericSuperclass())
 				      .getActualTypeArguments()[0];
 		
-		return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
+		return (T) this.sessionFactory.getCurrentSession().get(persistentClass, id);
 	}
 	
 	@Override
 	public T saveOrUpdate(T t) {
-		Session currentSession = sessionFactory.getCurrentSession();
+		Session currentSession = this.sessionFactory.getCurrentSession();
 		currentSession.saveOrUpdate(t);
 		currentSession.flush();		
 		return t;
@@ -32,7 +32,7 @@ public class BaseDAO<T> implements IBaseDAO<T> {
 
 	@Override
 	public Collection<? extends T> saveOrUpdateAll(Collection<? extends T> list) {
-		Session currentSession = sessionFactory.getCurrentSession();
+		Session currentSession = this.sessionFactory.getCurrentSession();
 		for (T t : list) {
 			currentSession.save(t);			
 		}
@@ -42,7 +42,7 @@ public class BaseDAO<T> implements IBaseDAO<T> {
 
 	@Override
 	public Collection<? extends T> deleteAll(Collection<? extends T> list) {
-		Session currentSession = sessionFactory.getCurrentSession();
+		Session currentSession = this.sessionFactory.getCurrentSession();
 		for (T t : list) {
 			currentSession.delete(t);			
 		}
@@ -52,7 +52,7 @@ public class BaseDAO<T> implements IBaseDAO<T> {
 	
 	@Override
 	public void delete(T t) {		
-		Session currentSession = sessionFactory.getCurrentSession();
+		Session currentSession = this.sessionFactory.getCurrentSession();
 		currentSession.delete(t);
 		currentSession.flush();
 	}

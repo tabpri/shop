@@ -43,7 +43,6 @@ public class PrivilegeManageFilter implements Filter {
 					boolean cookieexists = StringUtils.isNotBlank(sessionCookie);
 					
 	            	if(cookieexists) {            			
-
 						System.err.println(" session cookie malta is available ---------------------------------------- " + sessionCookie);
 
 	            		if( SessionData.getSessionPuchaseInfo(req2) == null ) {            				

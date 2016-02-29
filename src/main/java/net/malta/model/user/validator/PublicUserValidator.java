@@ -6,8 +6,8 @@ package net.malta.model.user.validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import net.malta.beans.ValidationError;
 import net.malta.error.Errors;
+import net.malta.error.ValidationError;
 import net.malta.model.Prefecture;
 import net.malta.model.PublicUser;
 import net.malta.model.validator.IValidator;

@@ -94,7 +94,6 @@
       <forward name="success" path="/pages/app/Products.jsp"/>
     </action>
     <action path="/UpdatePurchaseForTotal" type="net.malta.web.app.UpdatePurchaseForTotalAction"/>
-    <action path="/PostPurchaseVPForSettingNonTemp" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPForSettingNonTempAction"/>
     <action path="/PostPublicUserDetail" type="net.malta.web.app.PostPublicUserDetailAction">
       <forward name="success" path="/pages/app/PostPublicUserDetail.jsp"/>
     </action>
@@ -116,7 +115,9 @@
       <forward name="error" path="/PostProductDetail.do"/>
     </action>
     <action path="/PostPublicUserVPForPassword" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPForPasswordAction"/>
-    <action path="/PostPurchaseVPChoosingPaymentMethod" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPChoosingPaymentMethodAction"/>
+    <action path="/PostPurchaseVPChoosingPaymentMethod" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPChoosingPaymentMethodAction" scope="request"/>
+    <action path="/PostPurchaseVPPaymentAcsConfirm" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPPaymentAcsConfirmAction" scope="request"/>
+    
     <action path="/AttachmentFormFileUploadAddingToProductForThumnail" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForThumnailAction">
       <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToProductForThumnail.jsp"/>
     </action>

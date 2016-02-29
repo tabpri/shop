@@ -5,6 +5,8 @@
 //
 package net.malta.model;
 
+import net.malta.model.PaymentStatus;
+
 /**
  * 
  */
@@ -284,4 +286,14 @@ public abstract class Purchase
     }
     
 // HibernateEntity.vsl merge-point
+    
+    private PaymentStatus payment;
+
+	public PaymentStatus getPayment() {
+		return payment;
+	}
+
+	public void setPayment(PaymentStatus payment) {
+		this.payment = payment;
+	}    
 }

@@ -8,6 +8,7 @@
 		<param-value>
 			classpath:applicationContext-dataSource.xml		
 			classpath:applicationContext.xml
+			classpath:applicationContext-mail.xml			
 			<!-- classpath:applicationContext-localDataSource.xml -->
 		</param-value>
 	</context-param>
