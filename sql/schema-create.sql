@@ -196,6 +196,18 @@
         primary key (ID)
     ) type=InnoDB;
 
+   create table PAYMENT_STATUS (
+        ID INTEGER not null auto_increment,
+        PURCHASE_FK INTEGER not null,
+        PAYMENT_STATUS VARCHAR(100) not null,
+        PAYMENTGATEWAY_ACS TINYINT,
+        PAYMENTGATEWAY_MD VARCHAR(1000),
+		PAYMENTGATEWAY_PAREQ VARCHAR(1000),
+		PAYMENTGATEWAY_PARES VARCHAR(5000),
+		PAYMENTGATEWAY_ACSURL VARCHAR(1000),	
+        primary key (ID)
+    );
+    
     alter table ATTACHMENT 
         add index ATTACHMENT_DB_FILE_FKC (DB_FILE_FK), 
         add constraint ATTACHMENT_DB_FILE_FKC 
@@ -315,3 +327,9 @@
         add constraint PURCHASE_PAYMENT_METHOD_FKC 
         foreign key (PAYMENT_METHOD_FK) 
         references PAYMENT_METHOD (ID);
+
+    alter table PAYMENT_STATUS 
+        add index PAYMENT_STATUS_PURCHASE_FKC (PURCHASE_FK), 
+        add constraint PAYMENT_STATUS_PURCHASE_FKC 
+        foreign key (PURCHASE_FK) 
+        references PURCHASE (ID);

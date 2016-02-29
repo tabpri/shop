@@ -12,4 +12,8 @@ public interface IPurchaseService {
 
 	Purchase getUserCurrentPurchase(Integer userId);
 
+	void updatePaymentMethod(Purchase purchase, Integer paymentMethod);
+
+	Purchase confirmPurchase(Integer id);
+
 }

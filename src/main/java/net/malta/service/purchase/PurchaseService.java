@@ -4,18 +4,25 @@
 
 package net.malta.service.purchase;
 
+import java.util.Date;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.malta.dao.payment.PaymentMethodDAO;
 import net.malta.dao.purchase.PurchaseDAO;
 import net.malta.model.Choise;
 import net.malta.model.Item;
+import net.malta.model.PaymentMethod;
+import net.malta.model.PaymentStatus;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
+import net.malta.model.payment.PaymentStatusEnum;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 
 @Service
@@ -24,10 +31,11 @@ public class PurchaseService implements IPurchaseService {
 	@Autowired
 	private PurchaseDAO purchaseDAO;
 	
-	public void setPurchaseDAO(PurchaseDAO purchaseDAO) {
-		this.purchaseDAO = purchaseDAO;
-	}
+	@Autowired
+	private PaymentMethodDAO paymentMethodDAO; 
 	
+	private static final Logger logger = LoggerFactory.getLogger(PurchaseService.class);
+
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)	
 	public Purchase getPurchase(Integer id) {
@@ -71,7 +79,40 @@ public class PurchaseService implements IPurchaseService {
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)	
+	public Purchase confirmPurchase(Integer id) {		
+		Purchase purchase = getPurchase(id);
+		purchase.setTemp(false);
+		purchase.setDate(new Date());
+		PaymentStatus paymentStatus = purchase.getPayment();
+		if ( paymentStatus == null ) {
+			paymentStatus = new PaymentStatus();			
+		}
+		paymentStatus.setPaymentStatus(PaymentStatusEnum.COMPLETED);
+		purchase.setPayment(paymentStatus);
+		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);
+		sendEmail(purchase);
+		return purchase;
+	}	
+	
+	private void sendEmail(Purchase purchase) {
+		
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
 	public Purchase getUserCurrentPurchase(Integer userId) {
 		return purchaseDAO.getPurchase(userId, true);
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public void updatePaymentMethod(Purchase purchase,Integer paymentMethodId) {
+		PaymentMethod paymentMethod = paymentMethodDAO.find(paymentMethodId);
+		purchase.setPaymentMethod(paymentMethod);
+		updatePurchase(purchase);
+	}	
+
+	public void setPurchaseDAO(PurchaseDAO purchaseDAO) {
+		this.purchaseDAO = purchaseDAO;
 	}
 }

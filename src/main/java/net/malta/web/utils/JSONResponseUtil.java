@@ -18,7 +18,9 @@ public class JSONResponseUtil {
 	}
 	
 	public static void sendErrorJSON(HttpServletResponse res,Errors errors) throws IOException {
-		res.setStatus(HttpServletResponse.SC_BAD_REQUEST);		
-		JSONResponseUtil.writeResponseAsJSON(res, errors);
+		res.setContentType(APPLICATION_JSON);		
+		res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		res.getWriter().print(JSONUtil.serialize(errors));
+		res.flushBuffer();
 	}	
 }

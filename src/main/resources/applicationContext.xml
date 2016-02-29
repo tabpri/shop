@@ -41,6 +41,7 @@
                 <value>net/malta/model/Carriage.hbm.xml</value>
                 <value>net/malta/model/PaymentMethod.hbm.xml</value>
                 <value>net/malta/model/Prefecture.hbm.xml</value>
+                <value>net/malta/model/PaymentStatus.hbm.xml</value>                
             </list>
         </property>
         <property name="hibernateProperties">

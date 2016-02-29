@@ -1,4 +1,4 @@
-package net.malta.web.app;
+package net.malta.service.purchase;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -8,63 +8,39 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.MimeUtility;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import net.enclosing.util.SimpleMail;
+import net.malta.dao.meta.StaticDataDAO;
 import net.malta.model.Choise;
-import net.malta.model.DeliveryAddress;
-import net.malta.model.DeliveryAddressChoise;
 import net.malta.model.Purchase;
 import net.malta.model.StaticData;
 
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class PurchaseEmailService {
 
-public class MailAboutPurchaseToPublicUserAction extends Action{
-	public ActionForward execute(
-			ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest req,
-			HttpServletResponse res) throws Exception{
-//		if (req.getParameter("id") != null
-//				&& !req.getParameter("id").equals("")) {
-//			this.execute(Integer.valueOf(req.getParameter("id")),
-//					this.getServlet().getServletContext(),Integer.parseInt((String)req.getSession().getAttribute("deliveryaddress")));
-//		}else{
-//			this.execute(null,this.getServlet().getServletContext());
-//		}
-		return mapping.findForward("success");
-	}
+	@Autowired
+	ApplicationContext context;
+	
+	@Autowired
+	StaticDataDAO staticDataDAO;
+	
+	public void confirmPurchaseEmail(Purchase purchase) {
+		
+		SimpleMail mail = SimpleMail.create(context);
 
-    public void execute(Integer id,Session session,int deliverymethod){
-		SimpleMail mail = SimpleMail.create(new ClassPathXmlApplicationContext(new String[] { "applicationContext.xml", "applicationContext-localDataSource.xml", "applicationContext-mail.xml" }));
-
-		Criteria criteria = session.createCriteria(Purchase.class);
-		criteria.add(Restrictions.eq("id", id));
-		Purchase purchase = (Purchase) criteria.uniqueResult();
-	        	Map model = new HashMap();
+       	Map model = new HashMap();
 		model.put("purchase", purchase);
 		Locale l = new Locale("ja", "JP");
 		model.put("dateFormatter", new SimpleDateFormat("yyyy/MM/dd"));
 		model.put("dayFormatter", new SimpleDateFormat("E", l));		
 		model.put("timeFormatter", new SimpleDateFormat("HH:mm"));
 
-		Criteria criteriastaticData = session.createCriteria(StaticData.class);
-		criteriastaticData.add(Restrictions.eq("id", new Integer(1)));
-		StaticData staticData = (StaticData) criteriastaticData.uniqueResult();
+		StaticData staticData = staticDataDAO.find(1);	
 
-		
+		// this code needs to be part of template
 		StringBuilder builder = new StringBuilder();
-		Criteria criteriaDeliveryAddressChoise = session.createCriteria(DeliveryAddressChoise.class);
-		criteriaDeliveryAddressChoise.createCriteria("choise").add(Restrictions.eq("purchase", purchase));
 				//when there are no delivery address ( direct to public User)
 				builder.append("▼配送先情報");
 				builder.append("\r\n");
@@ -119,6 +95,7 @@ public class MailAboutPurchaseToPublicUserAction extends Action{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		model.put("staticData", staticData);
 
 		try {
@@ -133,8 +110,6 @@ public class MailAboutPurchaseToPublicUserAction extends Action{
 			e.printStackTrace();
 		}
 
-
-        }
-	
-	
+		
+	}
 }
