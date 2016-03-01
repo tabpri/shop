@@ -1,4 +1,7 @@
+<%@page import="net.malta.model.purchase.wrapper.PurchaseDeliveryAddress"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="net.malta.model.*" %>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -14,6 +17,8 @@
 
 
 <%@ page isELIgnored="false" %>
+<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
+
 <tiles:insert definition=".layout">
 	<tiles:put name="title" value="購入一覧" direct="true" />
 	<tiles:put name="content" direct="true">
@@ -190,6 +195,24 @@ ${row.choises}
 </nobr>
 </display:column>
 --%>
+
+<display:column media="html" sortable="true" title="支払い状況"><nobr>
+${row.payment.paymentStatusString}</nobr>
+</display:column>
+
+<%
+	Purchase purchase = (Purchase) pageContext.getAttribute("row");
+	pageContext.setAttribute("deliveryAddress",new PurchaseDeliveryAddress(purchase).getDeliveryAddress());
+%>
+<display:column media="html" sortable="false" title="配信アドレス"><nobr>
+お名前 ： ${deliveryAddress.name}様
+フリガナ： ${deliveryAddress.kana}
+郵便番号 ： ${deliveryAddress.zipthree}
+ご住所　： ${deliveryAddress.prefecture.name} ${deliveryAddress.address} ${deliveryAddress.city} ${deliveryAddress.buildingname}
+電話番号 ： ${deliveryAddress.phone}
+</nobr>
+</display:column>
+
                     </display:table>
 
 

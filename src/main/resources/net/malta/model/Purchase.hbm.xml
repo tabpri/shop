@@ -39,7 +39,9 @@
         </property>
         <many-to-one name="publicUser" class="net.malta.model.PublicUserImpl" foreign-key="PURCHASE_PUBLIC_USER_FKC" lazy="proxy" fetch="select">
             <column name="PUBLIC_USER_FK" not-null="false" sql-type="INTEGER"/>
-        </many-to-one>
+        </many-to-one>        
+        <one-to-one name="payment" class="net.malta.model.PaymentStatus" property-ref="purchaseId" foreign-key="PAYMENT_STATUS_PURCHASE_FKC"  lazy="proxy" fetch="select">
+		</one-to-one>        
         <set name="choises" order-by="PURCHASE_FK" lazy="true" fetch="select" inverse="true">
             <key foreign-key="CHOISE_PURCHASE_FKC">
                 <column name="PURCHASE_FK" sql-type="INTEGER"/>
