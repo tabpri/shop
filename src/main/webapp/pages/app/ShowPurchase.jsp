@@ -12,6 +12,7 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page isELIgnored="false" %>
 
+
    <tiles:insert definition=".akaruiPublicLayout">
 	<tiles:put name="content" direct="true">
 

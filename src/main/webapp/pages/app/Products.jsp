@@ -13,6 +13,7 @@
 <%@ page import="net.malta.web.utils.MainItem" %>
 
 <%@ page isELIgnored="false" %>
+<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
 
 <tiles:insert definition=".layout">
 	<tiles:put name="title" value="製品一覧" direct="true" />
