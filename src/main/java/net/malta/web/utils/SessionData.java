@@ -17,12 +17,10 @@ import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.service.user.IPublicUserService;
-import net.malta.web.model.PublicUserInfo;
 import net.malta.web.model.PurchaseInfo;
 
 public class SessionData {
 
-	public static final String USER_INFO = "USERINFO";
 	public static final String PURCHASE_INFO = "PURCHASEINFO";
 
 	public static void update(Purchase purchase, PublicUser publicUser,Session session) {
@@ -94,10 +92,6 @@ public class SessionData {
 	}
 	
 	
-	public static PublicUserInfo getUserInfo(HttpServletRequest req) {
-		return (PublicUserInfo) req.getSession(false).getAttribute(USER_INFO);		
-	}
-
 	public static PurchaseInfo createUserAndPurchase(HttpServletRequest req,ServletContext context) {		
 		Purchase purchase = new PurchaseImpl();
 		PublicUser publicUser = new PublicUserImpl();
