@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.SessionData;
 
 public class PrivilegeManageFilter implements Filter {
@@ -31,23 +32,23 @@ public class PrivilegeManageFilter implements Filter {
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		HttpServletRequest req2 = (HttpServletRequest)req;
-		HttpServletResponse res2 = (HttpServletResponse)res;
-		if(!req2.getRequestURI().contains(".do")){
+		HttpServletRequest httpRequest = (HttpServletRequest)req;
+		HttpServletResponse httpResponse = (HttpServletResponse)res;
+		if(!httpRequest.getRequestURI().contains(".do")){
 			chain.doFilter(req, res);
 		}else if(req.getParameter("login") == null || req.getParameter("ajax") == null){
 				synchronized (thread) {
 
-	            	String sessionCookie = SessionData.getSessionCookie(req2);
+	            	String sessionCookie = SessionData.getSessionCookie(httpRequest);
 	            	
 					boolean cookieexists = StringUtils.isNotBlank(sessionCookie);
 					
 	            	if(cookieexists) {            			
 						System.err.println(" session cookie malta is available ---------------------------------------- " + sessionCookie);
 
-	            		if( SessionData.getSessionPuchaseInfo(req2) == null ) {            				
-	        				SessionData.createTempPurchase(req2, this.context, Integer.valueOf(sessionCookie));
-	            			SessionData.updateSessionCookie(req2, res2);            				
+	            		if( SessionData.getSessionPuchaseInfo(httpRequest) == null ) {            				
+	        				SessionData.createTempPurchase(httpRequest, this.context, Integer.valueOf(sessionCookie));
+	            			SessionData.updateSessionCookie(httpRequest, httpResponse);            				
 	            		}
 
 //		            	Criteria criteria = session.createCriteria(IntraUser.class);
@@ -62,14 +63,23 @@ public class PrivilegeManageFilter implements Filter {
 
 						System.err.println(" session cookie malta is not available ----------------------------------------");
 						
-            			SessionData.createUserAndPurchase(req2,this.context);
-            			SessionData.updateSessionCookie(req2, res2);
+            			SessionData.createUserAndPurchase(httpRequest,this.context);
+            			SessionData.updateSessionCookie(httpRequest, httpResponse);
 	            			
 	            }
+	            	addSessionVariablesToResponseHeaders(httpRequest,httpResponse);
 			}
 
 		}
 		chain.doFilter(req, res);
+	}
+
+	private void addSessionVariablesToResponseHeaders(HttpServletRequest req,HttpServletResponse res) {
+		PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		String malta = sessionPuchaseInfo.getUserId().toString();
+		String sessionId = req.getSession().getId();
+		res.setHeader("JSESSIONID", sessionId);
+		res.setHeader("malta", malta);
 	}
 
 	public void init(FilterConfig config) throws ServletException {
