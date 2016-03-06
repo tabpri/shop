@@ -23,17 +23,16 @@ public class PurchaseTotal implements ITotal<Purchase>{
 	public void calcAndSetTotal() {
 			Integer purchaseTotal = 0;
 			Integer carriageTotal = 0;
+			Integer totalOrderNum = 0;
 			@SuppressWarnings("unchecked")
 			Collection<Choise> choises = purchase.getChoises();
 			for (Choise choise : choises ){
 				purchaseTotal +=choise.getPricewithtax();
 				carriageTotal +=choise.getCarriage();
+				totalOrderNum += choise.getOrdernum();
 			}
 			purchase.setTotal(purchaseTotal);
 			purchase.setCarriage(carriageTotal);
-	}
-
-	public void setCarriage(int carriage) {
-        purchase.setCarriage(carriage);
+			purchase.setTotalordernum(totalOrderNum);
 	}
 }

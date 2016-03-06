@@ -23,6 +23,8 @@ public class PurchaseMapper implements IMapper<Purchase, net.malta.model.purchas
 		// purchase info
 		purchaseJSON.setPurchaseId(purchase.getId());
 		purchaseJSON.setPurchasetotal(purchase.getTotal());
+		purchaseJSON.setTotalordernum(purchase.getTotalordernum());
+		purchaseJSON.setCarriage(purchase.getCarriage());
 		
 		// purchase.choises
 		Collection<Choise> choises = ((Collection<Choise>) purchase.getChoises());

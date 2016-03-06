@@ -208,6 +208,13 @@
         primary key (ID)
     );
     
+	CREATE TABLE `PREFECTURE_CARRIAGE` (
+		`ID` INTEGER not null auto_increment,
+		`PREFECTURE_FK` INTEGER not null,
+		`CARRIAGEVALUE` INTEGER not null,
+		primary key (ID)	
+	); 
+
     alter table ATTACHMENT 
         add index ATTACHMENT_DB_FILE_FKC (DB_FILE_FK), 
         add constraint ATTACHMENT_DB_FILE_FKC 
@@ -333,3 +340,9 @@
         add constraint PAYMENT_STATUS_PURCHASE_FKC 
         foreign key (PURCHASE_FK) 
         references PURCHASE (ID);
+        
+	ALTER TABLE PREFECTURE_CARRIAGE
+	    ADD INDEX PREFECTURE_CARRIAGE_FKC (PREFECTURE_FK), 
+	    ADD CONSTRAINT PREFECTURE_CARRIAGE_FKC 
+	    FOREIGN KEY (PREFECTURE_FK) 
+	    REFERENCES PREFECTURE (ID);        

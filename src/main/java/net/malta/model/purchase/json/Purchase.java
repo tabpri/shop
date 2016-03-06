@@ -13,7 +13,9 @@ public class Purchase implements Serializable {
 
 	private Integer purchaseId;
 	private Integer purchasetotal;
-
+	private Integer totalordernum;
+	private Integer carriage;
+	
 	private List<Choise> choises;
 
 	public void addChoise(Choise choise) {
@@ -45,5 +47,20 @@ public class Purchase implements Serializable {
 
 	public void setChoises(List<Choise> choises) {
 		this.choises = choises;
+	}	
+	public Integer getTotalordernum() {
+		return totalordernum;
+	}
+
+	public void setTotalordernum(Integer totalordernum) {
+		this.totalordernum = totalordernum;
+	}
+
+	public Integer getCarriage() {
+		return carriage;
+	}
+
+	public void setCarriage(Integer carriage) {
+		this.carriage = carriage;
 	}	
 }

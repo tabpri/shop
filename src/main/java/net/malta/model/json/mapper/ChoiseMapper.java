@@ -22,6 +22,7 @@ public class ChoiseMapper implements IMapper<Choise, net.malta.model.purchase.js
 		choiseJSON.setItem(itemJSON);
 		choiseJSON.setOrdernum(choise.getOrdernum());
 		choiseJSON.setPricewithtax(choise.getPricewithtax());
+		choiseJSON.setCarriage(choise.getCarriage());
 		choiseJSON.setWrapping(choise.isWrapping());
 		choiseJSON.setVarietychoise(choise.getVarietychoise());
 		return choiseJSON;		
