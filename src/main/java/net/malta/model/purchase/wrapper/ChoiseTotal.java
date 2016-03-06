@@ -19,10 +19,22 @@ public class ChoiseTotal implements ITotal<Choise> {
 	@Override
 	public void calcAndSetTotal() {
 		Item item = choise.getItem();
-		Integer shippingCost = item.getCarriage().getValue();
+		Integer carriage = item.getCarriage().getValue();
 		Integer priceWithTax = item.getPricewithtax();
 		Integer quantity = choise.getOrdernum();
-		choise.setPricewithtax( ( priceWithTax + shippingCost) * quantity );
-		choise.setCarriage((shippingCost * quantity));
+		choisetotal(carriage, priceWithTax, quantity);
 	}
+
+	public void carriageChanged(Integer carriage) {
+		Item item = choise.getItem();
+		Integer priceWithTax = item.getPricewithtax();
+		Integer quantity = choise.getOrdernum();
+		choisetotal(carriage, priceWithTax, quantity);
+	}
+
+	private void choisetotal(Integer carriage, Integer priceWithTax, Integer quantity) {
+		choise.setPricewithtax( ( priceWithTax + carriage) * quantity );
+		choise.setCarriage((carriage * quantity));
+	}
+		
 }

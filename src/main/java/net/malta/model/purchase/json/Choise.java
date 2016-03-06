@@ -12,6 +12,7 @@ public class Choise implements Serializable{
 	private String img;
 	private Integer ordernum;
 	private Integer pricewithtax;
+	private Integer carriage;	
 	private Boolean wrapping;
 	private String varietychoise;	
 	private Item item;
@@ -66,5 +67,11 @@ public class Choise implements Serializable{
 	}
 	public void setItem(Item item) {
 		this.item = item;
+	}
+	public Integer getCarriage() {
+		return carriage;
+	}
+	public void setCarriage(Integer carriage) {
+		this.carriage = carriage;
 	}	
 }
