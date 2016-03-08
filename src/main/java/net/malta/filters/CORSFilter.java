@@ -27,8 +27,6 @@ public class CORSFilter implements Filter {
 		res.addHeader(
 			"Access-Control-Allow-Origin", "*"
 		);
-		System.err.println("setting up the Access-Control-Expose-Headers in CORSFilter");		
-		res.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
 		chain.doFilter(request, response);
 	}
 }

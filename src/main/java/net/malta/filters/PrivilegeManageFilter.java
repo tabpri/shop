@@ -80,6 +80,7 @@ public class PrivilegeManageFilter implements Filter {
 		String sessionId = req.getSession().getId();
 		res.setHeader("JSESSIONID", sessionId);
 		res.setHeader("malta", malta);
+		res.setHeader("Access-Control-Expose-Headers", "JSESSIONID,malta");		
 	}
 
 	public void init(FilterConfig config) throws ServletException {
