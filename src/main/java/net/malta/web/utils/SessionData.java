@@ -1,39 +1,53 @@
 package net.malta.web.utils;
 
-import java.util.Calendar;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import net.enclosing.util.StringFullfiller;
 import net.malta.model.PublicUser;
-import net.malta.model.PublicUserImpl;
+import net.malta.model.PublicUserSession;
 import net.malta.model.Purchase;
-import net.malta.model.PurchaseImpl;
+import net.malta.model.PurchaseInfo;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.service.user.IPublicUserService;
-import net.malta.web.model.PurchaseInfo;
+import net.malta.service.user.IPublicUserSessionService;
 
 public class SessionData {
 
+	private static final String MALTA = "malta";
+
+	private static final String SECUAL_AUTH_TOKEN = "secual-auth-token";
+
 	public static final String PURCHASE_INFO = "PURCHASEINFO";
 
-	public static void update(Purchase purchase, PublicUser publicUser,Session session) {
-		purchase.setPublicUser(publicUser);
-		Transaction transaction = session.beginTransaction();
-		session.saveOrUpdate(publicUser);
-		session.saveOrUpdate(purchase);
-		transaction.commit();		
-		session.evict(publicUser);		
-		session.evict(purchase);
+	private static SessionData sessionData;
+	
+	private IPurchaseService purchaseService;
+	
+	private IPublicUserService publicUserService;
+	
+	private IPublicUserSessionService  publicUserSessionService;
+	
+	public SessionData(ServletContext context) {
+		initBeans(context);
+	}
+	
+	private void initBeans(ServletContext context) {
+		this.publicUserService = (IPublicUserService) BeanUtil.getBean("publicUserService", context);
+		this.purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", context);
+		this.publicUserSessionService = (IPublicUserSessionService) BeanUtil.getBean("publicUserSessionService", context);		
 	}
 
-	public static void updateCookie(PublicUser publicUser,
+	// TODO: need to implement double checking
+	public static SessionData getInstance(ServletContext context) {
+		if ( sessionData == null ) {
+			sessionData = new SessionData(context);
+		}
+		return sessionData;
+	}
+	
+/*	public static void updateCookie(PublicUser publicUser,
 			HttpServletRequest req, HttpServletResponse res) {
 
 		
@@ -45,14 +59,14 @@ public class SessionData {
 
 		res.addCookie(cookie); 
 		// flush should not happen here - after the response is set.
-/*		try {
+		try {
 			res.flushBuffer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-*/	}
-
-	public static void update(PublicUser u, Purchase purchase,
+	}
+*/
+/*	public static void update(PublicUser u, Purchase purchase,
 			HttpServletRequest req, HttpServletResponse res,Session session) {
 		update(purchase, u,session);
 		updateCookie(u, req, res);
@@ -61,93 +75,90 @@ public class SessionData {
 		req.getSession().setAttribute("purchase", purchase);
 	}
 
-	public static void 	updateSessionCookie(HttpServletRequest req, HttpServletResponse res) {
+*/	
+	public void updateSessionCookie(HttpServletRequest req, HttpServletResponse res) {
 		
 		PurchaseInfo purchaseInfo = getSessionPuchaseInfo(req);
 		String userIdString = purchaseInfo.getUserId().toString();
 				
-		Cookie cookie = new Cookie("malta",userIdString);
+		Cookie cookie = new Cookie(MALTA,userIdString);
 		cookie.setValue(userIdString);
 		cookie.setComment("hoge");
 		cookie.setMaxAge(60 * 60 * 168);
 		System.out.println("setting the cookie path to / -----------------------------------");
 		cookie.setPath("/");
 		res.addCookie(cookie);
-		res.setHeader("malta", userIdString);
+		res.setHeader(MALTA, userIdString);
 	}
 	
-	public static String getSessionCookie(HttpServletRequest req) {
+	public String getSessionCookie(HttpServletRequest req) {
     	if(req.getCookies()!=null){
 
         	for (int i = 0; i < req.getCookies().length; i++) {
-    			if(req.getCookies()[i].getName().equals("malta")){
+    			if(req.getCookies()[i].getName().equals(MALTA)){
     				return req.getCookies()[i].getValue();
     			}
 			}
     	}
-    	return null;
+    	return req.getHeader(MALTA);
 	}
-	public static PurchaseInfo getSessionPuchaseInfo(HttpServletRequest req) {
-		return (PurchaseInfo) req.getSession().getAttribute(PURCHASE_INFO);
+	
+	public PurchaseInfo getSessionPuchaseInfo(HttpServletRequest req) {
+		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+		PublicUserSession session = publicUserSessionService.getSession(sessionToken);
+		PurchaseInfo purchaseInfo = new PurchaseInfo(session.getPurchase(), session.getPublicUser(), 
+				session.getSessionToken());
+		return purchaseInfo;
+		//return (PurchaseInfo) req.getSession().getAttribute(PURCHASE_INFO);
 	}
 	
 	
-	public static PurchaseInfo createUserAndPurchase(HttpServletRequest req,ServletContext context) {		
-		Purchase purchase = new PurchaseImpl();
-		PublicUser publicUser = new PublicUserImpl();
-		StringFullfiller.fullfil(purchase);
-		StringFullfiller.fullfil(publicUser);
-		publicUser.setTemp(true);
-		purchase.setTemp(true);
-		purchase.setPublicUser(publicUser);
-		
-		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
-				context);
+	public PurchaseInfo createUserAndPurchase() {
 
-		IPublicUserService userService = (IPublicUserService) BeanUtil.getBean("publicUserService", 
-				context);
+		PublicUser user = publicUserService.createTempUser();
+		Purchase purchase = purchaseService.createTempPurchase(user);
 
-		userService.createUser(publicUser);
+		PurchaseInfo purchaseInfo = createUserSession(user, purchase);
 		
-		purchase = purchaseService.createPurchase(purchase);
-		
-		PurchaseInfo purchaseInfo = new PurchaseInfo(purchase.getId(), purchase.getPublicUser().getId());
-		
-		req.getSession().setAttribute(PURCHASE_INFO, purchaseInfo);
-
 		return purchaseInfo;
 	}
 
-	public static void createTempPurchase(HttpServletRequest req,ServletContext context, Integer userId) {
+	private PurchaseInfo createUserSession(PublicUser user,
+			Purchase purchase) {
 
-		IPublicUserService userService = (IPublicUserService) BeanUtil.getBean("publicUserService", 
-				context);
+		Integer purchaseId = purchase.getId();
 
-		PublicUser publicUser = userService.getUser(userId);
-
-		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
-				context);
-
-		Purchase purchase = new PurchaseImpl();
-		StringFullfiller.fullfil(purchase);
-		purchase.setTemp(true);
+		Integer userId = user.getId();
 		
-		purchase.setPublicUser(publicUser);
-		purchase = purchaseService.createPurchase(purchase);
+		PublicUserSession userSessionToken = publicUserSessionService.createSession(userId,purchaseId);
 		
-		PurchaseInfo purchaseInfo = new PurchaseInfo(purchase.getId(), purchase.getPublicUser().getId());
+		PurchaseInfo purchaseInfo = new PurchaseInfo(purchaseId, userId, userSessionToken.getSessionToken());
+		return purchaseInfo;
+	}
+
+	public PurchaseInfo createTempPurchase(Integer userId) {
+
+		PublicUser publicUser = publicUserService.getUser(userId);
+
+		Purchase purchase = purchaseService.createTempPurchase(publicUser);
 		
-		req.getSession(false).setAttribute(PURCHASE_INFO, purchaseInfo);		
+		Integer purchaseId = purchase.getId();
+
+		PurchaseInfo purchaseInfo = createUserSession(publicUser, purchase);
+		
+		//req.getSession().setAttribute(PURCHASE_INFO, purchaseInfo);
+		
+		return purchaseInfo;
 	}
 	
-	public static void updateSessionPurchaseInfoAndCookie(HttpServletRequest req,HttpServletResponse res,Integer userId) {
+	public void updateSessionPurchaseInfoAndCookie(HttpServletRequest req,HttpServletResponse res,Integer userId) {
 		PurchaseInfo sessionPuchaseInfo = getSessionPuchaseInfo(req);
 		sessionPuchaseInfo.setUserId(userId);
 		req.getSession(false).setAttribute(PURCHASE_INFO, sessionPuchaseInfo);
 		updateSessionCookie(req, res);
 	}
 	
-	public static PurchaseInfo getPurchaseUsingSessionCookie(HttpServletRequest req, ServletContext context,String cookie) {
+	public PurchaseInfo getPurchaseUsingSessionCookie(HttpServletRequest req, ServletContext context,String cookie) {
 		Integer cookieUserId = Integer.parseInt(cookie);
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
 				context);
@@ -160,4 +171,11 @@ public class SessionData {
 		
 		return purchaseInfo;
 	}
+	
+	public void setResponseHeaders(HttpServletResponse res,PurchaseInfo purchaseInfo) {
+		String userId = purchaseInfo.getUserId().toString();
+		res.setHeader(SECUAL_AUTH_TOKEN, purchaseInfo.getUserSessionToken());
+		res.setHeader(MALTA, userId);
+	}
+	
 }

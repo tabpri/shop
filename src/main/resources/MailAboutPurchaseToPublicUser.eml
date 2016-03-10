@@ -1,3 +1,5 @@
+#include( "DeliveryAddress.eml" )
+#include( "Choises.eml" )
 Subject:【A&L】＊ご注文ありがとうございました（自動配信メール）＊
 From:$staticData.fromaddress
 

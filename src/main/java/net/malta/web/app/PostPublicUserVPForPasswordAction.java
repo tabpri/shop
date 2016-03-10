@@ -65,7 +65,7 @@ public class PostPublicUserVPForPasswordAction extends Action {
 		session.saveOrUpdate(publicUser);
 		transaction.commit();
 		session.flush();
-		SessionData.update(publicUser,(Purchase)req.getSession().getAttribute("purchase"),req,res,session);
+		//SessionData.update(publicUser,(Purchase)req.getSession().getAttribute("purchase"),req,res,session);
 		req.getSession().setAttribute("msg", "パスワードは正しく変更されました。 <br />");
 		new HTTPGetRedirection(req, res, "PostPublicUserDetailForPassword.html", publicUser
 				.getId().toString());

@@ -1,19 +1,22 @@
 package net.malta.service.purchase;
 
+import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 
 public interface IPurchaseService {
 
-	Purchase getPurchase(Integer id);
+	public Purchase getPurchase(Integer id);
 
-	Purchase createPurchase(Purchase purchase);
+	public Purchase createPurchase(Purchase purchase);
 
-	Purchase updatePurchase(Purchase purchase);
+	public Purchase updatePurchase(Purchase purchase);
 
-	Purchase getUserCurrentPurchase(Integer userId);
+	public Purchase getUserCurrentPurchase(Integer userId);
 
-	void updatePaymentMethod(Purchase purchase, Integer paymentMethod);
+	public void updatePaymentMethod(Purchase purchase, Integer paymentMethod);
 
-	Purchase confirmPurchase(Integer id);
+	public Purchase confirmPurchase(Integer id);
+
+	public Purchase createTempPurchase(PublicUser user);
 
 }

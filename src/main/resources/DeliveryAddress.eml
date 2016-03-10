@@ -1,0 +1,19 @@
+▼配送先情報"
+
+================================================================
+
+お名前　　　　　　：
+
+$purchase.publicUser.name 様
+フリガナ　　　　　：
+$purchase.publicUser.kana
+郵便番号　　　　　：
+$purchase.publicUser.zipthree
+
+ご住所　　　　　　：
+#if ( $purchase.publicUser.prefecture != null  )
+	purchase.publicUser.prefecture.name $purchase.publicUser.address purchase.publicUser.buildingname
+#end
+
+電話番号　　　　　：
+purchase.publicUser.phone

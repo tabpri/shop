@@ -11,22 +11,23 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.enclosing.util.SimpleMail;
-import net.malta.model.Choise;
-import net.malta.model.DeliveryAddress;
-import net.malta.model.DeliveryAddressChoise;
-import net.malta.model.Purchase;
-import net.malta.model.StaticData;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import net.enclosing.util.SimpleMail;
+import net.malta.model.Choise;
+import net.malta.model.DeliveryAddressChoise;
+import net.malta.model.Purchase;
+import net.malta.model.StaticData;
+import net.malta.service.purchase.IPurchaseEmailService;
+import net.malta.service.purchase.IPurchaseService;
+import net.malta.web.utils.BeanUtil;
 
 public class MailAboutPurchaseToPublicUserAction extends Action{
 	public ActionForward execute(
@@ -34,13 +35,16 @@ public class MailAboutPurchaseToPublicUserAction extends Action{
 			ActionForm form,
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
-//		if (req.getParameter("id") != null
-//				&& !req.getParameter("id").equals("")) {
-//			this.execute(Integer.valueOf(req.getParameter("id")),
-//					this.getServlet().getServletContext(),Integer.parseInt((String)req.getSession().getAttribute("deliveryaddress")));
-//		}else{
-//			this.execute(null,this.getServlet().getServletContext());
-//		}
+		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
+				this.getServlet().getServletContext());
+
+		Purchase purchase = purchaseService.getPurchase(335);
+		
+		IPurchaseEmailService purchaseEmailService = (IPurchaseEmailService) BeanUtil.getBean("purchaseEmailService", 
+				this.getServlet().getServletContext());
+
+		//purchaseEmailService.confirmPurchaseEmail(purchase);
+		
 		return mapping.findForward("success");
 	}
 

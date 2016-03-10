@@ -2,6 +2,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,12 +15,12 @@ import org.slf4j.LoggerFactory;
 import net.malta.beans.PurchaseForm;
 import net.malta.beans.mapper.PurchaseFormMapper;
 import net.malta.error.Errors;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.payment.PaymentInfo;
 import net.malta.model.payment.RequestInfo;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.payment.IPaymentService;
 import net.malta.service.payment.PaymentException;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -47,10 +48,11 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends PostPurchaseVPPay
 
 	private void paymentEntryExecute(HttpServletRequest req, HttpServletResponse res, PurchaseForm purchaseform) throws IOException {
 		
-		IPaymentService paymentService = (IPaymentService) BeanUtil.getBean("paymentService", this.getServlet().getServletContext());				
+		ServletContext context = this.getServlet().getServletContext();
+		IPaymentService paymentService = (IPaymentService) BeanUtil.getBean("paymentService", context);				
 
 		PurchaseFormMapper formMapper = (PurchaseFormMapper) BeanUtil.getBean("purchaseFormMapper", 
-				this.getServlet().getServletContext());
+				context);
 		
 		PaymentInfo paymentInfo = formMapper.map(purchaseform, new PaymentInfo());
 		RequestInfo requestDetails = new RequestInfo(acsURL(req),				
@@ -59,7 +61,7 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends PostPurchaseVPPay
 		
 		String redirectContents = null;
 		
-		PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		try {
 			Integer purchaseId = sessionPuchaseInfo.getPurchaseId();
 			logger.info("executing the paymentService.paymentRequest");
