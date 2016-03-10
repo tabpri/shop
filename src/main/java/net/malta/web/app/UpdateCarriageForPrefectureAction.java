@@ -180,7 +180,7 @@ public class UpdateCarriageForPrefectureAction extends Action{
 		//Purchase purchase = (Purchase)req.getSession().getAttribute("purchase");
 		//session.evict(purchase);
 //		session.close();
-		SessionData.update(publicUser, purchase, req, res,session);	
+		//SessionData.update(publicUser, purchase, req, res,session);	
 
 		new HTTPGetRedirection(req, res, "PostPublicUserDetail.do",null);
 		return null;

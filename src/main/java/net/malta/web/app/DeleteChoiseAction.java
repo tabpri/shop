@@ -5,6 +5,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,11 +15,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.malta.model.Purchase;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.PurchaseMapper;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IChoiseService;
 import net.malta.service.purchase.IPurchaseService;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.PurchaseSessionUtil;
@@ -50,7 +51,8 @@ public class DeleteChoiseAction extends Action{
 
 	private Integer deleteChoise(HttpServletRequest req, Integer choiseId) {
 		
-		PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		ServletContext context = this.getServlet().getServletContext();
+		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 
 		Integer purchaseId = purchaseInfo.getPurchaseId();
 

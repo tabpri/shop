@@ -1,5 +1,6 @@
 package net.malta.web.app;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,24 +10,21 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.malta.model.Purchase;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.PurchaseMapper;
 import net.malta.service.purchase.IPurchaseService;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
-import net.malta.web.utils.PurchaseSessionUtil;
 import net.malta.web.utils.SessionData;
 
 public class ShowPurchaseAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		
-		String purchaseIdReq = req.getParameter("id");
+		ServletContext context = this.getServlet().getServletContext();
+		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		
-		PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
-		
-		Integer purchaseId = (purchaseIdReq == null ) ? purchaseInfo.getPurchaseId() : 
-			Integer.valueOf(purchaseIdReq);
+		Integer purchaseId = purchaseInfo.getPurchaseId(); 
 
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", this.getServlet().getServletContext());
 					

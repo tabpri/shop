@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-cascade="none">
+    <class name="net.malta.model.PublicUserSession" table="PUBLIC_USER_SESSION" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="java.lang.Integer" unsaved-value="null">
+            <column name="ID" sql-type="INTEGER"/>
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="publicUser" type="java.lang.Integer">
+            <column name="PUBLIC_USER_FK" not-null="true" unique="false" sql-type="INTEGER"/>
+        </property>
+        <property name="purchase" type="java.lang.Integer">
+            <column name="PURCHASE_FK" not-null="true" unique="false" sql-type="INTEGER"/>
+        </property>        
+        <property name="sessionToken" type="java.lang.String">
+            <column name="SESSION_TOKEN" not-null="true" unique="false" sql-type="VARCHAR2(1000)"/>
+        </property>
+    </class>
+</hibernate-mapping>

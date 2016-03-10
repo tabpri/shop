@@ -12,4 +12,6 @@ public interface IPublicUserService {
 
 	public PublicUser getUserByAuthUser(Integer authUserId);
 
+	public PublicUser createTempUser();
+
 }

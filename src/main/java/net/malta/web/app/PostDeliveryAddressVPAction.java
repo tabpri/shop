@@ -2,6 +2,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,11 +15,11 @@ import net.malta.beans.DeliveryAddressForm;
 import net.malta.beans.mapper.DeliveryAddressFormMapper;
 import net.malta.model.DeliveryAddress;
 import net.malta.model.DeliveryAddressImpl;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.DeliveryAddressMapper;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.user.IDeliveryAddressService;
 import net.malta.web.model.PublicUserInfo;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -56,7 +57,8 @@ public class PostDeliveryAddressVPAction extends Action{
 
 	private void persist(HttpServletRequest req,DeliveryAddress deliveryAddress) {
 		
-		PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		ServletContext context = this.getServlet().getServletContext();
+		PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		Integer userId = sessionPuchaseInfo.getUserId();
 
 		IDeliveryAddressService deliveryAddressService = (IDeliveryAddressService) BeanUtil.getBean("deliveryAddressService", 

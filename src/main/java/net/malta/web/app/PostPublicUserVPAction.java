@@ -5,6 +5,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,11 +19,11 @@ import net.malta.beans.mapper.PublicUserFormMapper;
 import net.malta.model.PublicUser;
 import net.malta.model.PublicUserImpl;
 import net.malta.model.Purchase;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.PublicUserMapper;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.service.user.IPublicUserService;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -52,10 +53,11 @@ public class PostPublicUserVPAction extends Action {
 
 
 	private void updatePurchase(HttpServletRequest req, HttpServletResponse res,PublicUser publicUser) {
+		ServletContext context = this.getServlet().getServletContext();
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
-				this.getServlet().getServletContext());
+				context);
 		
-		PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		
 		Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
 		
@@ -63,7 +65,7 @@ public class PostPublicUserVPAction extends Action {
 		
 		purchaseService.updatePurchase(purchase);
 
-		SessionData.updateSessionPurchaseInfoAndCookie(req, res,publicUser.getId());
+		SessionData.getInstance(context).updateSessionPurchaseInfoAndCookie(req, res,publicUser.getId());
 	}
 
 

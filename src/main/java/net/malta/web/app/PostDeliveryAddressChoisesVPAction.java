@@ -5,6 +5,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,9 +16,9 @@ import org.apache.struts.action.ActionMapping;
 
 import net.malta.beans.DeliveryAddressChoiseForm;
 import net.malta.model.DeliveryAddress;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.DeliveryAddressMapper;
 import net.malta.service.purchase.IDeliveryAddressChoiseService;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -52,10 +53,11 @@ public class PostDeliveryAddressChoisesVPAction extends Action {
 	private DeliveryAddress updateDeliveryAddress(HttpServletRequest request,
 			DeliveryAddressChoiseForm deliveryAddressChoiseForm) {
 		
+		ServletContext context = this.getServlet().getServletContext();
 		IDeliveryAddressChoiseService service = (IDeliveryAddressChoiseService) BeanUtil.getBean("deliveryAddressChoiseService", 
-				this.getServlet().getServletContext());
+				context);
 		
-		PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(request);
+		PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(request);
 		
 		Integer deliveryAddressId = deliveryAddressChoiseForm.getDeliveryAddress(); 
 				

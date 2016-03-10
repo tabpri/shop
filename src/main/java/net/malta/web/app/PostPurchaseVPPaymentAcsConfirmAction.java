@@ -2,6 +2,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,11 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import net.malta.error.Errors;
 import net.malta.model.PaymentStatus;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.payment.PaymentStatusEnum;
 import net.malta.service.payment.ACSResponse;
 import net.malta.service.payment.IPaymentService;
 import net.malta.service.payment.PaymentException;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -29,10 +30,11 @@ public class PostPurchaseVPPaymentAcsConfirmAction extends PostPurchaseVPPayment
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 
+		ServletContext context = this.getServlet().getServletContext();
 		IPaymentService paymentService = (IPaymentService) BeanUtil.getBean("paymentService", 
-				this.getServlet().getServletContext());
+				context);
 		
-		PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(req);
+		PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		Integer purchaseId = sessionPuchaseInfo.getPurchaseId();
 		PaymentStatus paymentStatus = paymentService.getPaymentStatus(purchaseId);
 		
@@ -48,9 +50,10 @@ public class PostPurchaseVPPaymentAcsConfirmAction extends PostPurchaseVPPayment
 	private void paymentExecute(HttpServletRequest req, HttpServletResponse res)
 			throws IOException {
 		try {
-			PurchaseInfo sessionPuchaseInfo = SessionData.getSessionPuchaseInfo(req);
+			ServletContext context = this.getServlet().getServletContext();			
+			PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 			IPaymentService paymentService = (IPaymentService) BeanUtil.getBean("paymentService", 
-					this.getServlet().getServletContext());				
+					context);				
 			
 			// 本人認証画面からの戻り値
 			String MD = req.getParameter("MD");

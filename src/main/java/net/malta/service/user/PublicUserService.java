@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.enclosing.util.StringFullfiller;
 import net.malta.dao.user.PublicUserDAO;
+import net.malta.dao.user.PublicUserSessionDAO;
 import net.malta.error.Errors;
 import net.malta.model.Prefecture;
 import net.malta.model.PublicUser;
 import net.malta.model.PublicUserImpl;
+import net.malta.model.PublicUserSession;
 import net.malta.model.user.validator.PublicUserValidator;
 import net.malta.service.meta.IPrefectureService;
 
@@ -24,6 +27,12 @@ public class PublicUserService implements IPublicUserService {
 	
 	@Autowired
 	private PublicUserValidator validator;
+	
+	@Autowired
+	private SessionTokenGenerator sessionTokenGenerator;
+	
+	@Autowired
+	private PublicUserSessionDAO sessionTokenDAO; 
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)	
@@ -49,6 +58,16 @@ public class PublicUserService implements IPublicUserService {
 	public PublicUser updateUser(PublicUser publicUser) {
 		validator.validate(publicUser, new Errors());
 		return publicUserUpdate(publicUser);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public PublicUser createTempUser() {
+		PublicUser publicUser = new PublicUserImpl();
+		StringFullfiller.fullfil(publicUser);
+		publicUser.setTemp(true);
+		publicUserDAO.saveOrUpdate((PublicUserImpl) publicUser);
+		return publicUser;
 	}
 
 	private PublicUser publicUserUpdate(PublicUser publicUser) {

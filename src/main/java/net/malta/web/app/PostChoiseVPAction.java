@@ -2,6 +2,7 @@ package net.malta.web.app;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,10 +15,10 @@ import net.malta.beans.ChoiseForm;
 import net.malta.beans.mapper.ChoiseFormMapper;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
+import net.malta.model.PurchaseInfo;
 import net.malta.model.json.mapper.PurchaseChoiseMapper;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IChoiseService;
-import net.malta.web.model.PurchaseInfo;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
@@ -33,11 +34,13 @@ public class PostChoiseVPAction extends Action{
 		
 		try{
 			
+			ServletContext context = this.getServlet().getServletContext();
+			
 			ChoiseForm choiseForm = (ChoiseForm) form;
 			
 			Choise choise = mapChoiseForm(choiseForm);
 			
-			PurchaseInfo purchaseInfo = SessionData.getSessionPuchaseInfo(req);
+			PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 
 			Integer purchaseId = purchaseInfo.getPurchaseId();
 			

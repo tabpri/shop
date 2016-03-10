@@ -14,16 +14,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.enclosing.util.StringFullfiller;
 import net.malta.dao.payment.PaymentMethodDAO;
 import net.malta.dao.purchase.PurchaseDAO;
 import net.malta.model.Choise;
 import net.malta.model.Item;
 import net.malta.model.PaymentMethod;
 import net.malta.model.PaymentStatus;
+import net.malta.model.PublicUser;
+import net.malta.model.PublicUserImpl;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.model.payment.PaymentStatusEnum;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
+import net.malta.service.user.IPublicUserService;
+import net.malta.web.utils.BeanUtil;
 
 @Service
 public class PurchaseService implements IPurchaseService {
@@ -33,6 +38,9 @@ public class PurchaseService implements IPurchaseService {
 	
 	@Autowired
 	private PaymentMethodDAO paymentMethodDAO; 
+	
+	@Autowired
+	private IPurchaseEmailService emailService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(PurchaseService.class);
 
@@ -95,7 +103,8 @@ public class PurchaseService implements IPurchaseService {
 	}	
 	
 	private void sendEmail(Purchase purchase) {
-		
+		PurchaseEmailRunnable emailRun = new PurchaseEmailRunnable(purchase);		
+		new Thread(emailRun).start();
 	}
 
 	@Override
@@ -112,6 +121,17 @@ public class PurchaseService implements IPurchaseService {
 		updatePurchase(purchase);
 	}	
 
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public Purchase createTempPurchase(PublicUser user) {		
+		Purchase purchase = new PurchaseImpl();
+		StringFullfiller.fullfil(purchase);
+		purchase.setTemp(true);
+		purchase.setPublicUser(user);		
+		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);		
+		return purchase;
+	}	
+	
 	public void setPurchaseDAO(PurchaseDAO purchaseDAO) {
 		this.purchaseDAO = purchaseDAO;
 	}
