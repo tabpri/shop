@@ -83,7 +83,7 @@ public class LoginAction extends Action{
 		
 		purchaseService.updatePurchase(purchase);
 
-		SessionData.getInstance(context).updateSessionPurchaseInfoAndCookie(req, res,publicUser.getId());
+		SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res,purchase);
 	}
 	
 }

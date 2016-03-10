@@ -18,6 +18,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import net.malta.model.PurchaseInfo;
+import net.malta.model.validator.ValidationException;
+import net.malta.web.utils.JSONResponseUtil;
 import net.malta.web.utils.SessionData;
 
 public class PrivilegeManageFilter implements Filter {
@@ -49,8 +51,14 @@ public class PrivilegeManageFilter implements Filter {
 						
 		            	if(cookieexists) {
 							System.err.println(" session cookie malta is available ---------------------------------------- " + sessionCookie);
-		            		purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(httpRequest);
-							if( purchaseInfo == null ) {            				
+							
+	            			try{ // check for the session
+	            				purchaseInfo = SessionData.getInstance(context).checkUserSession(httpRequest);		            				
+	            			} catch(ValidationException ve) {
+	            				JSONResponseUtil.sendErrorJSON(httpResponse, ve.getErrors());
+	            				return;
+	            			}							
+							if( purchaseInfo == null ) {
 		        				purchaseInfo = SessionData.getInstance(context).createTempPurchase(
 		        						Integer.valueOf(sessionCookie));
 		            		}

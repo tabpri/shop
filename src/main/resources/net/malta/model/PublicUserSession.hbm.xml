@@ -18,5 +18,11 @@
         <property name="sessionToken" type="java.lang.String">
             <column name="SESSION_TOKEN" not-null="true" unique="false" sql-type="VARCHAR2(1000)"/>
         </property>
+        <property name="parentSessionToken" type="java.lang.String">
+            <column name="PARENT_SESSION_TOKEN" unique="false" sql-type="VARCHAR2(1000)"/>
+        </property>
+        <property name="expired" type="boolean">
+            <column name="EXPIRED" not-null="true" unique="false" sql-type="TINYINT"/>
+        </property>
     </class>
 </hibernate-mapping>
