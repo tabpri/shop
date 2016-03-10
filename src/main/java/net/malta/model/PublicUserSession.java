@@ -13,6 +13,10 @@ public class PublicUserSession implements Serializable {
 	private Integer purchase;
 	
 	private String sessionToken;
+
+	private String parentSessionToken;
+
+	private boolean expired;
 	
 	public Integer getId() {
 		return id;
@@ -44,6 +48,22 @@ public class PublicUserSession implements Serializable {
 
 	public void setPurchase(Integer purchase) {
 		this.purchase = purchase;
+	}
+
+	public String getParentSessionToken() {
+		return parentSessionToken;
+	}
+
+	public void setParentSessionToken(String parentSessionToken) {
+		this.parentSessionToken = parentSessionToken;
+	}
+
+	public boolean isExpired() {
+		return expired;
+	}
+
+	public void setExpired(boolean expired) {
+		this.expired = expired;
 	}
 	
 }

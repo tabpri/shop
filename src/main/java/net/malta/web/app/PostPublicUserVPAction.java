@@ -53,19 +53,21 @@ public class PostPublicUserVPAction extends Action {
 
 
 	private void updatePurchase(HttpServletRequest req, HttpServletResponse res,PublicUser publicUser) {
+		
 		ServletContext context = this.getServlet().getServletContext();
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
 				context);
 		
 		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
 		
-		Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
+		boolean newuser = !purchaseInfo.getUserId().equals(publicUser.getId());
 		
-		purchase.setPublicUser(publicUser);
-		
-		purchaseService.updatePurchase(purchase);
-
-		SessionData.getInstance(context).updateSessionPurchaseInfoAndCookie(req, res,publicUser.getId());
+		if ( newuser ) {
+			Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());			
+			purchase.setPublicUser(publicUser);			
+			purchaseService.updatePurchase(purchase);
+			SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res, purchase);			
+		}
 	}
 
 

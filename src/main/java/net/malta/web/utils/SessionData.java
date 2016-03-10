@@ -5,6 +5,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.malta.model.PublicUser;
 import net.malta.model.PublicUserSession;
 import net.malta.model.Purchase;
@@ -118,24 +120,25 @@ public class SessionData {
 		PublicUser user = publicUserService.createTempUser();
 		Purchase purchase = purchaseService.createTempPurchase(user);
 
-		PurchaseInfo purchaseInfo = createUserSession(user, purchase);
+		PurchaseInfo purchaseInfo = createUserSession(user, purchase, null);
 		
 		return purchaseInfo;
 	}
 
 	private PurchaseInfo createUserSession(PublicUser user,
-			Purchase purchase) {
+			Purchase purchase,String sessionToken ) {
 
 		Integer purchaseId = purchase.getId();
 
 		Integer userId = user.getId();
 		
-		PublicUserSession userSessionToken = publicUserSessionService.createSession(userId,purchaseId);
+		PublicUserSession userSession = publicUserSessionService.createSession(userId,purchaseId,sessionToken);
 		
-		PurchaseInfo purchaseInfo = new PurchaseInfo(purchaseId, userId, userSessionToken.getSessionToken());
+		PurchaseInfo purchaseInfo = new PurchaseInfo(purchaseId, userId, userSession.getSessionToken());
 		return purchaseInfo;
 	}
 
+	
 	public PurchaseInfo createTempPurchase(Integer userId) {
 
 		PublicUser publicUser = publicUserService.getUser(userId);
@@ -144,7 +147,7 @@ public class SessionData {
 		
 		Integer purchaseId = purchase.getId();
 
-		PurchaseInfo purchaseInfo = createUserSession(publicUser, purchase);
+		PurchaseInfo purchaseInfo = createUserSession(publicUser, purchase,null);
 		
 		//req.getSession().setAttribute(PURCHASE_INFO, purchaseInfo);
 		
@@ -157,7 +160,13 @@ public class SessionData {
 		req.getSession(false).setAttribute(PURCHASE_INFO, sessionPuchaseInfo);
 		updateSessionCookie(req, res);
 	}
-	
+
+	public void createNewSessionAndSetResponseHeaders(HttpServletRequest req,HttpServletResponse res,Purchase purchase) {
+		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+		PurchaseInfo purchaseInfo = createUserSession(purchase.getPublicUser(), purchase,sessionToken);
+		setResponseHeaders(res, purchaseInfo);
+	}
+
 	public PurchaseInfo getPurchaseUsingSessionCookie(HttpServletRequest req, ServletContext context,String cookie) {
 		Integer cookieUserId = Integer.parseInt(cookie);
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
@@ -168,6 +177,21 @@ public class SessionData {
 		PurchaseInfo purchaseInfo = new PurchaseInfo(currentPurchase.getId(), currentPurchase.getPublicUser().getId());
 		
 		req.getSession(false).setAttribute(PURCHASE_INFO, purchaseInfo);
+		
+		return purchaseInfo;
+	}
+	
+	public PurchaseInfo checkUserSession(HttpServletRequest req) {
+		
+		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+		
+		if ( StringUtils.isBlank(sessionToken)) {
+			return null;
+		}
+				
+		PublicUserSession userSession = publicUserSessionService.checkUserSession(sessionToken);
+		PurchaseInfo purchaseInfo = new PurchaseInfo(userSession.getPurchase(), 
+				userSession.getPublicUser(), userSession.getSessionToken());
 		
 		return purchaseInfo;
 	}
