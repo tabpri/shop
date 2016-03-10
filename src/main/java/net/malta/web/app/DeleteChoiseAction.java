@@ -22,7 +22,6 @@ import net.malta.service.purchase.IChoiseService;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.web.utils.BeanUtil;
 import net.malta.web.utils.JSONResponseUtil;
-import net.malta.web.utils.PurchaseSessionUtil;
 import net.malta.web.utils.SessionData;
 
 public class DeleteChoiseAction extends Action{
