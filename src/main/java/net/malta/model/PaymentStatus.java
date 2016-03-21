@@ -1,6 +1,7 @@
 package net.malta.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import net.malta.model.payment.PaymentStatusEnum;
 
@@ -24,8 +25,13 @@ public class PaymentStatus implements Serializable {
 
 	private String acsURL;
 
-	private Integer purchaseId;
+	private String transactionReference;
 
+	private Date transactionDate;
+	
+	private String orderId;
+
+	private Integer purchaseId;
 	
 	public PaymentStatus() {
 		setPaymentStatus(PaymentStatusEnum.PENDING);
@@ -117,6 +123,33 @@ public class PaymentStatus implements Serializable {
 
 	public void setPaymentStatusString(String paymentStatusString) {
 		setPaymentStatus(PaymentStatusEnum.valueOf(paymentStatusString));
+	}
+
+	public String getTransactionReference() {
+		return transactionReference;
+	}
+
+
+	public void setTransactionReference(String transactionReference) {
+		this.transactionReference = transactionReference;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+	
+	public String getOrderId() {
+		return orderId;
+	}
+
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public boolean isPayable() {

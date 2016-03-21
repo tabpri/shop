@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 
 import net.malta.mapper.IMapper;
 import net.malta.model.Choise;
+import net.malta.model.PaymentStatus;
 import net.malta.model.Purchase;
+import net.malta.model.purchase.json.Payment;
 
 @Component
 public class PurchaseMapper implements IMapper<Purchase, net.malta.model.purchase.json.Purchase>{
@@ -25,6 +27,16 @@ public class PurchaseMapper implements IMapper<Purchase, net.malta.model.purchas
 		purchaseJSON.setPurchasetotal(purchase.getTotal());
 		purchaseJSON.setTotalordernum(purchase.getTotalordernum());
 		purchaseJSON.setCarriage(purchase.getCarriage());
+		purchaseJSON.setPurchaseDate(purchase.getDate());
+		PaymentStatus payment = purchase.getPayment();
+		if ( payment != null ) {
+			Payment paymentJSON = new Payment();
+			paymentJSON.setStatus(payment.getPaymentStatusString());
+			paymentJSON.setOrderId(payment.getOrderId());
+			paymentJSON.setTransactionReference(payment.getTransactionReference());
+			paymentJSON.setTransactionDate(payment.getTransactionDate());
+			purchaseJSON.setPayment(paymentJSON);
+		}
 		
 		// purchase.choises
 		Collection<Choise> choises = ((Collection<Choise>) purchase.getChoises());

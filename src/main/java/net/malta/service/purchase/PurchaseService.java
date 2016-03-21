@@ -6,6 +6,7 @@ package net.malta.service.purchase;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,10 @@ import net.malta.model.Item;
 import net.malta.model.PaymentMethod;
 import net.malta.model.PaymentStatus;
 import net.malta.model.PublicUser;
-import net.malta.model.PublicUserImpl;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.model.payment.PaymentStatusEnum;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
-import net.malta.service.user.IPublicUserService;
-import net.malta.web.utils.BeanUtil;
 
 @Service
 public class PurchaseService implements IPurchaseService {
@@ -93,12 +91,12 @@ public class PurchaseService implements IPurchaseService {
 		purchase.setDate(new Date());
 		PaymentStatus paymentStatus = purchase.getPayment();
 		if ( paymentStatus == null ) {
-			paymentStatus = new PaymentStatus();			
+			paymentStatus = new PaymentStatus();		
 		}
 		paymentStatus.setPaymentStatus(PaymentStatusEnum.COMPLETED);
 		purchase.setPayment(paymentStatus);
 		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);
-		sendEmail(purchase);
+		//sendEmail(purchase);
 		return purchase;
 	}	
 	
@@ -134,5 +132,15 @@ public class PurchaseService implements IPurchaseService {
 	
 	public void setPurchaseDAO(PurchaseDAO purchaseDAO) {
 		this.purchaseDAO = purchaseDAO;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public List<Purchase> getPurchases(Integer userId) {
+		List<Purchase> purchases = purchaseDAO.getPurchases(userId);
+		for (Purchase purchase : purchases) {
+			initialize(purchase);
+		}
+		return purchases;
 	}
 }

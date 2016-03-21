@@ -38,6 +38,11 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 	// 本人認証サービス要求電文
 	private String paReq;
 
+	private String transactionReference;
+	
+	private String transactionDate;
+	
+
 	/**
 	 * 決済実行
 	 * @throws com.gmo_pg.g_pay.client.common.PaymentException
@@ -49,6 +54,8 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 		// 認証後決済(3D セキュア認証結果と取引IDが設定されている場合)
 		if (PaRes != null && MD != null) {
 			SecureTranOutput secureTranOutput = paymentClientImpl.doSecureTran(PaRes, MD);
+			this.transactionReference =  secureTranOutput.getTranId();
+			this.transactionDate =  secureTranOutput.getTranDate();			
 			// 結果確認
 			if (secureTranOutput.isErrorOccurred()) {
 				entryErrList = new ArrayList();
@@ -63,6 +70,8 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 
 		// 決済実行
 		EntryExecTranOutput entryExecTranOutput = paymentClientImpl.doEntryExecTran(this);
+		this.transactionReference =  entryExecTranOutput.getTranId();
+		this.transactionDate =  entryExecTranOutput.getTranDate();
 
 		// 結果確認
 		if (entryExecTranOutput.isErrorOccurred()) {
@@ -159,5 +168,14 @@ public class BankingPaymentGatewayConfiguration extends EntryExecTranInput imple
 		return this.entryErrList;
 	}
 
+	@Override
+	public String getTransactionReference() {
+		return this.transactionReference;
+	}
+
+	@Override
+	public String getTransactionDate() {
+		return this.transactionDate;
+	}
 
 }
