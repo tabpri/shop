@@ -2,10 +2,14 @@ package net.malta.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import net.malta.model.PaymentMethod;
 
 public class BaseDAO<T> implements IBaseDAO<T> {
 
@@ -13,13 +17,22 @@ public class BaseDAO<T> implements IBaseDAO<T> {
 	SessionFactory sessionFactory;
 	
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public T find(Integer id) {
 		Class persistentClass = (Class)
 				   ((ParameterizedType)this.getClass().getGenericSuperclass())
 				      .getActualTypeArguments()[0];
-		
 		return (T) this.sessionFactory.getCurrentSession().get(persistentClass, id);
+	}
+	
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })	
+	public List<T> findAll() {
+		Class persistentClass = (Class)
+				   ((ParameterizedType)this.getClass().getGenericSuperclass())
+				      .getActualTypeArguments()[0];		
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(persistentClass);
+		return criteria.list();
 	}
 	
 	@Override

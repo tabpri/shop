@@ -43,7 +43,12 @@
                 <value>net/malta/model/Prefecture.hbm.xml</value>
                 <value>net/malta/model/PaymentStatus.hbm.xml</value>
                 <value>net/malta/model/PrefectureCarriage.hbm.xml</value>
-                <value>net/malta/model/PublicUserSession.hbm.xml</value>                
+                <value>net/malta/model/PublicUserSession.hbm.xml</value>
+                <value>net/malta/model/User.hbm.xml</value>
+                <value>net/malta/model/Role.hbm.xml</value>
+                <value>net/malta/model/AppFunction.hbm.xml</value>                                                
+                <value>net/malta/model/UserRole.hbm.xml</value>                                                
+                <value>net/malta/model/RoleAppFunction.hbm.xml</value>                                                                
             </list>
         </property>
         <property name="hibernateProperties">

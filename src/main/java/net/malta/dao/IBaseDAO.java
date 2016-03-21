@@ -1,6 +1,7 @@
 package net.malta.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IBaseDAO<T> {
 
@@ -13,5 +14,7 @@ public interface IBaseDAO<T> {
 	Collection<? extends T> saveOrUpdateAll(Collection<? extends T> list);
 
 	Collection<? extends T> deleteAll(Collection<? extends T> list);
+
+	List<T> findAll();
 	
 }
