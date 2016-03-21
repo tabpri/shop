@@ -28,12 +28,6 @@ public class PublicUserService implements IPublicUserService {
 	@Autowired
 	private PublicUserValidator validator;
 	
-	@Autowired
-	private SessionTokenGenerator sessionTokenGenerator;
-	
-	@Autowired
-	private PublicUserSessionDAO sessionTokenDAO; 
-	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)	
 	public PublicUser getUser(Integer id) {
@@ -56,7 +50,6 @@ public class PublicUserService implements IPublicUserService {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)		
 	public PublicUser updateUser(PublicUser publicUser) {
-		validator.validate(publicUser, new Errors());
 		return publicUserUpdate(publicUser);
 	}
 
@@ -71,6 +64,8 @@ public class PublicUserService implements IPublicUserService {
 	}
 
 	private PublicUser publicUserUpdate(PublicUser publicUser) {
+		validator.validate(publicUser, new Errors());		
+		StringFullfiller.fullfil(publicUser);		
 		if ( publicUser.getPrefecture() != null ){
 			Prefecture prefecture = prefectureService.getPrefecture(publicUser.getPrefecture().getId());
 			publicUser.setPrefecture(prefecture);			

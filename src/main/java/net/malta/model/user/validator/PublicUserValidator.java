@@ -1,6 +1,3 @@
-/**
- * @author SB
- */
 package net.malta.model.user.validator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +50,7 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.ADDRESS_ISBLANK, blank));
 		}
 
-		String fax = user.getFax();
+/*		String fax = user.getFax();
 
 		if (StringUtils.isBlank(fax)) {
 			errors.add(new ValidationError(PublicUserConstants.FAX_ISBLANK, blank));
@@ -62,7 +59,7 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 		if (!StringUtils.isNumeric(fax)) {
 			errors.add(new ValidationError(PublicUserConstants.FAX_ISNOTNUMERIC, fax));
 		}
-
+*/
 		String phone = user.getPhone();
 		if (StringUtils.isBlank(phone)) {
 			errors.add(new ValidationError(PublicUserConstants.PHONE_ISBLANK, blank));
@@ -73,13 +70,12 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.CITY_ISBLANK, blank));
 		}
 
-		// need to be enabled once the UI integrate the auth api for creating the user
 /*		Integer authuserid = user.getAuthuserid();
 		
 		if (authuserid == null ) {
 			errors.add(new ValidationError(PublicUserConstants.AUTHUSERID_ISBLANK, blank));
 		}
-*/		
+*/
 		if ( errors.hasErrors() ) {
 			throw new ValidationException(errors);
 		}

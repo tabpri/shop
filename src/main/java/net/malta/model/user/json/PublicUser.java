@@ -1,6 +1,3 @@
-/**
- * @author SB
- */
 package net.malta.model.user.json;
 
 import java.io.Serializable;
@@ -14,14 +11,14 @@ public class PublicUser implements Serializable{
 	private String kana;
 	private String address;
 	private String mail;
-	private int zip;
-	private String pref;
+	private Integer zip;
 	private String buildingname;
 	private String city;	
 	private String phone;
 	private Integer fax;
 	private Integer prefecture;
 	private Boolean registered;
+	private Integer authuserid;
 	
 	public Integer getId() {
 		return id;
@@ -40,18 +37,6 @@ public class PublicUser implements Serializable{
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
-	}
-	public int getZip() {
-		return zip;
-	}
-	public void setZip(int zip) {
-		this.zip = zip;
-	}
-	public String getPref() {
-		return pref;
-	}
-	public void setPref(String pref) {
-		this.pref = pref;
 	}
 	public String getBuildingname() {
 		return buildingname;
@@ -100,5 +85,17 @@ public class PublicUser implements Serializable{
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+	public Integer getAuthuserid() {
+		return authuserid;
+	}
+	public void setAuthuserid(Integer authuserid) {
+		this.authuserid = authuserid;
+	}
+	public Integer getZip() {
+		return zip;
+	}
+	public void setZip(Integer zip) {
+		this.zip = zip;
 	}	
 }
