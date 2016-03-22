@@ -55,8 +55,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
-							<html:submit value="Submit"/>													
+						<td colspan="2" align="right">
+							<html:submit value="提出します"/>&nbsp;&nbsp;&nbsp;
+							<html:reset value="リセット"/>&nbsp;&nbsp;&nbsp;
+																				
 						</td>
 					</tr>
 					

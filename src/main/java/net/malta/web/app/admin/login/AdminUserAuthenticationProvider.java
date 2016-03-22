@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import net.malta.model.Role;
 import net.malta.model.User;
-import net.malta.service.purchase.PurchaseService;
 import net.malta.service.user.auth.IUserAuthService;
 
 @Component
@@ -27,7 +26,7 @@ public class AdminUserAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	IUserAuthService userAuthService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(PurchaseService.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminUserAuthenticationProvider.class);
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -45,7 +44,7 @@ public class AdminUserAuthenticationProvider implements AuthenticationProvider {
 	     } catch(net.malta.service.user.auth.exception.AuthenticationException ae) {
 	    	 	logger.error("authentication failed for the user " + name);
 	    	 	throw new BadCredentialsException("User Name or Password doesnt match");
-	     }	     
+	     }
 	 }
 
 	private List<GrantedAuthority> createGrantedAuthorities(User authUser) {

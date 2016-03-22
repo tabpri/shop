@@ -15,7 +15,7 @@
 		<form-login
 		    login-page="/AdminLogin.do"
 		    default-target-url="/admin/Admin.do"
-			authentication-failure-url="/AdminLogin.do"
+			authentication-failure-url="/AdminLogin.do?loginFailed=true"
 			username-parameter="username"
 			password-parameter="password"  />
 		<logout logout-success-url="/login?logout"  />
