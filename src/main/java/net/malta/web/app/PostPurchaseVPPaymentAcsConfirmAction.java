@@ -58,13 +58,15 @@ public class PostPurchaseVPPaymentAcsConfirmAction extends PostPurchaseVPPayment
 			// 本人認証画面からの戻り値
 			String MD = req.getParameter("MD");
 			String PaRes = req.getParameter("PaRes");
-
 			ACSResponse acsResponse = new ACSResponse(PaRes, MD);
+			logger.info("executing the ACS payment");
 			paymentService.executePayment(sessionPuchaseInfo.getPurchaseId(),acsResponse);					
 		}
 		catch(PaymentException paymentException) {
+			logger.info("processing the payment errors");
+			
 			Errors errors = paymentException.getErrors();
-			if ( errors != null && paymentException.getErrors().hasErrors() ) {
+			if ( errors != null && errors.hasErrors() ) {
 				JSONResponseUtil.sendErrorJSON(res, errors);
 				return; // return
 			}

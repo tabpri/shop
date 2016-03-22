@@ -28,7 +28,9 @@ public abstract class PostPurchaseVPPaymentBaseAction extends Action {
 
 		Purchase purchase = purchaseService.getPurchase(purchaseId);
 
-		SessionData.getInstance(context).createTempPurchase(sessionPuchaseInfo.getUserId());
+		String sessionToken = SessionData.getInstance(context).getSessionToken(req);
+		
+		SessionData.getInstance(context).createTempPurchase(sessionPuchaseInfo.getUserId(),sessionToken);
 		
 		PurchaseMapper purchaseMapper = (PurchaseMapper) BeanUtil.getBean("purchaseMapper", context);
 		net.malta.model.purchase.json.Purchase purchaseJson = purchaseMapper.map(purchase, new net.malta.model.purchase.json.Purchase());

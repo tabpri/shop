@@ -178,15 +178,6 @@ public class PaymentService implements IPaymentService {
 			throw new PaymentException(errors);			
 		}
 		
-/*		boolean isSameSessionToken = paymentStatus.getSessionToken().equals(acsResponse.getSessionToken());
-		if ( !isSameSessionToken ) {
-			logger.error("May be a attack : the session tokens doesnt match paymentStatus.{0} acsResponse.{1} ",paymentStatus.getSessionToken(),
-					acsResponse.getSessionToken());
-			Errors errors = new Errors();
-			errors.add(new PaymentError(PaymentConstants.ACS_SESSIONTOKEN_MISMATCH, new Object[0]));
-			throw new PaymentException(errors);
-		}
-*/		
 		if ( acsResponse.getPaRes() == null ) {
 			paymentStatus.setPaymentStatus(PaymentStatusEnum.ACS_CONFIRM_FAILED);
 			paymentStatusDAO.saveOrUpdate(paymentStatus);
