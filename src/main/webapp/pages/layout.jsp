@@ -118,7 +118,8 @@ $(document).ready(function() {
               <div class="menu-header">
 						<ul class="clearfix">
 						<li><a href="Purchases.do">購入履歴一覧</a></li>
-						<li><a href="PublicUsers.do">顧客一覧</a></li>
+						<li><a href="Products.do">製品管理</a></li>
+						<li><a href="User.do?action=userlist">ショッピングカートオペレータのユーザー管理</a></li>						
 						</ul>
 
 			</div>

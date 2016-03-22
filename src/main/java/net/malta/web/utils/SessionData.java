@@ -17,9 +17,9 @@ import net.malta.service.user.IPublicUserSessionService;
 
 public class SessionData {
 
-	private static final String MALTA = "malta";
+	public static final String MALTA = "malta";
 
-	private static final String SECUAL_AUTH_TOKEN = "secual-auth-token";
+	public static final String SECUAL_AUTH_TOKEN = "secual-auth-token";
 
 	public static final String PURCHASE_INFO = "PURCHASEINFO";
 
@@ -106,12 +106,20 @@ public class SessionData {
 	}
 	
 	public PurchaseInfo getSessionPuchaseInfo(HttpServletRequest req) {
-		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+		String sessionToken = getSessionToken(req);
+		
 		PublicUserSession session = publicUserSessionService.getSession(sessionToken);
 		PurchaseInfo purchaseInfo = new PurchaseInfo(session.getPurchase(), session.getPublicUser(), 
 				session.getSessionToken());
 		return purchaseInfo;
-		//return (PurchaseInfo) req.getSession().getAttribute(PURCHASE_INFO);
+	}
+
+	public String getSessionToken(HttpServletRequest req) {
+		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+		
+		// for payment callback
+		sessionToken = (sessionToken==null) ? req.getParameter("secual-auth-token") : sessionToken;
+		return sessionToken;
 	}
 	
 	
@@ -138,8 +146,8 @@ public class SessionData {
 		return purchaseInfo;
 	}
 
-	
-	public PurchaseInfo createTempPurchase(Integer userId) {
+
+	public PurchaseInfo createTempPurchase(Integer userId, String sessionToken) {
 
 		PublicUser publicUser = publicUserService.getUser(userId);
 
@@ -147,11 +155,13 @@ public class SessionData {
 		
 		Integer purchaseId = purchase.getId();
 
-		PurchaseInfo purchaseInfo = createUserSession(publicUser, purchase,null);
+		PurchaseInfo purchaseInfo = createUserSession(publicUser, purchase,sessionToken);
 		
-		//req.getSession().setAttribute(PURCHASE_INFO, purchaseInfo);
-		
-		return purchaseInfo;
+		return purchaseInfo;		
+	}
+	
+	public PurchaseInfo createTempPurchase(Integer userId) {
+		return createTempPurchase(userId,null);
 	}
 	
 	public void updateSessionPurchaseInfoAndCookie(HttpServletRequest req,HttpServletResponse res,Integer userId) {
@@ -201,5 +211,5 @@ public class SessionData {
 		res.setHeader(SECUAL_AUTH_TOKEN, purchaseInfo.getUserSessionToken());
 		res.setHeader(MALTA, userId);
 	}
-	
+
 }

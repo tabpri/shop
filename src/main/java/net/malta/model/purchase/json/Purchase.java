@@ -5,6 +5,7 @@ package net.malta.model.purchase.json;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Purchase implements Serializable {
@@ -15,6 +16,8 @@ public class Purchase implements Serializable {
 	private Integer purchasetotal;
 	private Integer totalordernum;
 	private Integer carriage;
+	private Date	purchaseDate;
+	private Payment payment;
 	
 	private List<Choise> choises;
 
@@ -62,5 +65,20 @@ public class Purchase implements Serializable {
 
 	public void setCarriage(Integer carriage) {
 		this.carriage = carriage;
+	}
+	public Date getPurchaseDate() {
+		return purchaseDate;
+	}
+
+	public void setPurchaseDate(Date purchaseDate) {
+		this.purchaseDate = purchaseDate;
+	}
+	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
 	}	
 }

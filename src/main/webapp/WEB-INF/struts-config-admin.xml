@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<data-sources />
+	<form-beans>
+		<form-bean name="userForm" type="net.malta.beans.UserForm" />
+	</form-beans>
+	<global-exceptions />
+	<global-forwards />
+
+	<action-mappings>
+	
+		<action path="/Admin" type="net.malta.web.app.AdminAction">
+	      <forward name="success" path="/WEB-INF/pages/app/admin/Admin.jsp" contextRelative="true" />
+	    </action>
+	
+		<action path="/User" parameter="action" scope="request"
+			type="net.malta.web.app.admin.UserAction" name="userForm" >
+			<forward name="userlist" path="/WEB-INF/pages/app/admin/userlist.jsp" contextRelative="true" ></forward>
+			<forward name="user" path="/WEB-INF/pages/app/admin/user.jsp" contextRelative="true" ></forward>
+			
+		</action>
+	</action-mappings>
+
+	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
+	<message-resources parameter="MessageResources" />
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+	</plug-in>
+
+</struts-config>

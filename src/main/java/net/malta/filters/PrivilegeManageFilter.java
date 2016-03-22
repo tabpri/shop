@@ -37,12 +37,12 @@ public class PrivilegeManageFilter implements Filter {
 		boolean isNotCORSPreflightOptionsRequest = !httpRequest.getMethod().equals("OPTIONS");
 		
 		if ( isNotCORSPreflightOptionsRequest) {
-			if(!httpRequest.getRequestURI().contains(".do")){
+			if(!httpRequest.getRequestURI().contains(".do") || httpRequest.getRequestURI().contains("/admin/")){
 				chain.doFilter(req, res);
 			}else if(req.getParameter("login") == null || req.getParameter("ajax") == null){
 					synchronized (thread) {
 						
-						//malta
+						//malta - cookie/header
 		            	String sessionCookie = SessionData.getInstance(context).getSessionCookie(httpRequest);
 		            	
 						boolean cookieexists = StringUtils.isNotBlank(sessionCookie);

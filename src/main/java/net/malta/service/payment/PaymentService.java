@@ -1,5 +1,6 @@
 package net.malta.service.payment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -79,6 +80,12 @@ public class PaymentService implements IPaymentService {
 		
 		purchaseService.updatePaymentMethod(purchase, paymentMethod);
 		
+		if ( paymentStatus == null ) { // set payment status
+			paymentStatus = new PaymentStatus();
+			paymentStatus.setPurchaseId(purchaseId);
+			purchase.setPayment(paymentStatus);
+		}
+				
 		if( paymentMethod.equals(2) ){
 			purchaseService.confirmPurchase(purchaseId);
 			return null; // return no need of payment gateway call
@@ -90,17 +97,13 @@ public class PaymentService implements IPaymentService {
 		mapRequestDetails(requestDetails, paymentGatewayConfiguration);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhMMss");		
-		paymentGatewayConfiguration.setOrderId("id" + purchase.getId().toString() + "date" +  dateFormat.format(new Date()));
+		String paymentOrderId = "id" + purchase.getId().toString() + "date" +  dateFormat.format(new Date());
+		paymentGatewayConfiguration.setOrderId(paymentOrderId);
 		paymentGatewayConfiguration.setAmount(purchase.getTotal());
 		paymentGatewayConfiguration.setTax(purchase.getCarriage());
 		
 		GMOPaymentWrapper gmoPaymentWrapper = new GMOPaymentWrapper();
 
-		if ( paymentStatus == null ) {
-			paymentStatus = new PaymentStatus();
-			paymentStatus.setPurchaseId(purchaseId);			
-		}
-		
 		try {
 			gmoPaymentWrapper.executePayment(paymentGatewayConfiguration);
 		} catch (com.gmo_pg.g_pay.client.common.PaymentException e) {
@@ -114,6 +117,9 @@ public class PaymentService implements IPaymentService {
 		paymentStatus.setAcsURL(paymentGatewayConfiguration.getAcsUrl());
 		paymentStatus.setMD(paymentGatewayConfiguration.getMD());
 		paymentStatus.setPaReq(paymentGatewayConfiguration.getPaReq());
+		paymentStatus.setTransactionReference(paymentGatewayConfiguration.getTransactionReference());		
+		paymentStatus.setTransactionDate(parseTransactionDate(paymentGatewayConfiguration));
+		paymentStatus.setOrderId(paymentOrderId);
 		
 		@SuppressWarnings("rawtypes")
 		List errList = paymentGatewayConfiguration.getErrList();
@@ -122,7 +128,9 @@ public class PaymentService implements IPaymentService {
 			paymentStatus.setPaymentStatus(paymentStatus.isAcsSecure() ? 
 					PaymentStatusEnum.ACS_CONFIRM : PaymentStatusEnum.COMPLETED);
 			paymentStatusDAO.saveOrUpdate(paymentStatus);
-			purchaseService.confirmPurchase(purchaseId);			
+			if ( !paymentStatus.isAcsSecure() ) {
+				purchaseService.confirmPurchase(purchaseId);		
+			}
 			return paymentGatewayConfiguration.getRedirectContents();
 		} else {
 			paymentStatus.setPaymentStatus(PaymentStatusEnum.FAILED);
@@ -130,6 +138,23 @@ public class PaymentService implements IPaymentService {
 			Errors errors = mapToErrors(errList);
 			throw new PaymentException(errors);
 		}
+	}
+
+
+	private Date parseTransactionDate(PaymentGatewayConfiguration paymentGatewayConfiguration) {
+		SimpleDateFormat transactionDateFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		try {
+			String transactionDateString = paymentGatewayConfiguration.getTransactionDate();
+			if ( transactionDateString != null ) {
+				Date transactionDate = transactionDateFormatter.parse(transactionDateString);
+				return transactionDate;				
+			} else {
+				return null;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -143,6 +168,16 @@ public class PaymentService implements IPaymentService {
 		paymentGatewayConfiguration.setMD(acsResponse.getMD());
 		
 		PaymentStatus paymentStatus = paymentStatusDAO.getPaymentStatus(purchaseId);
+
+		boolean isMDMatched = acsResponse.getMD().equals(paymentStatus.getMD()); 
+		
+		if ( !isMDMatched ) {
+			logger.error("May be a attack : the payment requests doesnt match paymentStatus.MD acsResponse.MD ",paymentStatus.getMD(),
+					acsResponse.getMD());
+			Errors errors = new Errors();
+			errors.add(new PaymentError(PaymentConstants.ACS_PAYMENTREQUESTS_MISMATCH, new Object[0]));
+			throw new PaymentException(errors);			
+		}
 		
 		if ( acsResponse.getPaRes() == null ) {
 			paymentStatus.setPaymentStatus(PaymentStatusEnum.ACS_CONFIRM_FAILED);
@@ -153,9 +188,12 @@ public class PaymentService implements IPaymentService {
 		}
 		
 		paymentStatus.setPaRes(acsResponse.getPaRes());
-		
 		try {
 			gmoPaymentWrapper.executePayment(paymentGatewayConfiguration);
+			System.out.println("paymentGatewayConfiguration.getTransactionReference() " + paymentGatewayConfiguration.getTransactionReference());
+			System.out.println("paymentGatewayConfiguration.getTransactionDate() " + paymentGatewayConfiguration.getTransactionDate());			
+			paymentStatus.setTransactionReference(paymentGatewayConfiguration.getTransactionReference());		
+			paymentStatus.setTransactionDate(parseTransactionDate(paymentGatewayConfiguration));
 		} catch (com.gmo_pg.g_pay.client.common.PaymentException e) {
 			paymentStatus.setPaymentStatus(PaymentStatusEnum.FAILED);
 			paymentStatusDAO.saveOrUpdate((PaymentStatus) paymentStatus);			
@@ -208,4 +246,13 @@ public class PaymentService implements IPaymentService {
 		this.paymentMethodDAO = paymentMethodDAO;
 	}
 	
+	public static void main(String[] args) {	
+		SimpleDateFormat transactionDateFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		try {
+			Date transactionDate = transactionDateFormatter.parse("20160318220727");
+			System.out.println(transactionDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }

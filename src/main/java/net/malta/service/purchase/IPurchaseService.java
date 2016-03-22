@@ -1,5 +1,7 @@
 package net.malta.service.purchase;
 
+import java.util.List;
+
 import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 
@@ -18,5 +20,7 @@ public interface IPurchaseService {
 	public Purchase confirmPurchase(Integer id);
 
 	public Purchase createTempPurchase(PublicUser user);
+
+	public List<Purchase> getPurchases(Integer userId);
 
 }

@@ -95,11 +95,11 @@ public class PostPurchaseVPChoosingPaymentMethodAction extends PostPurchaseVPPay
 		
 		String reqURL = req.getRequestURL().toString();
 		String reqURI = req.getRequestURI();
-		String contextPath = req.getContextPath();		
+		String contextPath = req.getContextPath();
 		int uriIndex = reqURL.indexOf(reqURI);
 		String requestPath = reqURL.subSequence(0, uriIndex).toString();
 		
-		String acsURL = requestPath + contextPath + "/PostPurchaseVPPaymentAcsConfirm.do";
+		String acsURL = requestPath + contextPath + "/PostPurchaseVPPaymentAcsConfirm.do?secual-auth-token="+req.getHeader("secual-auth-token");
 		logger.info("acsURL:" + acsURL);
 		return acsURL;
 	}

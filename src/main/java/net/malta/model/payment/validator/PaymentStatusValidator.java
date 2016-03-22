@@ -24,11 +24,13 @@ public class PaymentStatusValidator implements IValidator<PaymentStatus> {
 		PaymentStatusEnum status = paymentStatus.getPaymentStatus();
 		if ( status.equals(PaymentStatusEnum.COMPLETED) ){
 			errors.add(new PaymentError(PaymentConstants.PURCHASE_PAYMENT_COMPLETED, purchaseId));
-		} else if ( status.equals(PaymentStatusEnum.ACS_CONFIRM) ){
+		}
+		// no need of ACS_CONFIRM check
+/*		else if ( status.equals(PaymentStatusEnum.ACS_CONFIRM) ){
 			errors.add(new PaymentError(PaymentConstants.PURCHASE_PAYMENT_ACSCONFIRM, purchaseId));
 		}
 		
-		if ( errors.hasErrors() ) {
+*/		if ( errors.hasErrors() ) {
 			throw new ValidationException(errors);
 		}
 	}

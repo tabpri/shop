@@ -41,9 +41,12 @@
   <global-exceptions/>
   <global-forwards/>
   <action-mappings>
-    <action path="/Admin" type="net.malta.web.app.AdminAction">
-      <forward name="success" path="/pages/app/Admin.jsp"/>
-    </action>
+  
+  	<action
+			path="/AdminLogin"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="/pages/app/adminLogin.jsp"/>
+			
     <action path="/ShowPurchaseAdmin" type="net.malta.web.app.ShowPurchaseAdminAction">
       <forward name="success" path="/pages/app/ShowPurchaseAdmin.jsp"/>    
     </action>
@@ -194,6 +197,8 @@
     </action>
     <action path="/PostGiftCardVP" type="net.malta.web.app.PostGiftCardVPAction" name="GiftCardForm"/>
     <action path="/GiftCards" type="net.malta.web.app.GiftCardsAction"/>
+
+    <action path="/PurchaseHistory" type="net.malta.web.app.PurchaseHistoryAction" />
 
     <!-- action with empty pages -->
      <!--<action path="/PostPaymentDetail" type="net.malta.web.app.PostPaymentDetailAction">

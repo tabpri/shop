@@ -49,7 +49,6 @@ public class LoginAction extends Action{
 			
 			sendJSON(res, authenticationResponse, publicUser);
 			
-			System.out.println("LoginAction ------------------------------- didnt close the outputstream");
 		} catch (AuthenticationException ae) {
 			res.setStatus(ae.getStatusCode());
 		}

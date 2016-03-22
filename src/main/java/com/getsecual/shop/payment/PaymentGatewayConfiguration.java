@@ -72,4 +72,8 @@ public interface PaymentGatewayConfiguration {
 	 */
 	public List getErrList();
 
+	public String getTransactionReference();
+	
+	public String getTransactionDate();
+	
 }
