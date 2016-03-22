@@ -1,0 +1,57 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <!-- enable use-expressions -->
+	<http auto-config="true" use-expressions="true" authentication-manager-ref="defaultAuthenticationManager" access-decision-manager-ref="roleBasedAccessDecisionManager">
+		<intercept-url pattern="/admin/User.do" access="hasRole('SHOPPING_CART_OPERATOR_ADMIN')" />
+		<intercept-url pattern="/admin/**" access="hasRole('SHOPPING_CART_OPERATOR')" />
+		
+		<!-- access denied page -->
+		<access-denied-handler error-page="/pages/app/accessDenied.jsp" />
+		<form-login
+		    login-page="/AdminLogin.do"
+		    default-target-url="/admin/Admin.do"
+			authentication-failure-url="/AdminLogin.do"
+			username-parameter="username"
+			password-parameter="password"  />
+		<logout logout-success-url="/login?logout"  />
+	</http>
+		
+	<!-- Select users and user_roles from database -->
+	<authentication-manager id="defaultAuthenticationManager" >
+		<authentication-provider ref="adminUserAuthenticationProvider" >
+		</authentication-provider>
+ 	</authentication-manager>
+
+	<beans:bean id="roleBasedAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		    <beans:property name="decisionVoters">
+		    	<beans:list>
+		            <beans:ref bean="roleHierarchyVoter" />
+		            <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+		                <beans:property name="expressionHandler">
+		                    <beans:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+		                        <beans:property name="roleHierarchy" ref="roleHierarchy"/>
+		                    </beans:bean>
+		                </beans:property>
+		            </beans:bean>		    		
+		    	</beans:list>
+			</beans:property>
+	</beans:bean>
+	
+	<beans:bean id="roleHierarchyVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter">
+	    <beans:constructor-arg ref="roleHierarchy" />
+	</beans:bean>
+	
+	<beans:bean id="roleHierarchy"
+	        class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+	    <beans:property name="hierarchy">
+	        <beans:value>
+	            SHOPPING_CART_OPERATOR_ADMIN > SHOPPING_CART_OPERATOR
+	        </beans:value>
+	    </beans:property>
+	</beans:bean>	
+</beans:beans>

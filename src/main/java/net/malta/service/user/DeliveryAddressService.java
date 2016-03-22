@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.enclosing.util.StringFullfiller;
 import net.malta.dao.user.DeliveryAddressDAO;
 import net.malta.error.Errors;
 import net.malta.model.DeliveryAddress;
@@ -52,6 +53,8 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 		
 		//validate
 		deliveryAddressValidator.validate(deliveryAddress, new Errors());
+
+		StringFullfiller.fullfil(deliveryAddress);
 		
 		//save
 		PublicUser user = publicUserService.getUser(userId);
