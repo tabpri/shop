@@ -80,6 +80,12 @@ public class PaymentService implements IPaymentService {
 		
 		purchaseService.updatePaymentMethod(purchase, paymentMethod);
 		
+		if ( paymentStatus == null ) { // set payment status
+			paymentStatus = new PaymentStatus();
+			paymentStatus.setPurchaseId(purchaseId);
+			purchase.setPayment(paymentStatus);
+		}
+				
 		if( paymentMethod.equals(2) ){
 			purchaseService.confirmPurchase(purchaseId);
 			return null; // return no need of payment gateway call
@@ -98,11 +104,6 @@ public class PaymentService implements IPaymentService {
 		
 		GMOPaymentWrapper gmoPaymentWrapper = new GMOPaymentWrapper();
 
-		if ( paymentStatus == null ) {
-			paymentStatus = new PaymentStatus();
-			paymentStatus.setPurchaseId(purchaseId);		
-		}
-		
 		try {
 			gmoPaymentWrapper.executePayment(paymentGatewayConfiguration);
 		} catch (com.gmo_pg.g_pay.client.common.PaymentException e) {

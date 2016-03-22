@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.enclosing.util.StringFullfiller;
 import net.malta.dao.payment.PaymentMethodDAO;
+import net.malta.dao.payment.PaymentStatusDAO;
 import net.malta.dao.purchase.PurchaseDAO;
 import net.malta.model.Choise;
 import net.malta.model.Item;
@@ -40,6 +41,9 @@ public class PurchaseService implements IPurchaseService {
 	@Autowired
 	private IPurchaseEmailService emailService;
 	
+	@Autowired
+	private PaymentStatusDAO paymentStatusDAO; 
+	
 	private static final Logger logger = LoggerFactory.getLogger(PurchaseService.class);
 
 	@Override
@@ -52,7 +56,7 @@ public class PurchaseService implements IPurchaseService {
 
 	// call this method for the associations data
 	private void initialize(Purchase purchase) {
-		purchase.getPublicUser().getName();		
+		purchase.getPublicUser().getName();
 		Iterator iterator = purchase.getChoises().iterator();
 		while(iterator.hasNext()) {
 			Choise choise = (Choise) iterator.next();
@@ -90,11 +94,9 @@ public class PurchaseService implements IPurchaseService {
 		purchase.setTemp(false);
 		purchase.setDate(new Date());
 		PaymentStatus paymentStatus = purchase.getPayment();
-		if ( paymentStatus == null ) {
-			paymentStatus = new PaymentStatus();		
-		}
 		paymentStatus.setPaymentStatus(PaymentStatusEnum.COMPLETED);
 		purchase.setPayment(paymentStatus);
+		paymentStatusDAO.saveOrUpdate(paymentStatus);		
 		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);
 		//sendEmail(purchase);
 		return purchase;
