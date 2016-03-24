@@ -65,7 +65,8 @@ public class LoginAction extends Action{
 		res.setContentType("application/json");
 		res.setHeader("access-token", authenticationResponse.getAccessToken());
 		res.setHeader("client", authenticationResponse.getClient());
-		res.setHeader("uid", authenticationResponse.getUid());			
+		res.setHeader("uid", authenticationResponse.getUid());
+		res.setHeader("Access-Control-Expose-Headers", "secual-auth-token,malta,access-token,client,uid");
 		JSONResponseUtil.writeResponseAsJSON(res, responseJSON);
 	}
 	
