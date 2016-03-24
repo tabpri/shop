@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.getsecual.auth.client.UserAuthServiceClient;
+import com.getsecual.auth.client.constant.AuthApiConstants;
 import com.getsecual.auth.client.exception.AuthenticationException;
 import com.getsecual.auth.client.model.json.AuthenticationUserRequest;
 import com.getsecual.auth.client.model.json.AuthenticationUserResponse;
@@ -63,9 +64,9 @@ public class LoginAction extends Action{
 		responseJSON.setEmail(authenticationResponse.getEmail());
 		responseJSON.setName(authenticationResponse.getName());
 		res.setContentType("application/json");
-		res.setHeader("access-token", authenticationResponse.getAccessToken());
-		res.setHeader("client", authenticationResponse.getClient());
-		res.setHeader("uid", authenticationResponse.getUid());
+		res.setHeader(AuthApiConstants.AUTHAPI_HEADER_ACCESS_TOKEN, authenticationResponse.getAccessToken());
+		res.setHeader(AuthApiConstants.AUTHAPI_HEADER_CLIENT, authenticationResponse.getClient());
+		res.setHeader(AuthApiConstants.AUTHAPI_HEADER_UID, authenticationResponse.getUid());
 		res.setHeader("Access-Control-Expose-Headers", "secual-auth-token,malta,access-token,client,uid");
 		JSONResponseUtil.writeResponseAsJSON(res, responseJSON);
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.getsecual.auth.client.constant.AuthApiConstants;
 import com.getsecual.auth.client.exception.AuthenticationException;
 import com.getsecual.auth.client.model.json.AuthenticationUserRequest;
 import com.getsecual.auth.client.model.json.AuthenticationUserResponse;
@@ -22,28 +24,28 @@ import com.getsecual.auth.client.model.json.AuthenticationUserResponse;
 @Component
 public class UserAuthServiceClient {
 
-	@Value("${USERAUTHAPI_URI}")
-	private String AUTHAPI_URI;
-	
+	@Value("${USERAUTHAPI_SIGNIN_URI}")
+	private String AUTHAPI_SIGNIN_URI;
+
+	@Value("${USERAUTHAPI_VALIDATETOKEN_URI}")
+	private String AUTHAPI_VALIDATETOKEN_URI;
+
 	public AuthenticationUserResponse authenticateUser(AuthenticationUserRequest authenticationRequest) 
 			throws AuthenticationException {
 		try {
-			URI uri = new URI(AUTHAPI_URI);
+			URI uri = new URI(AUTHAPI_SIGNIN_URI);
 			HttpEntity<AuthenticationUserRequest> authenticationRequestEntity = 
 					new HttpEntity<AuthenticationUserRequest>(authenticationRequest);			
-			RestTemplate restTemplate = new RestTemplate();
-			List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-			messageConverters.add(new GsonHttpMessageConverter());
-			restTemplate.setMessageConverters(messageConverters);
+			RestTemplate restTemplate = newRestTemplate();
 			ResponseEntity<AuthenticationUserResponse> response = restTemplate.exchange(uri, 
 					HttpMethod.POST, authenticationRequestEntity, AuthenticationUserResponse.class);
 			if ( response.getStatusCode() == HttpStatus.OK ) {
 				AuthenticationUserResponse authenticationResponse = response.getBody();
-				String accessToken = response.getHeaders().getFirst("access-token");
+				String accessToken = response.getHeaders().getFirst(AuthApiConstants.AUTHAPI_HEADER_ACCESS_TOKEN);
 				authenticationResponse.setAccessToken(accessToken);
-				String client = response.getHeaders().getFirst("client");
+				String client = response.getHeaders().getFirst(AuthApiConstants.AUTHAPI_HEADER_CLIENT);
 				authenticationResponse.setClient(client);
-				String uid = response.getHeaders().getFirst("uid");
+				String uid = response.getHeaders().getFirst(AuthApiConstants.AUTHAPI_HEADER_UID);
 				authenticationResponse.setUid(uid);
 				System.out.println("UserAuthServiceClient: ----- " + accessToken + " ----- " + client + " --------- " + uid);
 				return authenticationResponse;
@@ -59,8 +61,43 @@ public class UserAuthServiceClient {
 		}				
 	}
 
+
+	private RestTemplate newRestTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+		messageConverters.add(new GsonHttpMessageConverter());
+		restTemplate.setMessageConverters(messageConverters);
+		return restTemplate;
+	}
+
+
+	public AuthenticationUserResponse validateToken(UserAuthApiTokens tokens) throws AuthenticationException {
+		try {
+			URI uri = new URI(AUTHAPI_VALIDATETOKEN_URI);
+			RestTemplate restTemplate = newRestTemplate();
+			// http entity with the token headers			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set(AuthApiConstants.AUTHAPI_HEADER_ACCESS_TOKEN, tokens.getAccessToken());
+			headers.set(AuthApiConstants.AUTHAPI_HEADER_CLIENT, tokens.getClient());
+			headers.set(AuthApiConstants.AUTHAPI_HEADER_UID, tokens.getUid());
+			
+			HttpEntity<String> entity = new HttpEntity<String>("",headers);
+			
+			ResponseEntity<AuthenticationUserResponse> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, 
+					entity, AuthenticationUserResponse.class);
+			
+			return responseEntity.getBody();
+		} catch(HttpClientErrorException hcee) {
+			throw new AuthenticationException(hcee.getStatusCode().value());			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new AuthenticationException(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		}
+	}
+
 	public void setAUTHAPI_URI(String authAPIURI) {
-		this.AUTHAPI_URI = authAPIURI;
+		this.AUTHAPI_SIGNIN_URI = authAPIURI;
 	}
 
 	public static void main(String[] args) throws AuthenticationException {
