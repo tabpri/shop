@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.malta.error.ValidationError;
 import net.malta.model.PublicUser;
 import net.malta.model.PublicUserSession;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseInfo;
+import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.service.user.IPublicUserService;
 import net.malta.service.user.IPublicUserSessionService;
@@ -108,9 +110,16 @@ public class SessionData {
 	public PurchaseInfo getSessionPuchaseInfo(HttpServletRequest req) {
 		String sessionToken = getSessionToken(req);
 		
-		PublicUserSession session = publicUserSessionService.getSession(sessionToken);
-		PurchaseInfo purchaseInfo = new PurchaseInfo(session.getPurchase(), session.getPublicUser(), 
-				session.getSessionToken());
+		PublicUserSession userSession = publicUserSessionService.getSession(sessionToken);
+		
+		// this exception would be caught by the ShopRequestProcessor and sends the errors json
+		if ( userSession == null ) {
+			throw new ValidationException(
+					new ValidationError("PUBLICUSER.SESSION.DOESNOTEXIST", new Object[]{sessionToken}));			
+		}
+
+		PurchaseInfo purchaseInfo = new PurchaseInfo(userSession.getPurchase(), userSession.getPublicUser(), 
+				userSession.getSessionToken());
 		return purchaseInfo;
 	}
 
@@ -118,7 +127,7 @@ public class SessionData {
 		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
 		
 		// for payment callback
-		sessionToken = (sessionToken==null) ? req.getParameter("secual-auth-token") : sessionToken;
+		sessionToken = (sessionToken==null) ? req.getParameter(SECUAL_AUTH_TOKEN) : sessionToken;
 		return sessionToken;
 	}
 	

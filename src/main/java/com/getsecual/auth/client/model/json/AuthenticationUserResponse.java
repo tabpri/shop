@@ -63,5 +63,4 @@ public class AuthenticationUserResponse implements Serializable {
 		this.uid = uid;
 	}
 
-
 }
