@@ -1,6 +1,7 @@
 package net.malta.filters;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -37,8 +38,10 @@ public class PrivilegeManageFilter implements Filter {
 		boolean isNotCORSPreflightOptionsRequest = !httpRequest.getMethod().equals("OPTIONS");
 		
 		if ( isNotCORSPreflightOptionsRequest) {
-			if(!httpRequest.getRequestURI().contains(".do") || httpRequest.getRequestURI().contains("/admin/")){
+			if(!httpRequest.getRequestURI().contains(".do") || httpRequest.getRequestURI().contains("/admin/") || 
+					httpRequest.getRequestURI().contains("/SignupConfirmation.do") ){
 				chain.doFilter(req, res);
+				return;
 			}else if(req.getParameter("login") == null || req.getParameter("ajax") == null){
 					synchronized (thread) {
 						
@@ -62,16 +65,16 @@ public class PrivilegeManageFilter implements Filter {
 		        				purchaseInfo = SessionData.getInstance(context).createTempPurchase(
 		        						Integer.valueOf(sessionCookie));
 		            		}
-		            	}else{
+		            	}else{		            		
 							System.err.println(" session cookie malta is not available ----------------------------------------");						
 	            			purchaseInfo = SessionData.getInstance(context).createUserAndPurchase();       			
 		            	}
 		            SessionData.getInstance(context).setResponseHeaders(httpResponse,purchaseInfo);
 				}
 			}
-			chain.doFilter(req, res);			
+			chain.doFilter(req, res);
 		} else {
-			chain.doFilter(req, res);			
+			chain.doFilter(req, res);
 		}
 	}
 

@@ -14,4 +14,6 @@ public interface IPublicUserService {
 
 	public PublicUser createTempUser();
 
+	PublicUser updateAuthUser(Integer id, Integer authuserid);
+
 }

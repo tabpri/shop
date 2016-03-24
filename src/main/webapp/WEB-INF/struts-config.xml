@@ -7,15 +7,12 @@
     <form-bean name="manageDbFileForm" type="net.malta.model.crud.DbFileForm"/>
     <form-bean name="DbFileForm" type="net.malta.beans.DbFileForm"/>
     <form-bean name="manageAttachmentForm" type="net.malta.model.crud.AttachmentForm"/>
-    <form-bean name="AttachmentForm" type="net.malta.beans.AttachmentForm"/>
-    <form-bean name="managePublicUserForm" type="net.malta.model.crud.PublicUserForm"/>
     <form-bean name="PublicUserForm" type="net.malta.beans.PublicUserForm"/>
     <form-bean name="manageItemForm" type="net.malta.model.crud.ItemForm"/>
     <form-bean name="ItemForm" type="net.malta.beans.ItemForm"/>
     <form-bean name="managePurchaseForm" type="net.malta.model.crud.PurchaseForm"/>
     <form-bean name="PurchaseForm" type="net.malta.beans.PurchaseForm"/>
     <form-bean name="manageProductForm" type="net.malta.model.crud.ProductForm"/>
-    <form-bean name="ProductForm" type="net.malta.beans.ProductForm"/>
     <form-bean name="manageChoiseForm" type="net.malta.model.crud.ChoiseForm"/>
     <form-bean name="ChoiseForm" type="net.malta.beans.ChoiseForm"/>
     <form-bean name="manageCategoryForm" type="net.malta.model.crud.CategoryForm"/>
@@ -47,9 +44,6 @@
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="/pages/app/adminLogin.jsp"/>
 			
-    <action path="/ShowPurchaseAdmin" type="net.malta.web.app.ShowPurchaseAdminAction">
-      <forward name="success" path="/pages/app/ShowPurchaseAdmin.jsp"/>    
-    </action>
     <action path="/ShowPurchaseForConfirmation" type="net.malta.web.app.ShowPurchaseForConfirmationAction"/>
     <action path="/ShowPublicUserForPassword" type="net.malta.web.app.ShowPublicUserForPasswordAction"/>
     <action path="/DeletePublicUser" type="net.malta.web.app.DeletePublicUserAction"/>
@@ -62,11 +56,12 @@
     <action path="/PostPublicUserVP" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPAction" scope="request" >
       <forward name="error" path="/PostPublicUserDetail.do"/>
     </action>
+
+    <action path="/SignupConfirmation" type="net.malta.web.app.SignupConfirmationAction" scope="request" >    
+    </action>
+    
     <action path="/ShowPurchaseForThanks" type="net.malta.web.app.ShowPurchaseForThanksAction">
       <forward name="success" path="/pages/app/ShowPurchaseForThanks.jsp"/>
-    </action>
-    <action path="/PostItemDetail" type="net.malta.web.app.PostItemDetailAction">
-      <forward name="success" path="/pages/app/PostItemDetail.jsp"/>
     </action>
     <action path="/PostPurchaseDetailForSettingNonTemp" type="net.malta.web.app.PostPurchaseDetailForSettingNonTempAction">
       <forward name="success" path="/pages/app/PostPurchaseDetailForSettingNonTemp.jsp"/>
@@ -78,23 +73,14 @@
     <action path="/PublicUsers" type="net.malta.web.app.PublicUsersAction">
       <forward name="success" path="/pages/app/PublicUsers.jsp"/>
     </action>
-    <action path="/Purchases" type="net.malta.web.app.PurchasesAction">
-      <forward name="success" path="/pages/app/Purchases.jsp"/>
-    </action>
     <action path="/DeleteDeliveryAddress" type="net.malta.web.app.DeleteDeliveryAddressAction"/>
     <action path="/PostPublicUserDetailForPassword" type="net.malta.web.app.PostPublicUserDetailForPasswordAction">
       <forward name="success" path="/pages/app/PostPublicUserDetailForPassword.jsp"/>
     </action>
     <action path="/PostCarriageVP" name="CarriageForm" type="net.malta.web.app.PostCarriageVPAction"/>
-    <action path="/PostProductDetail" type="net.malta.web.app.PostProductDetailAction">
-      <forward name="success" path="/pages/app/PostProductDetail.jsp"/>
-    </action>
     <action path="/ProductList" type="net.malta.web.app.ProductListAction"/>
     <action path="/PostCarriageDetail" type="net.malta.web.app.PostCarriageDetailAction">
       <forward name="success" path="/pages/app/PostCarriageDetail.jsp"/>
-    </action>
-    <action path="/Products" type="net.malta.web.app.ProductsAction">
-      <forward name="success" path="/pages/app/Products.jsp"/>
     </action>
     <action path="/UpdatePurchaseForTotal" type="net.malta.web.app.UpdatePurchaseForTotalAction"/>
     <action path="/PostPublicUserDetail" type="net.malta.web.app.PostPublicUserDetailAction">
@@ -108,43 +94,17 @@
     <action path="/GiftCardList" type="net.malta.web.app.GiftCardListAction">
       <forward name="success" path="/pages/app/GiftCardList.jsp"/>
     </action>
-    <action path="/PostItemVP" name="ItemForm" type="net.malta.web.app.PostItemVPAction">
-      <forward name="error" path="/PostItemDetail.do"/>
-    </action>
     <action path="/PostDeliveryAddressDetail" type="net.malta.web.app.PostDeliveryAddressDetailAction">
       <forward name="success" path="/pages/app/PostDeliveryAddressDetail.jsp"/>
-    </action>
-    <action path="/PostProductVP" name="ProductForm" type="net.malta.web.app.PostProductVPAction">
-      <forward name="error" path="/PostProductDetail.do"/>
     </action>
     <action path="/PostPublicUserVPForPassword" name="PublicUserForm" type="net.malta.web.app.PostPublicUserVPForPasswordAction"/>
     <action path="/PostPurchaseVPChoosingPaymentMethod" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPChoosingPaymentMethodAction" scope="request"/>
     <action path="/PostPurchaseVPPaymentAcsConfirm" name="PurchaseForm" type="net.malta.web.app.PostPurchaseVPPaymentAcsConfirmAction" scope="request"/>
     
-    <action path="/AttachmentFormFileUploadAddingToProductForThumnail" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForThumnailAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToProductForThumnail.jsp"/>
-    </action>
-    <action path="/AttachmentFormFileUploadAddingToItemForDefault" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForDefaultAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToItemForDefault.jsp"/>
-    </action>
-    <action path="/AttachmentFormFileUploadAddingToItemForSubDetailed" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForSubDetailedAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToItemForSubDetailed.jsp"/>
-    </action>
-    <action path="/AttachmentFormFileUploadAddingToProductForSlideShow" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForSlideShowAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToProductForSlideShow.jsp"/>
-    </action>
-    <action path="/DeleteItem" type="net.malta.web.app.DeleteItemAction"/>
     <action path="/DeliveryAddressChoiseList" type="net.malta.web.app.DeliveryAddressChoiseListAction">
       <forward name="success" path="/pages/app/DeliveryAddressChoiseList.jsp"/>
     </action>
     <action path="/UpdateChoiseForOrdernum" type="net.malta.web.app.UpdateChoiseForOrdernumAction"/>
-    <action path="/AttachmentFormFileUploadAddingToItem" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToItemAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToItem.jsp"/>
-    </action>
-    <action path="/AttachmentFormFileUploadAddingToItemForDetailed" name="AttachmentForm" type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForDetailedAction">
-      <forward name="success" path="/pages/app/AttachmentFormFileUploadAddingToItemForDetailed.jsp"/>
-    </action>
-    <action path="/DeletePurchase" type="net.malta.web.app.DeletePurchaseAction"/>
     <action path="/PostPaymentMethodDetail" type="net.malta.web.app.PostPaymentMethodDetailAction">
       <forward name="success" path="/pages/app/PostPaymentMethodDetail.jsp"/>
     </action>
@@ -188,7 +148,6 @@
     </action>
     <action path="/MailAboutPurchaseToAdmin" type="net.malta.web.app.MailAboutPurchaseToAdminAction"/>
     <action path="/MailAboutPurchaseToPublicUser" type="net.malta.web.app.MailAboutPurchaseToPublicUserAction"/>
-    <action path="/DeleteAttachment" type="net.malta.web.app.DeleteAttachmentAction"/>
     <action path="/ShowProduct" type="net.malta.web.app.ShowProductAction"/>
     <action path="/ProductsForThumnailsXml" type="net.malta.web.app.ProductsForThumnailsXmlAction"/>
     <action path="/ProductsForScenesXm2" type="net.malta.web.app.ProductsForScenesXm2Action"/>
@@ -212,8 +171,8 @@
       <forward name="success" path="/pages/app/ShowPayment.jsp"/>
     </action>-->
   </action-mappings>
-  <!-- <controller processorClass="net.gasbooknet.web.app.CustomRequestProcessor"/> -->
-  <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
+  <controller processorClass="net.malta.web.struts.ShopRequestProcessor"/>
+<!--   <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/> -->
   <message-resources parameter="MessageResources"/>
   <plug-in className="org.apache.struts.tiles.TilesPlugin">
     <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml"/>

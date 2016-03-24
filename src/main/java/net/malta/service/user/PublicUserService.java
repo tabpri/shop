@@ -63,6 +63,15 @@ public class PublicUserService implements IPublicUserService {
 		return publicUser;
 	}
 
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public PublicUser updateAuthUser(Integer id,Integer authuserid) {
+		PublicUserImpl publicUser = publicUserDAO.find(id);
+		publicUser.setAuthuserid(authuserid);
+		publicUserDAO.saveOrUpdate((PublicUserImpl) publicUser);
+		return publicUser;
+	}
+
 	private PublicUser publicUserUpdate(PublicUser publicUser) {
 		validator.validate(publicUser, new Errors());		
 		StringFullfiller.fullfil(publicUser);		
