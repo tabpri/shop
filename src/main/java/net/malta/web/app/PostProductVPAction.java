@@ -1,6 +1,7 @@
 package net.malta.web.app;
 
 import net.malta.model.*;
+import static net.malta.web.utils.ActionUtil.*;
 import net.malta.web.utils.MainItem;
 import net.malta.beans.*;
 
@@ -138,13 +139,12 @@ public class PostProductVPAction extends Action{
 		}
 		
 		if(StringUtils.isNotBlank(req.getParameter("from")) && "detail".equals(req.getParameter("from"))){
-			new HTTPGetRedirection(req, res, "PostProductDetail.html", product.getId().toString());
+			new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostProductDetail.do", product.getId().toString());
 			return null;
 		}
 
-		new HTTPGetRedirection(req, res, "Products.html", null);
+		new HTTPGetRedirection(req, res, getModulePrefix(req)+"Products.do", null);
 		return null;
 	}
-	
-	
+		
 }
