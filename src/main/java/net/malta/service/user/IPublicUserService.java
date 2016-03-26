@@ -16,4 +16,6 @@ public interface IPublicUserService {
 
 	PublicUser updateAuthUser(Integer id, Integer authuserid);
 
+	PublicUser getUserByEmail(String email);
+
 }

@@ -40,6 +40,11 @@ public class PublicUserService implements IPublicUserService {
 		return publicUserDAO.findUserByAuthUser(authUserId);
 	}
 
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public PublicUser getUserByEmail(String email) {
+		return publicUserDAO.findUserByEmail(email);
+	}
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)		

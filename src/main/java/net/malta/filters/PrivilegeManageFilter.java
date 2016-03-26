@@ -35,25 +35,24 @@ public class PrivilegeManageFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest)req;
 		HttpServletResponse httpResponse = (HttpServletResponse)res;
-		boolean isNotCORSPreflightOptionsRequest = !httpRequest.getMethod().equals("OPTIONS");
-		
+		boolean isNotCORSPreflightOptionsRequest = !httpRequest.getMethod().equals("OPTIONS");		
 		if ( isNotCORSPreflightOptionsRequest) {
 			if(!httpRequest.getRequestURI().contains(".do") || httpRequest.getRequestURI().contains("/admin/") || 
-					httpRequest.getRequestURI().contains("/SignupConfirmation.do") ){
+					httpRequest.getRequestURI().contains("/SignupConfirmation.do") || httpRequest.getRequestURI().contains("/Login.do") ){
 				chain.doFilter(req, res);
 				return;
 			}else if(req.getParameter("login") == null || req.getParameter("ajax") == null){
 					synchronized (thread) {
 						
-						//malta - cookie/header
-		            	String sessionCookie = SessionData.getInstance(context).getSessionCookie(httpRequest);
+						//malta - header
+		            	String maltaHeader = httpRequest.getHeader(SessionData.MALTA);
 		            	
-						boolean cookieexists = StringUtils.isNotBlank(sessionCookie);
+						boolean maltaHeaderExists = StringUtils.isNotBlank(maltaHeader);
 						
 						PurchaseInfo purchaseInfo  = null;
 						
-		            	if(cookieexists) {
-							System.err.println(" session cookie malta is available ---------------------------------------- " + sessionCookie);
+		            	if(maltaHeaderExists) {
+							System.err.println(" session cookie malta is available ---------------------------------------- " + maltaHeader);
 							
 	            			try{ // check for the session
 	            				purchaseInfo = SessionData.getInstance(context).checkUserSession(httpRequest);		            				
@@ -63,7 +62,7 @@ public class PrivilegeManageFilter implements Filter {
 	            			}							
 							if( purchaseInfo == null ) {
 		        				purchaseInfo = SessionData.getInstance(context).createTempPurchase(
-		        						Integer.valueOf(sessionCookie));
+		        						Integer.valueOf(maltaHeader));
 		            		}
 		            	}else{		            		
 							System.err.println(" session cookie malta is not available ----------------------------------------");						

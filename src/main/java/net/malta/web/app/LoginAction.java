@@ -22,6 +22,7 @@ import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseInfo;
 import net.malta.model.user.json.AuthenticationResponse;
+import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IPurchaseService;
 import net.malta.service.user.IPublicUserService;
 import net.malta.web.utils.BeanUtil;
@@ -45,10 +46,13 @@ public class LoginAction extends Action{
 			
 			IPublicUserService userService = (IPublicUserService) BeanUtil.getBean("publicUserService", this.getServlet().getServletContext());
 			PublicUser publicUser = userService.getUserByAuthUser(authenticationResponse.getId());
-
-			updatePurchase(req, res, publicUser);
 			
-			sendJSON(res, authenticationResponse, publicUser);
+			publicUser = updatePurchase(req, res, publicUser);
+			
+			userService.updateAuthUser(publicUser.getId(), 
+						authenticationResponse.getId());
+				
+			sendJSON(req,res, authenticationResponse, publicUser);
 			
 		} catch (AuthenticationException ae) {
 			res.setStatus(ae.getStatusCode());
@@ -56,8 +60,9 @@ public class LoginAction extends Action{
 		return null;
 	}
 
-	private void sendJSON(HttpServletResponse res, AuthenticationUserResponse authenticationResponse,
+	private void sendJSON(HttpServletRequest req, HttpServletResponse res, AuthenticationUserResponse authenticationResponse,
 			PublicUser publicUser) throws IOException {
+		
 		AuthenticationResponse responseJSON = new AuthenticationResponse();
 		responseJSON.setId(publicUser.getId());
 		responseJSON.setAuthuserid(authenticationResponse.getId()); // auth userid
@@ -71,20 +76,37 @@ public class LoginAction extends Action{
 		JSONResponseUtil.writeResponseAsJSON(res, responseJSON);
 	}
 	
-	private void updatePurchase(HttpServletRequest req, HttpServletResponse res,PublicUser publicUser) {
+	private PublicUser updatePurchase(HttpServletRequest req, HttpServletResponse res,PublicUser loggedInPublicUser) {		
 		ServletContext context = this.getServlet().getServletContext();
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
 				context);
-		
-		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
-		
-		Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
-		
-		purchase.setPublicUser(publicUser);
-		
-		purchaseService.updatePurchase(purchase);
 
-		SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res,purchase);
+		PurchaseInfo purchaseInfo = null;
+		Purchase purchase = null;
+		
+		purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
+		// session found
+		if ( purchaseInfo != null ) {
+			purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
+			if ( loggedInPublicUser != null ) { // if public user found with the logged in user auth user id then map it to purchase
+				purchase.setPublicUser(loggedInPublicUser);
+				purchaseService.updatePurchase(purchase);
+			} else { 
+				// do nothing - purchase is already mapped to the its a session public user							
+			}
+			purchaseInfo = SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res, purchase);				
+		}
+		else { // no session found
+			if ( loggedInPublicUser == null ) { // no public user available then create both public user and purchase
+				purchaseInfo = SessionData.getInstance(context).createUserAndPurchase();
+			} else { // if user found with the logged in user auth user id then create the  purchase and map it to purchase
+				purchaseInfo = SessionData.getInstance(context).createTempPurchase(loggedInPublicUser.getId());
+			}
+			SessionData.getInstance(context).setResponseHeaders(res, purchaseInfo);			
+		}
+
+		IPublicUserService publicUserService = (IPublicUserService) BeanUtil.getBean("publicUserService", this.getServlet().getServletContext());
+		return publicUserService.getUser(purchaseInfo.getUserId());
 	}
 	
 }

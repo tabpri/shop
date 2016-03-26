@@ -16,5 +16,12 @@ public class PublicUserDAO extends BaseDAO<PublicUserImpl>{
 		criteria.add(Restrictions.eq("authuserid", authUserId));
 		return (PublicUser)criteria.uniqueResult();
 	}
-	
+
+	public PublicUser findUserByEmail(String email) {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(PublicUser.class);		
+		criteria.add(Restrictions.eq("mail", email));
+		criteria.add(Restrictions.eq("temp", false));		
+		return (PublicUser)criteria.uniqueResult();
+	}
+
 }
