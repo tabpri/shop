@@ -4,7 +4,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -28,6 +27,7 @@ import net.malta.web.utils.SessionData;
 
 public class SignupConfirmationAction extends Action {
 
+	private static final String SIGNUPCONFIRMATION_USERDOESNOTEXISTWITHTHISUID = "SIGNUPCONFIRMATION..USERDOESNOTEXISTWITHTHISUID";
 	private static final String SIGNUPCONFIRMATION_INVALIDTOKENHEADERS = "SIGNUPCONFIRMATION.INVALIDTOKENHEADERS";
 
 	@Override
@@ -35,8 +35,6 @@ public class SignupConfirmationAction extends Action {
 			HttpServletResponse response) throws Exception {
 
 		ServletContext servletContext = this.getServlet().getServletContext();
-
-		PurchaseInfo sessionPuchaseInfo = SessionData.getInstance(servletContext).getSessionPuchaseInfo(request);
 
 		UserAuthServiceClient authClient = (UserAuthServiceClient) BeanUtil.getBean("userAuthServiceClient",
 				this.getServlet().getServletContext());
@@ -57,10 +55,20 @@ public class SignupConfirmationAction extends Action {
 		IPublicUserService publicUserService = (IPublicUserService) BeanUtil.getBean("publicUserService",
 				servletContext);
 
-		PublicUser publicUser = publicUserService.updateAuthUser(sessionPuchaseInfo.getUserId(),
+		PurchaseInfo puchaseInfo = SessionData.getInstance(servletContext).getSessionPuchaseInfo(request);			;
+
+		if ( puchaseInfo == null ) { // no session found then get the user by the uid(email)
+			PublicUser publicUser = publicUserService.getUserByEmail(uid);
+			if ( publicUser == null ) {
+				throw new ValidationException(new ValidationError(SIGNUPCONFIRMATION_USERDOESNOTEXISTWITHTHISUID, null, uid));
+			}
+			puchaseInfo = SessionData.getInstance(servletContext).createTempPurchase(publicUser.getId());
+		}
+		
+		PublicUser publicUser = publicUserService.updateAuthUser(puchaseInfo.getUserId(),
 				authenticationUserResponse.getId());
 
-        SessionData.getInstance(this.getServlet().getServletContext()).setResponseHeaders(response,sessionPuchaseInfo);
+        SessionData.getInstance(this.getServlet().getServletContext()).setResponseHeaders(response,puchaseInfo);
 
 		PublicUserMapper mapper = (PublicUserMapper) BeanUtil.getBean("publicUserMapper",
 				this.getServlet().getServletContext());

@@ -104,14 +104,18 @@ public class SessionData {
 		
 		PublicUserSession userSession = publicUserSessionService.getSession(sessionToken);
 		
-		// this exception would be caught by the ShopRequestProcessor and sends the errors json
+/*		// this exception would be caught by the ShopRequestProcessor and sends the errors json
 		if ( userSession == null ) {
 			throw new ValidationException(
 					new ValidationError("PUBLICUSER.SESSION.DOESNOTEXIST", new Object[]{sessionToken}));			
 		}
 
-		PurchaseInfo purchaseInfo = new PurchaseInfo(userSession.getPurchase(), userSession.getPublicUser(), 
-				userSession.getSessionToken());
+*/		
+		PurchaseInfo purchaseInfo = null;
+		if ( userSession != null ) {
+			purchaseInfo = new PurchaseInfo(userSession.getPurchase(), userSession.getPublicUser(), 
+					userSession.getSessionToken());
+		}
 		return purchaseInfo;
 	}
 

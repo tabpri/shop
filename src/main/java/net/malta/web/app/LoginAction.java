@@ -84,18 +84,19 @@ public class LoginAction extends Action{
 		PurchaseInfo purchaseInfo = null;
 		Purchase purchase = null;
 		
-		try {
-			purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
-			// session found
+		purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
+		// session found
+		if ( purchaseInfo != null ) {
 			purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
 			if ( loggedInPublicUser != null ) { // if public user found with the logged in user auth user id then map it to purchase
-				purchase.setPublicUser(loggedInPublicUser);			
+				purchase.setPublicUser(loggedInPublicUser);
 				purchaseService.updatePurchase(purchase);
 			} else { 
 				// do nothing - purchase is already mapped to the its a session public user							
 			}
-			purchaseInfo = SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res, purchase);			
-		} catch(ValidationException ve){ // no session found
+			purchaseInfo = SessionData.getInstance(context).createNewSessionAndSetResponseHeaders(req, res, purchase);				
+		}
+		else { // no session found
 			if ( loggedInPublicUser == null ) { // no public user available then create both public user and purchase
 				purchaseInfo = SessionData.getInstance(context).createUserAndPurchase();
 			} else { // if user found with the logged in user auth user id then create the  purchase and map it to purchase
