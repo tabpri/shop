@@ -66,7 +66,6 @@
     <action path="/PostPurchaseDetailForSettingNonTemp" type="net.malta.web.app.PostPurchaseDetailForSettingNonTempAction">
       <forward name="success" path="/pages/app/PostPurchaseDetailForSettingNonTemp.jsp"/>
     </action>
-    <action path="/DeleteProduct" type="net.malta.web.app.DeleteProductAction"/>
     <action path="/ShowImage" type="net.malta.web.app.ShowImage"/>
     <action path="/ShowPurchase" type="net.malta.web.app.ShowPurchaseAction"/>
     <action path="/ShowDeliveryAddressChoise" type="net.malta.web.app.ShowDeliveryAddressChoiseAction"/>

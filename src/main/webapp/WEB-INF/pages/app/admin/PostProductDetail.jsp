@@ -10,14 +10,17 @@
 <%@ taglib uri="http://www.enclosing.net/tags/storyteller" prefix="st" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page isELIgnored="false" %>
-<%@ page import="net.malta.web.utils.MainItem" %>
+<%@ page import="net.malta.web.utils.MainItem,net.malta.web.utils.ActionUtil" %>
 
 <tiles:insert definition=".layout">
 
 	<tiles:put name="title" value="商品登録" direct="true" />
 
 	<tiles:put name="content" direct="true">
-		
+
+<%
+	String relativeModulePrefix = ActionUtil.getModulePrefix(request);
+%>
 		<c:if test="${!empty error}">
 			<font color="red">
 				<st:error key="error"/>
@@ -25,7 +28,7 @@
 		</c:if>
 		
 <%--		<span id="subform">
---%>			<html:form method="POST" action="/PostProductVP">
+--%>			<html:form method="POST" action="PostProductVP.do">
 			<input type="hidden" name="from" value="detail" />
 				<html:hidden name="form" property="id"/>
 				<c:set var="mainItem" value='<%= MainItem.Of(request.getAttribute("model"),application)%>' />			
@@ -266,16 +269,16 @@
 --%>						</td>
 						<td>
 						<c:if test="${!empty mainItem.defaultattachment}">
-						<a href="ShowImage.do?id=${mainItem.defaultattachment.id}" rel="lightbox">
-						<img src="ShowImage.do?id=${mainItem.defaultattachment.id}" width="40" />
+						<a href="/Shop/ShowImage.do?id=${mainItem.defaultattachment.id}" rel="lightbox">
+						<img src="/Shop/ShowImage.do?id=${mainItem.defaultattachment.id}" width="40" />
 						</a>
-						<a href="DeleteAttachment.do?id=${mainItem.defaultattachment.id}&from=PostProductDetail.do&toid=${model.id}&itemid=${mainItem.id}">削除</a>
+						<a href="DeleteAttachment.do?id=${mainItem.defaultattachment.id}&from=<%= relativeModulePrefix%>PostProductDetail.do&toid=${model.id}&itemid=${mainItem.id}">削除</a>
 						</c:if>
 						<c:forEach var="detailed" items="${mainItem.detailed}" >
-						<a href="ShowImage.do?id=${detailed.id}"  rel="lightbox">
-						<img src="ShowImage.do?id=${detailed.id}" width="40" />
+						<a href="/Shop/ShowImage.do?id=${detailed.id}"  rel="lightbox">
+						<img src="/Shop/ShowImage.do?id=${detailed.id}" width="40" />
 						</a>
-						<a href="DeleteAttachment.do?id=${detailed.id}&from=PostProductDetail.do&toid=${model.id}">削除</a>
+						<a href="DeleteAttachment.do?id=${detailed.id}&from=<%= relativeModulePrefix%>PostProductDetail.do&toid=${model.id}">削除</a>
 						
 						</c:forEach>						
 						

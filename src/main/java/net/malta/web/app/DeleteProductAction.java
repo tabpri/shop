@@ -16,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import static net.malta.web.utils.ActionUtil.*;
 
 public class DeleteProductAction extends Action{
 	public ActionForward execute(
@@ -41,7 +42,7 @@ public class DeleteProductAction extends Action{
 		transaction.commit();
 		session.flush();
 		
-		new HTTPGetRedirection(req, res, "Products.html",null);
+		new HTTPGetRedirection(req, res, getModulePrefix(req) + "Products.do",null);
 		return null;
 	}
 }

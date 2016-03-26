@@ -1,5 +1,7 @@
 package net.malta.web.app.admin;
 
+import static net.malta.web.utils.ActionUtil.getModulePrefix;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +61,7 @@ public class UserAction extends DispatchAction {
 			return mapping.findForward("user");
 		}
 		logger.debug("saving the user - successful, return to the userlist");
-		new HTTPGetRedirection(request, response, "admin/User.do?action=userlist", null);
+		new HTTPGetRedirection(request, response, getModulePrefix(request)+"User.do?action=userlist", null);
 		return  null;
     }
 
@@ -86,7 +88,7 @@ public class UserAction extends DispatchAction {
 				
 		userService.deleteUser(userId);
 
-		new HTTPGetRedirection(request, response, "admin/User.do?action=userlist", null);
+		new HTTPGetRedirection(request, response, getModulePrefix(request)+"User.do?action=userlist", null);
 		
 		return null;
     }

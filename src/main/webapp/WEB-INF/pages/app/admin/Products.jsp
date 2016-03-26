@@ -120,7 +120,7 @@
 --%>		    </display:column>
 		    <display:column media="html" sortable="false" title="削除">
 				<a onClick="javascript:if(window.confirm('削除してもよろしいですか？')){location.href='DeleteProduct.do?id=${row.id}';}">
-				    <img src="images/icons/bt_delete.gif">
+				    <img src="/Shop/images/icons/bt_delete.gif">
 			    </a>
 			</display:column>
 		</display:table>

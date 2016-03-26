@@ -1,5 +1,7 @@
 package net.malta.web.app;
 
+import static net.malta.web.utils.ActionUtil.getModulePrefix;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +14,7 @@ import net.malta.model.Attachment;
 import net.malta.model.AttachmentImpl;
 import net.malta.model.DbFile;
 import net.malta.model.Item;
+import net.malta.web.utils.ActionUtil;
 import net.malta.web.utils.AttachmentUtils;
 import net.storyteller.desktop.CopyProperties;
 
@@ -90,11 +93,11 @@ public class AttachmentFormFileUploadAddingToItemForDetailedAction extends Actio
 		session.flush();
 
 		if(StringUtils.isNotBlank(req.getParameter("from")) && "detail".equals(req.getParameter("from"))){		
-			new HTTPGetRedirection(req, res, "PostItemDetail.html", item.getId().toString());
+			new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostItemDetail.do", item.getId().toString());
 			return null;
 		}
 		
-		new HTTPGetRedirection(req, res, "PostProductDetail.html", item.getProduct().getId().toString());
+		new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostProductDetail.do", item.getProduct().getId().toString());
 		return null;
 	}
 	

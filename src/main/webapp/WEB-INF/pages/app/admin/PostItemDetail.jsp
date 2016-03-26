@@ -10,7 +10,7 @@
 <%@ taglib uri="http://www.enclosing.net/tags/storyteller" prefix="st" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page isELIgnored="false" %>
-<%@ page import="net.malta.web.utils.MainItem" %>
+<%@ page import="net.malta.web.utils.MainItem,net.malta.web.utils.ActionUtil" %>
 
 <tiles:insert definition=".layout">
 
@@ -18,7 +18,11 @@
 
 	<tiles:put name="content" direct="true">
 		
-	<html:form enctype="multipart/form-data" method="POST" action="/PostItemVP">
+<%
+	String relativeModulePrefix = ActionUtil.getModulePrefix(request);
+%>
+		
+	<html:form enctype="multipart/form-data" method="POST" action="PostItemVP.do">
           <html:hidden name="form" property="id"/>
           <input type="hidden" name="product" value="${form.product}" />	
 		
@@ -239,16 +243,16 @@
 					</td>
 						<td>
 						<c:if test="${!empty model.defaultattachment}">
-						<a href="ShowImage.do?id=${model.defaultattachment.id}" rel="lightbox">
-						<img src="ShowImage.do?id=${model.defaultattachment.id}" width="40" />
+						<a href="/Shop/ShowImage.do?id=${model.defaultattachment.id}" rel="lightbox">
+						<img src="/Shop/ShowImage.do?id=${model.defaultattachment.id}" width="40" />
 						</a>
-						<a href="DeleteAttachment.do?id=${model.defaultattachment.id}&from=PostItemDetail.do&toid=${model.id}&itemid=${model.id}">削除</a>
+						<a href="DeleteAttachment.do?id=${model.defaultattachment.id}&from=<%= relativeModulePrefix%>PostItemDetail.do&toid=${model.id}&itemid=${model.id}">削除</a>
 						</c:if>
 						<c:forEach var="detailed" items="${model.detailed}" >
-						<a href="ShowImage.do?id=${detailed.id}"  rel="lightbox">
-						<img src="ShowImage.do?id=${detailed.id}" width="40" />
+						<a href="/Shop/ShowImage.do?id=${detailed.id}"  rel="lightbox">
+						<img src="/Shop/ShowImage.do?id=${detailed.id}" width="40" />
 						</a>
-						<a href="DeleteAttachment.do?id=${detailed.id}&from=PostItemDetail.do&toid=${model.id}">削除</a>
+						<a href="DeleteAttachment.do?id=${detailed.id}&from=<%= relativeModulePrefix%>PostItemDetail.do&toid=${model.id}">削除</a>
 						</c:forEach>						
 						
 						</td>

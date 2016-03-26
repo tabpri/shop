@@ -23,6 +23,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import static net.malta.web.utils.ActionUtil.*;
 
 
 public class PostItemVPAction extends Action{
@@ -128,11 +129,11 @@ public class PostItemVPAction extends Action{
 		}
 
 		if(StringUtils.isNotBlank(req.getParameter("from")) && "detail".equals(req.getParameter("from"))){		
-			new HTTPGetRedirection(req, res, "PostItemDetail.html", item.getId().toString());
+			new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostItemDetail.do", item.getId().toString());
 			return null;
 		}
 		
-		new HTTPGetRedirection(req, res, "PostProductDetail.html", item.getProduct().getId().toString());
+		new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostProductDetail.do", item.getProduct().getId().toString());
 		return null;
 	}
 }

@@ -1,7 +1,18 @@
 package net.malta.web.app;
 
+import static net.malta.web.utils.ActionUtil.getModulePrefix;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import net.enclosing.util.HTTPGetRedirection;
 import net.enclosing.util.HibernateSession;
@@ -12,15 +23,6 @@ import net.malta.model.AttachmentImpl;
 import net.malta.model.DbFile;
 import net.malta.model.Product;
 import net.malta.web.utils.AttachmentUtils;
-
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 
 public class AttachmentFormFileUploadAddingToProductForSlideShowAction extends Action{
 	public ActionForward execute(
@@ -67,7 +69,7 @@ public class AttachmentFormFileUploadAddingToProductForSlideShowAction extends A
 		transaction.commit();
 		session.flush();
 
-		new HTTPGetRedirection(req, res, "PostProductDetail.html", ProductInt.toString());
+		new HTTPGetRedirection(req, res, getModulePrefix(req)+"PostProductDetail.do", ProductInt.toString());
 		return null;
 	}
 }
