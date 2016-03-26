@@ -96,14 +96,6 @@ public class SessionData {
 	}
 	
 	public String getSessionCookie(HttpServletRequest req) {
-    	if(req.getCookies()!=null){
-
-        	for (int i = 0; i < req.getCookies().length; i++) {
-    			if(req.getCookies()[i].getName().equals(MALTA)){
-    				return req.getCookies()[i].getValue();
-    			}
-			}
-    	}
     	return req.getHeader(MALTA);
 	}
 	
@@ -180,10 +172,11 @@ public class SessionData {
 		updateSessionCookie(req, res);
 	}
 
-	public void createNewSessionAndSetResponseHeaders(HttpServletRequest req,HttpServletResponse res,Purchase purchase) {
-		String sessionToken = req.getHeader(SECUAL_AUTH_TOKEN);
+	public PurchaseInfo createNewSessionAndSetResponseHeaders(HttpServletRequest req,HttpServletResponse res,Purchase purchase) {
+		String sessionToken = getSessionToken(req);
 		PurchaseInfo purchaseInfo = createUserSession(purchase.getPublicUser(), purchase,sessionToken);
 		setResponseHeaders(res, purchaseInfo);
+		return purchaseInfo;
 	}
 
 	public PurchaseInfo getPurchaseUsingSessionCookie(HttpServletRequest req, ServletContext context,String cookie) {
