@@ -96,7 +96,7 @@ public class UserAuthServiceClient {
 		return headers;
 	}
 
-	public boolean signout(UserAuthApiTokens tokens) throws AuthenticationException {
+	public Boolean signout(UserAuthApiTokens tokens) throws AuthenticationException {
 		try {
 			RestTemplate restTemplate = newRestTemplate();
 			HttpHeaders headers = addHeaders(tokens);
@@ -108,7 +108,7 @@ public class UserAuthServiceClient {
 			ResponseEntity<Map> responseEntity = restTemplate.exchange(uri, HttpMethod.DELETE,
 					entity, Map.class);
 			Map responseMap = responseEntity.getBody();
-			return (boolean) responseMap.get("success");
+			return (Boolean) responseMap.get("success");
 		} catch (HttpClientErrorException hcee) {
 			throw new AuthenticationException(hcee.getStatusCode().value());
 		} catch (Exception e) {
