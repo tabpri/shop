@@ -1,13 +1,11 @@
 package net.malta.service.user;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.malta.dao.user.PublicUserSessionDAO;
-import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.PublicUserSession;
 import net.malta.model.validator.ValidationException;
@@ -69,4 +67,12 @@ public class PublicUserSessionService implements IPublicUserSessionService {
 		return userSession;
 	}
 
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public PublicUserSession expireSession(String sessionToken) {
+		PublicUserSession userSession = sessionTokenDAO.getUserSession(sessionToken);
+		userSession.setExpired(true);
+		sessionTokenDAO.saveOrUpdate(userSession);
+		return userSession;
+	}
 }

@@ -12,4 +12,6 @@ public interface IPublicUserSessionService {
 
 	PublicUserSession checkUserSession(String sessionToken);
 
+	PublicUserSession expireSession(String sessionToken);
+
 }
