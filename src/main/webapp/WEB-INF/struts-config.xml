@@ -59,6 +59,9 @@
 
     <action path="/SignupConfirmation" type="net.malta.web.app.SignupConfirmationAction" scope="request" >    
     </action>
+
+    <action path="/SignOut" type="net.malta.web.app.SignOutAction" scope="request" >    
+    </action>
     
     <action path="/ShowPurchaseForThanks" type="net.malta.web.app.ShowPurchaseForThanksAction">
       <forward name="success" path="/pages/app/ShowPurchaseForThanks.jsp"/>
