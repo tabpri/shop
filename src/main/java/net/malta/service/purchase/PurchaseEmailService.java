@@ -2,6 +2,7 @@ package net.malta.service.purchase;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -9,11 +10,10 @@ import java.util.Map;
 import javax.mail.internet.MimeUtility;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +23,11 @@ import com.getsecual.email.client.Email;
 import com.getsecual.email.client.IEmailSender;
 import com.getsecual.email.client.exception.EmailException;
 
-import net.enclosing.util.SimpleMail;
 import net.malta.dao.meta.StaticDataDAO;
+import net.malta.dao.purchase.PurchaseEmailDAO;
 import net.malta.model.DeliveryAddress;
 import net.malta.model.Purchase;
+import net.malta.model.PurchaseEmail;
 import net.malta.model.StaticData;
 import net.malta.model.purchase.wrapper.PurchaseDeliveryAddress;
 
@@ -38,6 +39,9 @@ public class PurchaseEmailService implements IPurchaseEmailService {
 	@Autowired
 	StaticDataDAO staticDataDAO;
 
+	@Autowired
+	PurchaseEmailDAO purchaseEmailDAO;
+	
 	@Autowired
 	IEmailSender emailSender;
 	
@@ -55,8 +59,8 @@ public class PurchaseEmailService implements IPurchaseEmailService {
 		Map model = new HashMap();
 		model.put("purchase", purchase);
 		DeliveryAddress deliveryAddress = new PurchaseDeliveryAddress(purchase).getDeliveryAddress();
-		System.out.println("delivery address prefecture " + deliveryAddress.getPrefecture());
-		System.out.println("delivery address prefecture " + deliveryAddress.getPrefecture().getName());
+		logger.debug("delivery address prefecture " + deliveryAddress.getPrefecture());
+		logger.debug("delivery address prefecture " + deliveryAddress.getPrefecture().getName());
 		
 		model.put("deliveryaddress", deliveryAddress);
 		Locale l = new Locale("ja", "JP");
@@ -69,34 +73,60 @@ public class PurchaseEmailService implements IPurchaseEmailService {
 		String from = staticData.getFromaddress();
 		
 		try {
-			model.put("fromstring", MimeUtility.encodeText("AFRICA & LEO", "ISO-2022-JP", "B") + "<"+staticData.getFromaddress()+">");
+			from = MimeUtility.encodeText("AFRICA & LEO", "ISO-2022-JP", "B") + "<"+staticData.getFromaddress()+">";
 		} catch (UnsupportedEncodingException uee) {
 			logger.error(uee.getMessage(),uee);
 		}
 		
 		model.put("staticData", staticData);
 
+    	String userEmail = purchase.getPublicUser().getMail();
+
+		PurchaseEmail purchaseEmail = new PurchaseEmail();
+		purchaseEmail.setUserEmailAddress(userEmail);
+		purchaseEmail.setAdminEmailAddressesString(staticData.getAdminEmailAddressesString());
+		purchaseEmail.setPurchaseId(purchase.getId());
+		purchase.setPurchaseEmail(purchaseEmail);
+		
 		try {
 	    	logger.info("email sending to the user---------------------------------------------");
 	    	String userEmailString = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,"MailAboutPurchaseToPublicUser.eml","UTF-8",model);
-	    	String adminEmailString = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,"MailAboutPurchaseToAdmin.eml","UTF-8",model);
-	    	
-	    	//emailSender.sendEmail(new Email(subject, from, purchase.getPublicUser().getMail(), userEmailString));
-	    	emailSender.sendEmail(new Email(subject, from, "amruthasuri@gmail.com", adminEmailString));
-	    	//emailSender.sendEmail(new Email(subject, from, purchase.getPublicUser().getMail(), userEmailString));
-	    	
-			//mail.send("MailAboutPurchaseToPublicUser.eml", purchase.getPublicUser().getMail(), model);
-			
-			//mail.send("MailAboutPurchaseToAdmin.eml", "aandl.order@gmail.com", model);
-			//mail.send("MailAboutPurchaseToAdmin.eml", "toukubo+africaandleo@gmail.com", model);
-			logger.info("email sent to the --------------------------------------------- " + purchase.getPublicUser().getMail());
+	    	System.out.println("userEmailString:\n" +userEmailString);
+			emailSender.sendEmail(new Email(subject, from, userEmail, userEmailString));
+			purchaseEmail.setUserEmailSent(Boolean.TRUE);
+			purchaseEmail.setUserEmailSentDate(new Date());
+			logger.info("email sent to the user --------------------------------------------- " + purchase.getPublicUser().getMail());
 		} catch (EmailException ee) {
-			logger.error("sending emails failed for purchase:" + + purchase.getId(),ee);
-			logger.error("email confirmation failed for purchase:" + + purchase.getId());			
+			logger.error("email sending to the user - failed ---------------------------------------------" + + purchase.getId(),ee);
+			purchaseEmail.setUserEmailErrorCode(ee.getStatusCode() != null ? ee.getStatusCode().toString() : "");
+			purchaseEmail.setUserEmailErrorMessage(ee.getMessage());
+			purchaseEmail.setUserEmailSent(Boolean.FALSE);
+		} catch (VelocityException e) {
+			purchaseEmail.setUserEmailErrorMessage(e.getMessage());
+			purchaseEmail.setUserEmailSent(Boolean.FALSE);			
+			logger.error("email sending to the user - failed ---------------------------------------------" + + purchase.getId(),e);			
 		}
-		catch (Exception e) {
-			logger.error("email confirmation failed for purchase:" + + purchase.getId(),e);
-		}		
+
+		try {
+	    	logger.info("email sending to the admin users---------------------------------------------");
+	    	String adminEmailString = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,"MailAboutPurchaseToAdmin.eml","UTF-8",model);
+	    	System.out.println("adminEmailString:\n" +adminEmailString);	    	
+	    	emailSender.sendEmail(new Email(subject, from, staticData.getAdminEmailAddresses(), adminEmailString));
+			purchaseEmail.setAdminEmailSent(Boolean.TRUE);
+			purchaseEmail.setAdminEmailSentDate(new Date());	    	
+			logger.info("email sent to the admins --------------------------------------------- " + staticData.getAdminEmailAddressesString());	    	
+		} catch (EmailException ee) {
+			purchaseEmail.setAdminEmailErrorCode(ee.getStatusCode() != null ? ee.getStatusCode().toString() : "");
+			purchaseEmail.setAdminEmailErrorMessage(ee.getMessage());
+			purchaseEmail.setAdminEmailSent(Boolean.FALSE);			
+			logger.error("email sending to the admin users - failed ---------------------------------------------" + + purchase.getId(),ee);
+		}
+		catch (VelocityException e) {
+			purchaseEmail.setAdminEmailErrorMessage(e.getMessage());
+			purchaseEmail.setAdminEmailSent(Boolean.FALSE);
+			logger.error("email sending to the admin users - failed ---------------------------------------------" + + purchase.getId(),e);
+		}
+		purchaseEmailDAO.saveOrUpdate(purchaseEmail);
 	}
 
 /*	public static void main(String[] args) {

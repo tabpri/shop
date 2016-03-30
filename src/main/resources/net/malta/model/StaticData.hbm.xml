@@ -40,5 +40,9 @@
         <property name="contract_code" type="java.lang.String">
             <column name="CONTRACT_CODE" not-null="true" unique="false" sql-type="VARCHAR(255) BINARY"/>
         </property>
+        <property name="adminEmailAddressesString" type="java.lang.String">
+            <column name="ADMIN_EMAILADDRESSES" not-null="true" unique="false" sql-type="VARCHAR(2000) BINARY"/>
+        </property>
+        
     </class>
 </hibernate-mapping>

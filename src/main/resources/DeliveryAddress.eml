@@ -2,13 +2,11 @@
 
 ================================================================
 
-お名前　　　　　　：
+お名前　　　　　　： $deliveryaddress.name 様
 
-$deliveryaddress.name 様
-フリガナ　　　　　：
-$deliveryaddress.kana
-郵便番号　　　　　：
-$deliveryaddress.zipthree
+フリガナ　　　　　 ： $deliveryaddress.kana
+
+郵便番号　　　　　： $deliveryaddress.zipthree
 
 ご住所　　　　　　： $deliveryaddress.prefecture.name $deliveryaddress.address $deliveryaddress.buildingname
 

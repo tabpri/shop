@@ -45,6 +45,7 @@
                 <value>net/malta/model/PaymentMethod.hbm.xml</value>
                 <value>net/malta/model/Prefecture.hbm.xml</value>
                 <value>net/malta/model/PaymentStatus.hbm.xml</value>
+                <value>net/malta/model/PurchaseEmail.hbm.xml</value>
                 <value>net/malta/model/PrefectureCarriage.hbm.xml</value>
                 <value>net/malta/model/PublicUserSession.hbm.xml</value>
                 <value>net/malta/model/User.hbm.xml</value>

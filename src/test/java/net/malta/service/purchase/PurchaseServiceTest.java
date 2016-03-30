@@ -46,7 +46,7 @@ public class PurchaseServiceTest {
 	public void testConfirmPurchase() {
 		purchaseService.confirmPurchase(335);
 		try {
-			Thread.sleep(1000*60); // wait for a minute
+			Thread.sleep(1000*20); // wait for 20 seconds
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

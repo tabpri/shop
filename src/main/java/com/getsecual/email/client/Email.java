@@ -26,6 +26,15 @@ public class Email {
 		this.addTo(to);
 	}
 
+	public Email(String subject, String from, String[] to, String text) {
+		this.subject = subject;
+		this.from = from;
+		this.text = text;
+		for (String toOne : to) {
+			this.addTo(toOne);			
+		}
+	}
+
 	public List<String> getTo() {
 		return to;
 	}

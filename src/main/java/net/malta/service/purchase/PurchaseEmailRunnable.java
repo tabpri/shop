@@ -2,7 +2,6 @@ package net.malta.service.purchase;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import net.malta.model.Purchase;
 
@@ -22,7 +21,7 @@ public class PurchaseEmailRunnable implements Runnable {
 	public void run() {
 		logger.info("purchase email confirmation start - purchase: " + purchase.getId());		
 		emailService.sendConfirmationEmail(purchase);
-		logger.info("purchase email confirmation end - purchase: " + purchase.getId());		
+		logger.info("purchase email confirmation end - purchase: " + purchase.getId());
 	}
 
 	public void setEmailService(IPurchaseEmailService emailService) {
