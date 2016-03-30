@@ -1,4 +1,5 @@
 #foreach( $choise in $purchase.choises )
+
 ----------------------------------------------------------------
 
 商品詳細
@@ -9,7 +10,7 @@
 $choise.name
 
 価格（税込）　　　：
-choise.pricewithtax円);
+$choise.pricewithtax円);
 
 数量　　　　　　　：
 $choise.ordernum

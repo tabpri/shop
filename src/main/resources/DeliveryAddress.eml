@@ -4,16 +4,12 @@
 
 お名前　　　　　　：
 
-$purchase.publicUser.name 様
+$deliveryaddress.name 様
 フリガナ　　　　　：
-$purchase.publicUser.kana
+$deliveryaddress.kana
 郵便番号　　　　　：
-$purchase.publicUser.zipthree
+$deliveryaddress.zipthree
 
-ご住所　　　　　　：
-#if ( $purchase.publicUser.prefecture != null  )
-	purchase.publicUser.prefecture.name $purchase.publicUser.address purchase.publicUser.buildingname
-#end
+ご住所　　　　　　： $deliveryaddress.prefecture.name $deliveryaddress.address $deliveryaddress.buildingname
 
-電話番号　　　　　：
-purchase.publicUser.phone
+電話番号　　　　　： $deliveryaddress.phone
