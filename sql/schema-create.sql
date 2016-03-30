@@ -204,7 +204,10 @@
         PAYMENTGATEWAY_MD VARCHAR(1000),
 		PAYMENTGATEWAY_PAREQ VARCHAR(1000),
 		PAYMENTGATEWAY_PARES VARCHAR(5000),
-		PAYMENTGATEWAY_ACSURL VARCHAR(1000),	
+		PAYMENTGATEWAY_ACSURL VARCHAR(1000),
+ 		TRANSACTION_REFERENCE varchar(100) DEFAULT NULL,
+  		TRANSACTION_DATE datetime DEFAULT NULL,
+  		ORDER_ID varchar(255) DEFAULT NULL,
         primary key (ID)
     );
     
@@ -230,6 +233,75 @@
 	);
 
 
+	CREATE TABLE `app_function` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `function_name` varchar(100) NOT NULL,
+	  `function_uri` varchar(255) NOT NULL,
+	  PRIMARY KEY (`id`),
+	  KEY `FUNCTIONS_FUNCTIONURI` (`function_uri`)
+	);
+	
+	CREATE TABLE `role` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `role_name` varchar(50) NOT NULL,
+	  `role_description` varchar(255) DEFAULT NULL,
+	  PRIMARY KEY (`id`)
+	);
+	
+	CREATE TABLE `user` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `name` varchar(255) NOT NULL,
+	  `email` varchar(255) NOT NULL,
+	  `password` varchar(255) NOT NULL,
+	  `created_by` int(11) NOT NULL,
+	  `updated_by` int(11) NOT NULL,
+	  `created_date` datetime NOT NULL,
+	  `updated_date` datetime NOT NULL,
+	  `removed` tinyint(4) NOT NULL DEFAULT '0',
+	  PRIMARY KEY (`id`)
+	);
+	
+	CREATE TABLE `user_roles` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `user_fk` int(11) NOT NULL,
+	  `role_fk` int(11) NOT NULL,
+	  PRIMARY KEY (`id`),
+	  KEY `USERROLE_USER_FKC` (`user_fk`),
+	  KEY `USERROLE_ROLE_FKC` (`role_fk`),
+	  CONSTRAINT `USERROLES_ROLE_FKC` FOREIGN KEY (`role_fk`) REFERENCES `role` (`id`),
+	  CONSTRAINT `USERROLES_USER_FKC` FOREIGN KEY (`user_fk`) REFERENCES `user` (`id`)
+	);
+	
+	CREATE TABLE `role_app_functions` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `role_fk` int(11) NOT NULL,
+	  `app_function_fk` int(11) NOT NULL,
+	  PRIMARY KEY (`id`),
+	  UNIQUE KEY `ROLEFUNCTIONS_ROLEFUNCTION` (`role_fk`,`app_function_fk`),
+	  KEY `ROLEFUNCTIONS_ROLE_FKC` (`role_fk`),
+	  KEY `ROLEFUNCTIONS_FUNCTION_FKC` (`app_function_fk`),
+	  CONSTRAINT `ROLEFUNCTIONS_FUNCTION_FKC` FOREIGN KEY (`app_function_fk`) REFERENCES `app_function` (`id`),
+	  CONSTRAINT `ROLEFUNCTIONS_ROLE_FKC` FOREIGN KEY (`role_fk`) REFERENCES `role` (`id`)
+	);
+	
+	CREATE TABLE `purchase_email` (
+	  `ID` int(11) NOT NULL AUTO_INCREMENT,
+	  `USER_EMAIL_ADDRESS` varchar(255) NOT NULL,
+	  `USER_EMAIL_SENT` tinyint(1) NOT NULL DEFAULT '0',
+	  `USER_EMAIL_SENT_DATE` datetime DEFAULT NULL,
+	  `USER_EMAIL_ERROR_MSG` varchar(1000) DEFAULT NULL,
+	  `USER_EMAIL_ERROR_CODE` varchar(20) DEFAULT NULL,
+	  `ADMIN_EMAIL_ADDRESSES` varchar(2000) NOT NULL,
+	  `ADMIN_EMAIL_SENT` tinyint(1) NOT NULL DEFAULT '0',
+	  `ADMIN_EMAIL_SENT_DATE` datetime DEFAULT NULL,
+	  `ADMIN_EMAIL_ERROR_MSG` varchar(1000) DEFAULT NULL,
+	  `ADMIN_EMAIL_ERROR_CODE` varchar(20) DEFAULT NULL,
+	  `PURCHASE_FK` int(11) NOT NULL,
+	  KEY `id` (`ID`),
+	  KEY `PURCHASE_EMAIL_PURCHASE_FKC` (`PURCHASE_FK`),
+	  CONSTRAINT `PURCHASE_EMAIL_PURCHASE_FKC` FOREIGN KEY (`PURCHASE_FK`) REFERENCES `purchase` (`ID`)
+	);
+	
 	alter table ATTACHMENT 
         add index ATTACHMENT_DB_FILE_FKC (DB_FILE_FK), 
         add constraint ATTACHMENT_DB_FILE_FKC 
