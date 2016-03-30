@@ -1,9 +1,3 @@
-#include( "DeliveryAddress.eml" )
-#include( "Choises.eml" )
-Subject:＊注文がありました＊
-From:$staticData.fromaddress
-
-
 注文：$purchase.publicUser.name 様
 
 
@@ -22,7 +16,8 @@ From:$staticData.fromaddress
 【　決　済　方　法　】$purchase.paymentMethod.name 
 ================================================================
 
-$deliveryaddress
+#parse ( "DeliveryAddress.eml" )
+#parse ( "Choises.eml" )
 
 ================================================================
 

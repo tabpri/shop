@@ -27,6 +27,7 @@ import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.model.payment.PaymentStatusEnum;
+import net.malta.model.purchase.wrapper.PurchaseDeliveryAddress;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 
 @Service
@@ -62,7 +63,7 @@ public class PurchaseService implements IPurchaseService {
 			Choise choise = (Choise) iterator.next();
 			Item item = choise.getItem();
 			item.getId();
-			item.getCarriage().getValue();
+			item.getCarriage().getValue();			
 		}
 		if ( purchase.getPaymentMethod() != null ) {
 			purchase.getPaymentMethod().getName();
@@ -98,12 +99,15 @@ public class PurchaseService implements IPurchaseService {
 		purchase.setPayment(paymentStatus);
 		paymentStatusDAO.saveOrUpdate(paymentStatus);		
 		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);
-		//sendEmail(purchase);
+		sendEmail(purchase);
 		return purchase;
 	}	
 	
 	private void sendEmail(Purchase purchase) {
-		PurchaseEmailRunnable emailRun = new PurchaseEmailRunnable(purchase);		
+		PurchaseEmailRunnable emailRun = new PurchaseEmailRunnable(purchase);
+		new PurchaseDeliveryAddress(purchase).getDeliveryAddress();
+		emailRun.setEmailService(emailService);
+		logger.info("purchase email confirmation start - purchase: " + purchase.getId());
 		new Thread(emailRun).start();
 	}
 

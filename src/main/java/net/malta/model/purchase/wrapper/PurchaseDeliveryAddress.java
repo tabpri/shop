@@ -27,7 +27,11 @@ public class PurchaseDeliveryAddress implements Serializable {
 			if ( deliveryAddressChoises != null && !deliveryAddressChoises.isEmpty() ) {
 				DeliveryAddressChoise deliveryAddressChoise = (DeliveryAddressChoise) 
 						deliveryAddressChoises.iterator().next();
-				return deliveryAddressChoise.getDeliveryAddress();
+				DeliveryAddress deliveryAddress = deliveryAddressChoise.getDeliveryAddress();
+				if ( deliveryAddress.getPrefecture() != null ) {
+					deliveryAddress.getPrefecture().getName();					
+				}
+				return deliveryAddress;
 			}
 		}
 		return null;

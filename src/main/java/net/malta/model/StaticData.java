@@ -233,5 +233,24 @@ public abstract class StaticData
         }
     }
     
+    // admin email addresses
+    private String adminEmailAddressesString;
+
+	public String getAdminEmailAddressesString() {
+		return adminEmailAddressesString;
+	}
+
+	public void setAdminEmailAddressesString(String adminEmailAddressesString) {
+		this.adminEmailAddressesString = adminEmailAddressesString;
+	}
+
+	public String[] getAdminEmailAddresses() {
+		if ( this.adminEmailAddressesString != null ) {
+			return this.adminEmailAddressesString.split(",");
+		} else {
+			return null;
+		}		
+	}
+    
 // HibernateEntity.vsl merge-point
 }

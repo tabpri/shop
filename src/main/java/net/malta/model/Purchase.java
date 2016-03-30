@@ -295,5 +295,15 @@ public abstract class Purchase
 
 	public void setPayment(PaymentStatus payment) {
 		this.payment = payment;
-	}    
+	} 
+	
+	private PurchaseEmail purchaseEmail;
+
+	public PurchaseEmail getPurchaseEmail() {
+		return purchaseEmail;
+	}
+
+	public void setPurchaseEmail(PurchaseEmail purchaseEmail) {
+		this.purchaseEmail = purchaseEmail;
+	}	
 }
