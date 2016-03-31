@@ -1,12 +1,11 @@
-/**
- * @author SB
- */
 package net.malta.model.purchase.json;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import net.malta.model.user.json.DeliveryAddress;
 
 public class Purchase implements Serializable {
 
@@ -17,6 +16,7 @@ public class Purchase implements Serializable {
 	private Integer totalordernum;
 	private Integer carriage;
 	private Date	purchaseDate;
+	private DeliveryAddress deliveryaddress;
 	private Payment payment;
 	
 	private List<Choise> choises;
@@ -80,5 +80,12 @@ public class Purchase implements Serializable {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	public DeliveryAddress getDeliveryaddress() {
+		return deliveryaddress;
+	}
+
+	public void setDeliveryaddress(DeliveryAddress deliveryaddress) {
+		this.deliveryaddress = deliveryaddress;
 	}	
 }
