@@ -68,6 +68,8 @@ public class PurchaseService implements IPurchaseService {
 		if ( purchase.getPaymentMethod() != null ) {
 			purchase.getPaymentMethod().getName();
 		}
+		// load the delivery address if available
+		new PurchaseDeliveryAddress(purchase).getDeliveryAddress();		
 	}
 
 	@Override
