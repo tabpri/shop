@@ -14,7 +14,8 @@ public class Choise implements Serializable{
 	private Integer pricewithtax;
 	private Integer carriage;	
 	private Boolean wrapping;
-	private String varietychoise;	
+	private String varietychoise;
+	private Boolean removed;
 	private Item item;
 	private Purchase purchase;	
 	
@@ -73,5 +74,11 @@ public class Choise implements Serializable{
 	}
 	public void setCarriage(Integer carriage) {
 		this.carriage = carriage;
+	}
+	public Boolean getRemoved() {
+		return removed;
+	}
+	public void setRemoved(Boolean removed) {
+		this.removed = removed;
 	}	
 }

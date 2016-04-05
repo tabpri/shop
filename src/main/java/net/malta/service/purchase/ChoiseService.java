@@ -6,11 +6,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.malta.dao.purchase.ChoiseDAO;
+import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Item;
 import net.malta.model.Purchase;
+import net.malta.model.purchase.validator.ChoiseValidator;
 import net.malta.model.purchase.wrapper.ChoiseTotal;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 import net.malta.model.validator.ValidationException;
@@ -33,6 +35,9 @@ public class ChoiseService implements IChoiseService {
 	@Autowired
 	private ChoiseDAO choiseDAO;
 	
+	//@Autowired
+	//private ChoiseValidator choiseValidator;
+	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public Choise getChoise(Integer id) {
@@ -44,8 +49,8 @@ public class ChoiseService implements IChoiseService {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public Choise addChoise(Integer purchaseId,Choise choise) {
-		
+	public Choise addChoise(Integer purchaseId,Choise choise) {		
+		//choiseValidator.validate(choise, new Errors());		
 		Integer itemId = choise.getWp_posts_id();
 		Item item = choise.getItem();
 		choise.setItem(itemService.getItem(item.getId()));
@@ -90,9 +95,10 @@ public class ChoiseService implements IChoiseService {
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void deleteChoise(Integer purchaseId,Integer choiseId) {
+	public Choise deleteChoise(Integer purchaseId,Integer choiseId) {
 		Choise choise = choiseDAO.getChoise(purchaseId,choiseId);
 		if ( choise != null ) {
+			initialize(choise);			
 			choiseDAO.delete((ChoiseImpl) choise);
 			Purchase purchase = purchaseService.getPurchase(purchaseId);
 			new PurchaseTotal(purchase).calcAndSetTotal();
@@ -100,6 +106,7 @@ public class ChoiseService implements IChoiseService {
 		} else {
 			throw new ValidationException(new ValidationError(ChoiseConstants.CHOISE_DOESNOTEXIST, choiseId, purchaseId));
 		}
+		return choise;
 	}
 
 	private void initialize(Choise choise) {

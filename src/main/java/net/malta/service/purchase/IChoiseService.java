@@ -10,6 +10,6 @@ public interface IChoiseService {
 
 	Choise updateChoise(Integer purchaseId, Choise choise);
 
-	void deleteChoise(Integer purchaseId, Integer choiseId);
+	Choise deleteChoise(Integer purchaseId, Integer choiseId);
 
 }
