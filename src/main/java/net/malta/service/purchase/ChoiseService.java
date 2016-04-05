@@ -6,13 +6,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.malta.dao.purchase.ChoiseDAO;
-import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Item;
 import net.malta.model.Purchase;
-import net.malta.model.purchase.validator.ChoiseValidator;
 import net.malta.model.purchase.wrapper.ChoiseTotal;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 import net.malta.model.validator.ValidationException;
@@ -112,6 +110,9 @@ public class ChoiseService implements IChoiseService {
 	private void initialize(Choise choise) {
 		choise.getPurchase().getTotal();
 		choise.getItem().getName();
+		if ( choise.getItem().getCarriage() != null ) {
+			choise.getItem().getCarriage().getName();			
+		}
 	}
 	
 	public void setPurchaseService(IPurchaseService purchaseService) {
