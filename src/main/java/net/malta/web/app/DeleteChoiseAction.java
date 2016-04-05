@@ -14,8 +14,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import net.malta.model.Choise;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseInfo;
+import net.malta.model.json.mapper.ChoiseMapper;
 import net.malta.model.json.mapper.PurchaseMapper;
 import net.malta.model.validator.ValidationException;
 import net.malta.service.purchase.IChoiseService;
@@ -34,21 +36,16 @@ public class DeleteChoiseAction extends Action{
 			HttpServletRequest req,
 			HttpServletResponse res) throws Exception{
 		
-		try {
-			
-			Integer choiseId = Integer.parseInt(req.getParameter("id"));
+		Integer choiseId = Integer.parseInt(req.getParameter("id"));
 
-			Integer purchaseId = deleteChoise(req, choiseId);
+		Choise removedChoise = deleteChoise(req, choiseId);
+		
+		sendJSON(req,res, removedChoise);
 			
-			sendJSON(res, purchaseId);
-					
-		} catch(ValidationException ve) {			
-			JSONResponseUtil.sendErrorJSON(res, ve.getErrors());
-		}		
 		return null;
 	}
 
-	private Integer deleteChoise(HttpServletRequest req, Integer choiseId) {
+	private Choise deleteChoise(HttpServletRequest req, Integer choiseId) {
 		
 		ServletContext context = this.getServlet().getServletContext();
 		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
@@ -58,18 +55,29 @@ public class DeleteChoiseAction extends Action{
 		IChoiseService choiseService = (IChoiseService) BeanUtil.getBean("choiseService", 
 				this.getServlet().getServletContext());
 
-		choiseService.deleteChoise(purchaseId, choiseId);
-		return purchaseId;
+		Choise removedChoise = choiseService.deleteChoise(purchaseId, choiseId);
+		
+		return removedChoise;
 	}
 
-	private void sendJSON(HttpServletResponse res, Integer purchaseId) throws IOException {
+	private void sendJSON(HttpServletRequest req,HttpServletResponse res, Choise removedChoise) throws IOException {
+
+		ServletContext context = this.getServlet().getServletContext();
+		
+		PurchaseInfo purchaseInfo = SessionData.getInstance(context).getSessionPuchaseInfo(req);
+
 		IPurchaseService purchaseService = (IPurchaseService) BeanUtil.getBean("purchaseService", 
 				this.getServlet().getServletContext());			
 
-		Purchase purchase = purchaseService.getPurchase(purchaseId);
+		Purchase purchase = purchaseService.getPurchase(purchaseInfo.getPurchaseId());
 		
-		PurchaseMapper purchaseMapper = BeanUtil.getPurchaseMapper(this.getServlet().getServletContext());
+		PurchaseMapper purchaseMapper = BeanUtil.getPurchaseMapper(context);
+		
+		ChoiseMapper choiseMapper = (ChoiseMapper) BeanUtil.getBean("choiseMapper", context);
+		net.malta.model.purchase.json.Choise removedChoiseJSON = choiseMapper.map(removedChoise, new net.malta.model.purchase.json.Choise());
+		removedChoiseJSON.setRemoved(true);
 		net.malta.model.purchase.json.Purchase purchaseJSON = purchaseMapper.map(purchase, new net.malta.model.purchase.json.Purchase());
+		purchaseJSON.addChoise(removedChoiseJSON); // adding the removedChoise to the response json
 		JSONResponseUtil.writeResponseAsJSON(res,purchaseJSON);
 	}
 }
