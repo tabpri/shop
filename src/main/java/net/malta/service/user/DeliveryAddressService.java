@@ -86,12 +86,16 @@ public class DeliveryAddressService implements IDeliveryAddressService {
 	@Transactional(propagation=Propagation.REQUIRED)		
 	public DeliveryAddress getDeliveryAddress(Integer userId, Integer id) {
 		DeliveryAddress deliveryAddress = deliveryAddressDAO.getDeliveryAddress(userId, id);
-		initialize(deliveryAddress);
+		if ( deliveryAddress != null ) {
+			initialize(deliveryAddress);			
+		}
 		return deliveryAddress;
 	}	
 
 	private void initialize(DeliveryAddress deliveryAddress) {
-		deliveryAddress.getPrefecture().getName();
+		if ( deliveryAddress.getPrefecture() != null ) {
+			deliveryAddress.getPrefecture().getName();			
+		}
 		if ( deliveryAddress.getGiftCard() != null ) {
 			deliveryAddress.getGiftCard().getName();			
 		}

@@ -13,6 +13,7 @@ import net.malta.dao.meta.PrefectureCarriageDAO;
 import net.malta.dao.purchase.ChoiseDAO;
 import net.malta.dao.purchase.DeliveryAddressChoiseDAO;
 import net.malta.dao.purchase.PurchaseDAO;
+import net.malta.error.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.DeliveryAddress;
@@ -22,10 +23,13 @@ import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
 import net.malta.model.purchase.wrapper.ChoiseTotal;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
+import net.malta.model.validator.ValidationException;
 import net.malta.service.user.IDeliveryAddressService;
 
 @Service
 public class DeliveryAddressChoiseService implements IDeliveryAddressChoiseService {
+
+	private static final String DELIVERYADDRESSCHOISES_DELIVERYADDRESSNOTVALID = "DELIVERYADDRESSCHOISES.DELIVERYADDRESSNOTVALID";
 
 	@Autowired
 	private IPurchaseService purchaseService;
@@ -53,6 +57,10 @@ public class DeliveryAddressChoiseService implements IDeliveryAddressChoiseServi
 		Purchase purchase = purchaseService.getPurchase(purchaseId);
 		
 		DeliveryAddress deliveryAddress = addressService.getDeliveryAddress(userId, deliveryAddressId);
+		
+		if ( deliveryAddress == null ) {
+			throw new ValidationException(new ValidationError(DELIVERYADDRESSCHOISES_DELIVERYADDRESSNOTVALID, deliveryAddressId,userId));
+		}
 		
 		@SuppressWarnings("unchecked")
 		Collection<Choise> choises = purchase.getChoises();
