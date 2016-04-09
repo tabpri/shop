@@ -1,11 +1,14 @@
 package net.malta.model.user.validator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.malta.dao.meta.PrefectureDAO;
 import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.DeliveryAddress;
+import net.malta.model.Prefecture;
 import net.malta.model.validator.IValidator;
 import net.malta.model.validator.ValidationException;
 import net.malta.model.validator.constants.DeliveryAddressConstants;
@@ -13,6 +16,9 @@ import net.malta.model.validator.constants.DeliveryAddressConstants;
 @Component
 public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 
+	@Autowired
+	private PrefectureDAO prefectureDAO;
+	
 	@Override
 	public void validate(DeliveryAddress deliveryAddress, Errors errors) {
 		
@@ -22,10 +28,10 @@ public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 			errors.add(new ValidationError(DeliveryAddressConstants.NAMEISBLANK, blank));
 		}
 		
-		if(StringUtils.isBlank(deliveryAddress.getKana())){			
+/*		if(StringUtils.isBlank(deliveryAddress.getKana())){			
 			errors.add(new ValidationError(DeliveryAddressConstants.KANAISBLANK, blank));			
 		}
-		
+*/		
 		if(deliveryAddress.getZipthree() == 0 ){
 			errors.add(new ValidationError(DeliveryAddressConstants.ZIPISBLANK, blank));			
 		}
@@ -41,8 +47,15 @@ public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 		if(!StringUtils.isNumeric(deliveryAddress.getPhone())){
 			errors.add(new ValidationError(DeliveryAddressConstants.PHONEISNOTNUMERIC, blank));			
 		}
-		if( deliveryAddress.getPrefecture().getId() == 0){
+		Prefecture prefecture = deliveryAddress.getPrefecture();
+		Integer prefectureId = prefecture.getId();
+		if( prefecture == null || prefectureId == 0){
 			errors.add(new ValidationError(DeliveryAddressConstants.PREFECTUREISBLANK, blank));			
+		} else {
+			Prefecture prefectureReturned = prefectureDAO.find(prefectureId);
+			if ( prefectureReturned == null ) {
+				errors.add(new ValidationError(DeliveryAddressConstants.PREFECTURE_NOTVALID, prefectureId));				
+			}
 		}
 
 		String city = deliveryAddress.getCity();
@@ -54,5 +67,4 @@ public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 			throw new ValidationException(errors);
 		}
 	}
-
 }
