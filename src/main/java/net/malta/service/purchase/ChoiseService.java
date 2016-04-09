@@ -6,11 +6,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.malta.dao.purchase.ChoiseDAO;
+import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.Choise;
 import net.malta.model.ChoiseImpl;
 import net.malta.model.Item;
 import net.malta.model.Purchase;
+import net.malta.model.purchase.validator.ChoiseValidator;
 import net.malta.model.purchase.wrapper.ChoiseTotal;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 import net.malta.model.validator.ValidationException;
@@ -33,8 +35,8 @@ public class ChoiseService implements IChoiseService {
 	@Autowired
 	private ChoiseDAO choiseDAO;
 	
-	//@Autowired
-	//private ChoiseValidator choiseValidator;
+	@Autowired
+	private ChoiseValidator choiseValidator;
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -48,7 +50,7 @@ public class ChoiseService implements IChoiseService {
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public Choise addChoise(Integer purchaseId,Choise choise) {		
-		//choiseValidator.validate(choise, new Errors());		
+		choiseValidator.validate(choise, new Errors());
 		Integer itemId = choise.getWp_posts_id();
 		Item item = choise.getItem();
 		choise.setItem(itemService.getItem(item.getId()));

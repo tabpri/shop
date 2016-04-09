@@ -21,7 +21,7 @@ public class ChoiseFormMapper implements IMapper<ChoiseForm, Choise> {
 		Item item = new ItemImpl();
 		item.setId(choiseForm.getItem());
 		choise.setItem(item);
-		choise.setWp_posts_id(item.getId());		
+		choise.setWp_posts_id(item.getId()==null?0:item.getId());
 		return choise;
 	}
 
