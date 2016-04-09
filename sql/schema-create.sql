@@ -8,20 +8,20 @@
         DB_FILE_FK INTEGER unique,
         ASDETAILED_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table CARRIAGE (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         VALUE INTEGER not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table CATEGORY (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table CHOISE (
         ID INTEGER not null auto_increment,
@@ -31,13 +31,13 @@
         PURCHASE_FK INTEGER not null,
         ITEM_FK INTEGER not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table DB_FILE (
         ID INTEGER not null auto_increment,
         DATA LONGBLOB not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table DELIVERY_ADDRESS (
         ID INTEGER not null auto_increment,
@@ -56,7 +56,7 @@
         GIFT_CARD_FK INTEGER,
         PREFECTURE_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table DELIVERY_ADDRESS_CHOISE (
         ID INTEGER not null auto_increment,
@@ -67,13 +67,13 @@
         CHOISE_FK INTEGER not null,
         GIFT_CARD_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table GIFT_CARD (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table ITEM (
         ID INTEGER not null auto_increment,
@@ -92,20 +92,20 @@
         ZOOM_FK INTEGER unique,
         DEFAULTATTACHMENT_FK INTEGER unique,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table PAYMENT_METHOD (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         NOTE VARCHAR(2000) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table PREFECTURE (
         ID INTEGER not null auto_increment,
         NAME VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table PRODUCT (
         ID INTEGER not null auto_increment,
@@ -126,7 +126,7 @@
         THUMNAIL_FK INTEGER unique,
         SLIDESHOW_FK INTEGER unique,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table PUBLIC_USER (
         ID INTEGER not null auto_increment,
@@ -165,7 +165,7 @@
         PASSWORDONETIMEHASH VARCHAR(255) BINARY not null,
         PREFECTURE_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table PURCHASE (
         ID INTEGER not null auto_increment,
@@ -180,7 +180,7 @@
         PUBLIC_USER_FK INTEGER,
         PAYMENT_METHOD_FK INTEGER,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
     create table STATIC_DATA (
         ID INTEGER not null auto_increment,
@@ -194,7 +194,7 @@
         CREDITCARDPROCESURL VARCHAR(255) BINARY not null,
         CONTRACT_CODE VARCHAR(255) BINARY not null,
         primary key (ID)
-    ) type=InnoDB;
+    );
 
    create table PAYMENT_STATUS (
         ID INTEGER not null auto_increment,
@@ -432,4 +432,4 @@
 	    ADD INDEX PREFECTURE_CARRIAGE_FKC (PREFECTURE_FK), 
 	    ADD CONSTRAINT PREFECTURE_CARRIAGE_FKC 
 	    FOREIGN KEY (PREFECTURE_FK) 
-	    REFERENCES PREFECTURE (ID);        
+	    REFERENCES PREFECTURE (ID);
