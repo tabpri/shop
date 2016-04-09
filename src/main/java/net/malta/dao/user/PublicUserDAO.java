@@ -1,5 +1,8 @@
 package net.malta.dao.user;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -20,8 +23,13 @@ public class PublicUserDAO extends BaseDAO<PublicUserImpl>{
 	public PublicUser findUserByEmail(String email) {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(PublicUser.class);		
 		criteria.add(Restrictions.eq("mail", email));
-		criteria.add(Restrictions.eq("temp", false));		
-		return (PublicUser)criteria.uniqueResult();
+		criteria.add(Restrictions.eq("temp", false));
+		List usersList = criteria.list();
+		if ( CollectionUtils.isNotEmpty(usersList)) {
+			return (PublicUser) usersList.get(0);
+		} else {
+			return null;			
+		}
 	}
 
 }

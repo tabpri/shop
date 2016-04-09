@@ -1,8 +1,11 @@
 package net.malta.model.user.validator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.malta.dao.meta.PrefectureDAO;
+import net.malta.dao.user.PublicUserDAO;
 import net.malta.error.Errors;
 import net.malta.error.ValidationError;
 import net.malta.model.Prefecture;
@@ -14,6 +17,12 @@ import net.malta.model.validator.constants.PublicUserConstants;
 @Component
 public class PublicUserValidator implements IValidator<PublicUser> {
 
+	@Autowired
+	private PrefectureDAO prefectureDAO;
+	
+	@Autowired
+	private PublicUserDAO publicUserDAO;
+	
 	@Override
 	public void validate(PublicUser user,Errors errors) {
 
@@ -24,11 +33,11 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.USERNAME_ISBLANK, blank));
 		}
 
-		String kana = user.getKana();
+/*		String kana = user.getKana();
 		if (StringUtils.isBlank(kana)) {
 			errors.add(new ValidationError(PublicUserConstants.KANA_ISBLANK, blank));
 		}
-
+*/
 		int zip = user.getZipthree();
 
 		if (zip == 0) {
@@ -38,6 +47,12 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 		Prefecture prefecture = user.getPrefecture();
 		if (prefecture == null || prefecture.getId() == null || prefecture.getId().intValue() == 0) {
 			errors.add(new ValidationError(PublicUserConstants.PREFECTURE_ISBLANK, blank));
+		} else {
+			Integer prefectureId = prefecture.getId();
+			Prefecture prefectureReturned = prefectureDAO.find(prefectureId);
+			if ( prefectureReturned == null ) {
+				errors.add(new ValidationError(PublicUserConstants.PREFECTURE_NOTVALID, new Object[] {prefectureId}));
+			}
 		}
 
 		String mail = user.getMail();
@@ -45,6 +60,20 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.EMAIL_ISBLANK, blank));
 		}
 
+		String mailConfirm = user.getMailforconfirm();
+		if (StringUtils.isBlank(mailConfirm)) {
+			errors.add(new ValidationError(PublicUserConstants.EMAILCONFIRM_ISBLANK, blank));
+		}
+
+		if ( StringUtils.isNotBlank(mail) && StringUtils.isNotBlank(mailConfirm) && !mail.equals(mailConfirm) ) {
+			errors.add(new ValidationError(PublicUserConstants.EMAIL_EMAILCONFIRM_NOTSAME, new Object[] {mail,mailConfirm}));
+		} else {
+			PublicUser publicUserByEmail = publicUserDAO.findUserByEmail(mail);
+			if ( publicUserByEmail != null ) {
+				errors.add(new ValidationError(PublicUserConstants.USER_ALREADYEXISTSWITHTHISEMAIL, new Object[] {mail}));
+			}
+		}
+		
 		String address = user.getAddress();
 		if (StringUtils.isBlank(address)) {
 			errors.add(new ValidationError(PublicUserConstants.ADDRESS_ISBLANK, blank));
@@ -76,6 +105,8 @@ public class PublicUserValidator implements IValidator<PublicUser> {
 			errors.add(new ValidationError(PublicUserConstants.AUTHUSERID_ISBLANK, blank));
 		}
 */
+		
+		
 		if ( errors.hasErrors() ) {
 			throw new ValidationException(errors);
 		}
