@@ -48,12 +48,13 @@ public class DeliveryAddressValidator implements IValidator<DeliveryAddress>{
 			errors.add(new ValidationError(DeliveryAddressConstants.PHONEISNOTNUMERIC, blank));			
 		}
 		Prefecture prefecture = deliveryAddress.getPrefecture();
-		if( prefecture == null || prefecture.getId() == 0){
+		Integer prefectureId = prefecture.getId();
+		if( prefecture == null || prefectureId == 0){
 			errors.add(new ValidationError(DeliveryAddressConstants.PREFECTUREISBLANK, blank));			
 		} else {
-			Prefecture prefectureReturned = prefectureDAO.find(prefecture.getId());
+			Prefecture prefectureReturned = prefectureDAO.find(prefectureId);
 			if ( prefectureReturned == null ) {
-				errors.add(new ValidationError(DeliveryAddressConstants.PREFECTURE_NOTVALID, blank));				
+				errors.add(new ValidationError(DeliveryAddressConstants.PREFECTURE_NOTVALID, prefectureId));				
 			}
 		}
 
