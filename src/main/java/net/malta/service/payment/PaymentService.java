@@ -87,6 +87,7 @@ public class PaymentService implements IPaymentService {
 		}
 				
 		if( paymentMethod.equals(2) ){
+			paymentStatus.setPaymentStatus(PaymentStatusEnum.WAITING_FOR_PAYMENT);			
 			purchaseService.confirmPurchase(purchaseId);
 			return null; // return no need of payment gateway call
 		}		

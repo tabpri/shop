@@ -97,7 +97,7 @@ public class PurchaseService implements IPurchaseService {
 		purchase.setTemp(false);
 		purchase.setDate(new Date());
 		PaymentStatus paymentStatus = purchase.getPayment();
-		paymentStatus.setPaymentStatus(PaymentStatusEnum.COMPLETED);
+		//paymentStatus.setPaymentStatus(PaymentStatusEnum.COMPLETED);
 		purchase.setPayment(paymentStatus);
 		paymentStatusDAO.saveOrUpdate(paymentStatus);		
 		purchaseDAO.saveOrUpdate((PurchaseImpl) purchase);

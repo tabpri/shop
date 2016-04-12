@@ -30,6 +30,10 @@ public class PaymentInfoValidator implements IValidator<PaymentInfo>{
 			if ( paymentMethodReturned == null ) {				
 				errors.add(new ValidationError(PaymentConstants.PURCHASE_PAYMENTMETHODNOTVALID, paymentMethod));
 			}
+			// validate for paymentmethod 1  
+			if ( paymentMethod.equals(1)) {
+				validateForPaymentMethod1(paymentInfo,errors);
+			}
 		}
 		
 		// other validations
@@ -38,4 +42,16 @@ public class PaymentInfoValidator implements IValidator<PaymentInfo>{
 		}
 	}
 
+	private void validateForPaymentMethod1(PaymentInfo paymentInfo,Errors errors) {
+		Object[] blank = new Object[0];
+		if ( paymentInfo.getCardNo() == null ) {
+			errors.add(new ValidationError(PaymentConstants.PURCHASE_CARDNUM_ISBLANK, blank));
+		}
+		if ( paymentInfo.getExpire() == null ) {
+			errors.add(new ValidationError(PaymentConstants.PURCHASE_EXPIRE_ISBLANK, blank));
+		}
+		if ( paymentInfo.getSecurityCode() == null ) {
+			errors.add(new ValidationError(PaymentConstants.PURCHASE_SECURITYCODE_ISBLANK, blank));			
+		}		
+	}
 }
