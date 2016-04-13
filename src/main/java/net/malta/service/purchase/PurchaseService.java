@@ -26,7 +26,6 @@ import net.malta.model.PaymentStatus;
 import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 import net.malta.model.PurchaseImpl;
-import net.malta.model.payment.PaymentStatusEnum;
 import net.malta.model.purchase.wrapper.PurchaseDeliveryAddress;
 import net.malta.model.purchase.wrapper.PurchaseTotal;
 
@@ -150,5 +149,18 @@ public class PurchaseService implements IPurchaseService {
 			initialize(purchase);
 		}
 		return purchases;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)	
+	public void updatePaymentStatus(Integer id,PaymentStatus paymentStatus) {
+		Purchase purchase = purchaseDAO.find(id);
+		if ( purchase != null ) {
+			PaymentStatus payment = purchase.getPayment();
+			payment.setPaymentStatus(paymentStatus.getPaymentStatus());
+			payment.setTransactionReference(paymentStatus.getTransactionReference());
+			payment.setTransactionDate(paymentStatus.getTransactionDate());
+			paymentStatusDAO.saveOrUpdate(payment);
+		}
 	}
 }

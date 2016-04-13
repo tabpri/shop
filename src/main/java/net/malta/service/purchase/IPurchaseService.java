@@ -2,6 +2,7 @@ package net.malta.service.purchase;
 
 import java.util.List;
 
+import net.malta.model.PaymentStatus;
 import net.malta.model.PublicUser;
 import net.malta.model.Purchase;
 
@@ -23,4 +24,5 @@ public interface IPurchaseService {
 
 	public List<Purchase> getPurchases(Integer userId);
 
+	public void updatePaymentStatus(Integer id,PaymentStatus paymentStatus);
 }

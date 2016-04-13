@@ -7,7 +7,9 @@
 		<form-bean name="userForm" type="net.malta.beans.UserForm" />
     	<form-bean name="ProductForm" type="net.malta.beans.ProductForm"/>
     	<form-bean name="AttachmentForm" type="net.malta.beans.AttachmentForm"/>
-    	<form-bean name="ItemForm" type="net.malta.beans.ItemForm"/>    	    			
+    	<form-bean name="ItemForm" type="net.malta.beans.ItemForm"/>
+    	<form-bean name="PaymentStatusForm" type="net.malta.beans.PaymentStatusForm" />    	    			
+    	    	    			
 	</form-beans>
 	<global-exceptions />
 	<global-forwards />
@@ -32,6 +34,15 @@
 
 		<action path="/DeletePurchase" type="net.malta.web.app.DeletePurchaseAction" />
 
+  		<action
+			path="/ShowUpdatePaymentStatus"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="/WEB-INF/pages/app/admin/UpdatePaymentStatus.jsp"/>
+
+
+		<action path="/UpdatePaymentStatus" name="PaymentStatusForm" type="net.malta.web.app.admin.purchase.UpdatePaymentStatusAction" scope="request">
+		</action>
+		
 		<action path="/Products" type="net.malta.web.app.ProductsAction">
 			<forward name="success" path="/WEB-INF/pages/app/admin/Products.jsp" contextRelative="true"/>
 		</action>

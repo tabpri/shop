@@ -197,7 +197,11 @@ ${row.choises}
 --%>
 
 <display:column media="html" sortable="true" title="支払い状況"><nobr>
-${row.payment.paymentStatusString}</nobr>
+${row.payment.paymentStatusString}
+<c:if test="${row.payment.paymentStatusString == 'WAITING_FOR_PAYMENT'}">
+	<input type="button" value="支払いを完了する" onclick="location.href='ShowUpdatePaymentStatus.do?id=<c:out value="${row.id}"/>'"/>
+</c:if>
+</nobr>
 </display:column>
 
 <%
