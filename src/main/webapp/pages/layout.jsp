@@ -95,7 +95,7 @@ $(document).ready(function() {
 		<div id="masthead">
 			<div id="branding" role="banner">
 				<div id="logo">
-						<a href="http://africaandleo.com/" title="africaandleo" rel="home"><img src="http://africaandleo.com/wp-content/themes/africaandleo/images/logo.jpg" alt="africaandleo"/></a>
+						<a href="/" rel="home"><img src="/images/logo.png" /></a>
 					</div>
 				
   <div id="leftMenu">     
