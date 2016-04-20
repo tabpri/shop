@@ -13,7 +13,7 @@
 <%@ page import="net.malta.web.utils.MainItem" %>
 
 <%@ page isELIgnored="false" %>
-<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
+<link rel="stylesheet" type="text/css" href="/shop/contents.css">
 
 <tiles:insert definition=".layout">
 	<tiles:put name="title" value="製品一覧" direct="true" />
@@ -120,7 +120,7 @@
 --%>		    </display:column>
 		    <display:column media="html" sortable="false" title="削除">
 				<a onClick="javascript:if(window.confirm('削除してもよろしいですか？')){location.href='DeleteProduct.do?id=${row.id}';}">
-				    <img src="/Shop/images/icons/bt_delete.gif">
+				    <img src="/shop/images/icons/bt_delete.gif">
 			    </a>
 			</display:column>
 		</display:table>

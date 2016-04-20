@@ -269,14 +269,14 @@
 --%>						</td>
 						<td>
 						<c:if test="${!empty mainItem.defaultattachment}">
-						<a href="/Shop/ShowImage.do?id=${mainItem.defaultattachment.id}" rel="lightbox">
-						<img src="/Shop/ShowImage.do?id=${mainItem.defaultattachment.id}" width="40" />
+						<a href="/shop/ShowImage.do?id=${mainItem.defaultattachment.id}" rel="lightbox">
+						<img src="/shop/ShowImage.do?id=${mainItem.defaultattachment.id}" width="40" />
 						</a>
 						<a href="DeleteAttachment.do?id=${mainItem.defaultattachment.id}&from=<%= relativeModulePrefix%>PostProductDetail.do&toid=${model.id}&itemid=${mainItem.id}">削除</a>
 						</c:if>
 						<c:forEach var="detailed" items="${mainItem.detailed}" >
-						<a href="/Shop/ShowImage.do?id=${detailed.id}"  rel="lightbox">
-						<img src="/Shop/ShowImage.do?id=${detailed.id}" width="40" />
+						<a href="/shop/ShowImage.do?id=${detailed.id}"  rel="lightbox">
+						<img src="/shop/ShowImage.do?id=${detailed.id}" width="40" />
 						</a>
 						<a href="DeleteAttachment.do?id=${detailed.id}&from=<%= relativeModulePrefix%>PostProductDetail.do&toid=${model.id}">削除</a>
 						

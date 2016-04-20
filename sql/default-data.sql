@@ -3,7 +3,7 @@ insert  into `attachment`(`ID`,`FILETYPE`,`WIDTH`,`HEIGHT`,`WIDE`,`DB_FILE_FK`,`
 insert  into `carriage`(`ID`,`NAME`,`VALUE`) values (1,'TEST',20),(2,'TEST',25);
 insert  into `category`(`ID`,`NAME`) values (1,'1');
 insert  into `gift_card`(`ID`,`NAME`) values (1,'test');
-insert  into `product`(`NO`,`NAME`,`DATE`,`PUB`,`PRICEWITHTAX`,`SIZE`,`MATERIAL`,`CATCHCOPY`,`DESCRIPTION`,`NOTE`,`STOCKNUM`,`REMOVED`,`MAINITEMNAME`,`CATEGORY_FK`,`THUMNAIL_FK`,`SLIDESHOW_FK`,`ENGLISH`) values ('1','ゲートウェイ','0000-00-00 00:00:00',0,5000,'1','RAW','Y','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退',200,0,'ゲートウェイ',1,1,NULL,''),('2','センサー','0000-00-00 00:00:00',0,2500,'1','RAW','Y','窓に貼るだけで 簡単に異変を感知する センサー','窓に貼るだけで 簡単に異変を感知する センサー',200,0,'センサー',1,2,NULL,''),('3','セキュリティーステッカー','0000-00-00 00:00:00',0,500,'1','RAW','Y','ることで 防犯効果がアップ','ることで 防犯効果がアップ',400,0,'セキュリティーステッカー',1,3,NULL,'');
+insert  into `product`(`NO`,`NAME`,`DATE`,`PUB`,`PRICEWITHTAX`,`SIZE`,`MATERIAL`,`CATCHCOPY`,`DESCRIPTION`,`NOTE`,`STOCKNUM`,`REMOVED`,`MAINITEMNAME`,`CATEGORY_FK`,`THUMNAIL_FK`,`SLIDESHOW_FK`,`ENGLISH`) values ('1','ゲートウェイ',NOW(),0,5000,'1','RAW','Y','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退',200,0,'ゲートウェイ',1,1,NULL,''),('2','センサー',NOW(),0,2500,'1','RAW','Y','窓に貼るだけで 簡単に異変を感知する センサー','窓に貼るだけで 簡単に異変を感知する センサー',200,0,'センサー',1,2,NULL,''),('3','セキュリティーステッカー',NOW(),0,500,'1','RAW','Y','ることで 防犯効果がアップ','ることで 防犯効果がアップ',400,0,'セキュリティーステッカー',1,3,NULL,'');
 insert  into `item`(`NO`,`NAME`,`PRICEWITHTAX`,`SIZE`,`MATERIAL`,`CATCHCOPY`,`DESCRIPTION`,`NOTE`,`STOCKNUM`,`MAIN`,`PRODUCT_FK`,`CARRIAGE_FK`,`ZOOM_FK`,`DEFAULTATTACHMENT_FK`) values ('1','ゲートウェイ',5000,'1','ELEC','test1','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退','配線不要で簡単に設置できる メインデバイス 大音量の警告アラームにて撃退',200,1,1,2,NULL,NULL),('1','センサー',2500,'1','ELEC','test2','窓に貼るだけで 簡単に異変を感知する センサー','窓に貼るだけで 簡単に異変を感知する センサー',300,1,2,2,NULL,NULL),('1','セキュリティーステッカー',500,'1','ELEC','test3','ることで 防犯効果がアップ','ることで 防犯効果がアップ',200,1,3,2,NULL,NULL);
 insert  into `payment_method`(`ID`,`NAME`,`NOTE`) values (1,'Credit Card','for credit card payment'),(2,'Bank Wire','bank wire');
 
@@ -12,9 +12,9 @@ insert into `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post
 insert into `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) values('3','0','0000-00-00 00:00:00','0000-00-00 00:00:00','test','セキュリティーステッカー','test','publish','open','open','','','test','true','0000-00-00 00:00:00','0000-00-00 00:00:00','ゲートウェイ','0','','0','post','','0');
 
 delete from wp_postmeta;
-insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2816','1','product-thumbnail','1\\]/Shop/ShowImage.do?id=1]');
-insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2817','2','product-thumbnail','1\\]/Shop/ShowImage.do?id=2]');
-insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2818','3','product-thumbnail','1\\]/Shop/ShowImage.do?id=3]');
+insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2816','1','product-thumbnail','1\\]/shop/ShowImage.do?id=1]');
+insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2817','2','product-thumbnail','1\\]/shop/ShowImage.do?id=2]');
+insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2818','3','product-thumbnail','1\\]/shop/ShowImage.do?id=3]');
 insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2819','1','rate','￥.5000');
 insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2820','2','rate','￥.2500');
 insert into `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) values('2821','3','rate','￥.500');
