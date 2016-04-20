@@ -13,7 +13,7 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 
 <%@ page isELIgnored="false" %>
-<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
+<link rel="stylesheet" type="text/css" href="/shop/contents.css">
 
 <tiles:insert definition=".layout">
 

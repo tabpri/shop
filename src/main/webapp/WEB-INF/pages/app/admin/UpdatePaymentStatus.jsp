@@ -19,7 +19,7 @@
 
 	<tiles:put name="content" direct="true">
 
-	<html:form method="POST" action="UpdatePaymentStatus.do">
+	<form method="POST" action="UpdatePaymentStatus.do">
 					<input type="hidden" name="purchaseId" value="<c:out value="${param.id}"/>" />
 	
 				<table>
@@ -44,6 +44,6 @@
 						</td>
 					</tr>
 				</table>
-	</html:form>
+	</form>
 	</tiles:put>
 </tiles:insert>

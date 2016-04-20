@@ -325,7 +325,7 @@
     </dependencies>
 
     <build>
-        <finalName>Shop</finalName>
+        <finalName>shop</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>

@@ -13,7 +13,7 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 
 <%@ page isELIgnored="false" %>
-<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
+<link rel="stylesheet" type="text/css" href="/shop/contents.css">
 
 <tiles:insert definition=".layout">
 	<tiles:put name="title" value="ショッピングカートのユーザー" direct="true" />
@@ -29,7 +29,7 @@
 			<a href="User.do?action=showUser&id=${row.id}">編集</a>
 		</display:column>
 		<display:column media="html" title="削除" >
-			<a onClick="javascript:if(window.confirm('削除してもよろしいですか？')){location.href='User.do?action=deleteUser&id=${row.id}';}" ><img src="/Shop/images/icons/bt_delete.gif"></a>
+			<a onClick="javascript:if(window.confirm('削除してもよろしいですか？')){location.href='User.do?action=deleteUser&id=${row.id}';}" ><img src="/shop/images/icons/bt_delete.gif"></a>
 		</display:column>
 	</display:table>
 	

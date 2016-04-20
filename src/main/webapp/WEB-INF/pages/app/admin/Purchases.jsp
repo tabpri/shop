@@ -17,7 +17,7 @@
 
 
 <%@ page isELIgnored="false" %>
-<link rel="stylesheet" type="text/css" href="/Shop/contents.css">
+<link rel="stylesheet" type="text/css" href="/shop/contents.css">
 
 <tiles:insert definition=".layout">
 	<tiles:put name="title" value="購入一覧" direct="true" />
