@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-cascade="none">
+    <class name="net.malta.model.User" table="USER" dynamic-insert="false" dynamic-update="false" >
+        <id name="id" type="java.lang.Integer" unsaved-value="null">
+            <column name="ID" sql-type="INTEGER"/>
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" not-null="true" unique="false" sql-type="VARCHAR2(255)"/>
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="EMAIL" not-null="true" unique="false" sql-type="VARCHAR2(100)"/>
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" not-null="true" unique="false" sql-type="VARCHAR2(100)"/>
+        </property>
+        <component name="auditInfo" class="net.malta.model.AuditInfo">
+	        <property name="createdBy" type="java.lang.Integer">
+	            <column name="CREATED_BY" not-null="true" unique="false" sql-type="INTEGER"/>
+	        </property>
+	        <property name="updatedBy" type="java.lang.Integer">
+	            <column name="UPDATED_BY" not-null="true" unique="false" sql-type="INTEGER"/>
+	        </property>
+	        <property name="createdDate" type="java.util.Date">
+	            <column name="CREATED_DATE" unique="false" sql-type="DATETIME"/>
+	        </property>
+	        <property name="updatedDate" type="java.util.Date">
+	            <column name="UPDATED_DATE" unique="false" sql-type="DATETIME"/>
+	        </property>        
+        </component>
+        <property name="removed" type="java.lang.Boolean">
+            <column name="REMOVED" unique="false" sql-type="TINYINT"/>
+        </property>
+        <set name="roles" table="USER_ROLES" fetch="select" inverse="false" lazy="false">
+        	<key foreign-key="USER_ROLES_USERFKC" column="USER_FK" />
+        	<many-to-many class="net.malta.model.Role" column="ROLE_FK"/>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+	xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="file" class="org.apache.log4j.RollingFileAppender">
+       <param name="encoding" value="UTF-8" />	
+	   <param name="append" value="false" />
+	   <param name="maxFileSize" value="5MB" />
+	   <param name="maxBackupIndex" value="10" />
+	   <!-- For Tomcat -->
+	   <param name="file" value="${catalina.home}/logs/shop-api.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" 
+			value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+	   </layout>
+	</appender>
+
+ <category name="net.malta" >
+    <priority value="DEBUG" />
+ </category>
+
+<!--  <category name="org.springframework.security" >
+    <priority value="DEBUG" />
+ </category>
+
+ <category name="org.springframework.web" >
+    <priority value="DEBUG" />
+ </category>
+
+ --> 
+ <category name="org.apache.struts.action" >
+    <priority value="DEBUG" />
+ </category>
+
+ <category name="org.hibernate" >
+    <priority value="DEBUG" />
+ </category>
+
+ <category name="com.getsecual" >
+    <priority value="DEBUG" />
+ </category>
+ 
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="file" />
+	</root>
+
+</log4j:configuration>

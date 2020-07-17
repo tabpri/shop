@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<data-sources />
+	<form-beans>
+		<form-bean name="userForm" type="net.malta.beans.UserForm" />
+    	<form-bean name="ProductForm" type="net.malta.beans.ProductForm"/>
+    	<form-bean name="AttachmentForm" type="net.malta.beans.AttachmentForm"/>
+    	<form-bean name="ItemForm" type="net.malta.beans.ItemForm"/>
+    	<form-bean name="PaymentStatusForm" type="net.malta.beans.PaymentStatusForm" />    	    			
+    	    	    			
+	</form-beans>
+	<global-exceptions />
+	<global-forwards />
+
+	<action-mappings>
+
+		<action path="/Admin" type="net.malta.web.app.AdminAction">
+			<forward name="success" path="/WEB-INF/pages/app/admin/Admin.jsp"
+				contextRelative="true" />
+		</action>
+
+		<action path="/Purchases" type="net.malta.web.app.PurchasesAction">
+			<forward name="success" path="/WEB-INF/pages/app/admin/Purchases.jsp"
+				contextRelative="true" />
+		</action>
+
+		<action path="/ShowPurchaseAdmin" type="net.malta.web.app.ShowPurchaseAdminAction">
+			<forward name="success"
+				path="/WEB-INF/pages/app/admin/ShowPurchaseAdmin.jsp"
+				contextRelative="true" />
+		</action>
+
+		<action path="/DeletePurchase" type="net.malta.web.app.DeletePurchaseAction" />
+
+  		<action
+			path="/ShowUpdatePaymentStatus"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="/WEB-INF/pages/app/admin/UpdatePaymentStatus.jsp"/>
+
+
+		<action path="/UpdatePaymentStatus" name="PaymentStatusForm" type="net.malta.web.app.admin.purchase.UpdatePaymentStatusAction" scope="request">
+		</action>
+		
+		<action path="/Products" type="net.malta.web.app.ProductsAction">
+			<forward name="success" path="/WEB-INF/pages/app/admin/Products.jsp" contextRelative="true"/>
+		</action>
+
+		<action path="/PostProductDetail" type="net.malta.web.app.PostProductDetailAction">
+			<forward name="success"
+				path="/WEB-INF/pages/app/admin/PostProductDetail.jsp" contextRelative="true"/>
+		</action>
+
+		<action path="/PostProductVP" name="ProductForm"
+			type="net.malta.web.app.PostProductVPAction">
+			<forward name="error" path="/PostProductDetail.do" />
+		</action>
+
+    	<action path="/DeleteProduct" type="net.malta.web.app.DeleteProductAction"/>
+
+	    <action path="/PostItemDetail" type="net.malta.web.app.PostItemDetailAction">
+	      <forward name="success" path="/WEB-INF/pages/app/admin/PostItemDetail.jsp" contextRelative="true"/>
+	    </action>
+
+		<action path="/PostItemVP" name="ItemForm"
+			type="net.malta.web.app.PostItemVPAction">
+			<forward name="error" path="/PostItemDetail.do" />
+		</action>
+
+	    <action path="/AttachmentFormFileUploadAddingToProductForThumnail" name="AttachmentForm" 
+	    		type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForThumnailAction" >
+	    </action>
+    
+    	<action path="/AttachmentFormFileUploadAddingToItemForDefault"
+			name="AttachmentForm"
+			type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForDefaultAction">
+		</action>
+		<action path="/AttachmentFormFileUploadAddingToItemForSubDetailed"
+			name="AttachmentForm"
+			type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForSubDetailedAction">
+		</action>
+		<action path="/AttachmentFormFileUploadAddingToProductForSlideShow"
+			name="AttachmentForm"
+			type="net.malta.web.app.AttachmentFormFileUploadAddingToProductForSlideShowAction">
+		</action>
+		<action path="/DeleteItem" type="net.malta.web.app.DeleteItemAction" />
+
+		<action path="/AttachmentFormFileUploadAddingToItem" name="AttachmentForm"
+			type="net.malta.web.app.AttachmentFormFileUploadAddingToItemAction">
+			<forward name="success"
+				path="/pages/app/AttachmentFormFileUploadAddingToItem.jsp" />
+		</action>
+		<action path="/AttachmentFormFileUploadAddingToItemForDetailed"
+			name="AttachmentForm"
+			type="net.malta.web.app.AttachmentFormFileUploadAddingToItemForDetailedAction">
+		</action>
+
+		<action path="/DeleteAttachment" type="net.malta.web.app.DeleteAttachmentAction" />
+
+		<action path="/User" parameter="action" scope="request"
+			type="net.malta.web.app.admin.UserAction" name="userForm">
+			<forward name="userlist" path="/WEB-INF/pages/app/admin/userlist.jsp"
+				contextRelative="true"></forward>
+			<forward name="user" path="/WEB-INF/pages/app/admin/user.jsp"
+				contextRelative="true"></forward>
+
+		</action>
+	</action-mappings>
+
+	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
+	<message-resources parameter="MessageResources" />
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+	</plug-in>
+
+</struts-config>

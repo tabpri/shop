@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/tx  
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:authapi.properties</value>
+				<value>classpath:email.properties</value>				
+			</list>
+		</property>
+	</bean>
+	
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource"><ref bean="dataSource"/></property>
+        <property name="mappingResources">
+            <list>
+                <value>net/malta/model/DbFile.hbm.xml</value>
+                <value>net/malta/model/Attachment.hbm.xml</value>
+                <value>net/malta/model/PublicUser.hbm.xml</value>
+                <value>net/malta/model/Item.hbm.xml</value>
+                <value>net/malta/model/Purchase.hbm.xml</value>
+                <value>net/malta/model/Product.hbm.xml</value>
+                <value>net/malta/model/Choise.hbm.xml</value>
+                <value>net/malta/model/Category.hbm.xml</value>
+                <value>net/malta/model/DeliveryAddress.hbm.xml</value>
+                <value>net/malta/model/DeliveryAddressChoise.hbm.xml</value>
+                <value>net/malta/model/GiftCard.hbm.xml</value>
+                <value>net/malta/model/StaticData.hbm.xml</value>
+                <value>net/malta/model/Carriage.hbm.xml</value>
+                <value>net/malta/model/PaymentMethod.hbm.xml</value>
+                <value>net/malta/model/Prefecture.hbm.xml</value>
+                <value>net/malta/model/PaymentStatus.hbm.xml</value>
+                <value>net/malta/model/PurchaseEmail.hbm.xml</value>
+                <value>net/malta/model/PrefectureCarriage.hbm.xml</value>
+                <value>net/malta/model/PublicUserSession.hbm.xml</value>
+                <value>net/malta/model/User.hbm.xml</value>
+                <value>net/malta/model/Role.hbm.xml</value>
+                <value>net/malta/model/AppFunction.hbm.xml</value>                                                
+                <value>net/malta/model/UserRole.hbm.xml</value>                                                
+                <value>net/malta/model/RoleAppFunction.hbm.xml</value>                                                                
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+                <prop key="hibernate.cache.query_cache_factory">org.hibernate.cache.StandardQueryCacheFactory</prop>
+                <!-- applicationContext hibernateProperties merge-point -->
+            </props>
+        </property>
+    </bean>
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.getsecual,net.malta"></context:component-scan>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+    <!-- ========================= GENERAL DEFINITIONS ========================= -->
+
+    <!-- Message source for this context, loaded from localized "messages_xx" files -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename"><value>messages</value></property>
+    </bean>
+
+    <!-- applicationContext merge-point -->
+    <!-- Hibernate SessionFactory -->
+
+</beans>

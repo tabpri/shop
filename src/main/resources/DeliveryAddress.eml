@@ -1,0 +1,13 @@
+▼配送先情報"
+
+================================================================
+
+お名前　　　　　　： $deliveryaddress.name 様
+
+フリガナ　　　　　 ： $deliveryaddress.kana
+
+郵便番号　　　　　： $deliveryaddress.zipthree
+
+ご住所　　　　　　： $deliveryaddress.prefecture.name $deliveryaddress.address $deliveryaddress.buildingname
+
+電話番号　　　　　： $deliveryaddress.phone

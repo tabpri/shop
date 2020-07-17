@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-cascade="none">
+    <class name="net.malta.model.PrefectureCarriage" table="PREFECTURE_CARRIAGE" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="java.lang.Integer" unsaved-value="null">
+            <column name="ID" sql-type="INTEGER"/>
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="prefecture" type="java.lang.Integer">
+            <column name="PREFECTURE_FK" not-null="true" unique="false" sql-type="INTEGER"/>
+        </property>
+        <property name="carriageValue" type="java.lang.Integer">
+            <column name="CARRIAGEVALUE" not-null="true" unique="false" sql-type="INTEGER"/>
+        </property>
+    </class>
+</hibernate-mapping>

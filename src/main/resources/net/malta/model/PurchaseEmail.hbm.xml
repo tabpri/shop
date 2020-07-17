@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-cascade="none">
+    <class name="net.malta.model.PurchaseEmail" table="PURCHASE_EMAIL" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="java.lang.Integer" unsaved-value="null">
+            <column name="ID" sql-type="INTEGER"/>
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="userEmailAddress" type="java.lang.String">
+            <column name="USER_EMAIL_ADDRESS" not-null="true" unique="false" sql-type="VARCHAR(255)"/>
+        </property>
+        <property name="userEmailSent" type="java.lang.Boolean">
+            <column name="USER_EMAIL_SENT" unique="false" sql-type="TINYINT"/>
+        </property>
+        <property name="userEmailSentDate" type="java.util.Date">
+            <column name="USER_EMAIL_SENT_DATE" unique="false" sql-type="DATETIME"/>
+        </property>
+        <property name="userEmailErrorMessage" type="java.lang.String">
+            <column name="USER_EMAIL_ERROR_MSG" unique="false" sql-type="VARCHAR(1000)"/>
+        </property>
+        <property name="userEmailErrorCode" type="java.lang.String">
+            <column name="USER_EMAIL_ERROR_CODE" unique="false" sql-type="VARCHAR(20)"/>
+        </property>
+        
+        <property name="adminEmailAddressesString" type="java.lang.String">
+            <column name="ADMIN_EMAIL_ADDRESSES" not-null="true" unique="false" sql-type="VARCHAR(2000)"/>
+        </property>
+        <property name="adminEmailSent" type="java.lang.Boolean">
+            <column name="ADMIN_EMAIL_SENT" unique="false" sql-type="TINYINT"/>
+        </property>
+        <property name="adminEmailSentDate" type="java.util.Date">
+            <column name="ADMIN_EMAIL_SENT_DATE" unique="false" sql-type="DATETIME"/>
+        </property>
+        <property name="adminEmailErrorMessage" type="java.lang.String">
+            <column name="ADMIN_EMAIL_ERROR_MSG" unique="false" sql-type="VARCHAR(1000)"/>
+        </property>
+        <property name="adminEmailErrorCode" type="java.lang.String">
+            <column name="ADMIN_EMAIL_ERROR_CODE" unique="false" sql-type="VARCHAR(20)"/>
+        </property>
+
+        <property name="purchaseId" type="int">
+            <column name="PURCHASE_FK" unique="false" sql-type="INTEGER"/>
+        </property>		
+    </class>
+</hibernate-mapping>
